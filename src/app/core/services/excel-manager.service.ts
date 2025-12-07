@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
-import {MetaProduct} from 'src/app/core/models/meta-model';
+import { MetaProduct } from 'src/app/core/models/meta-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExcelManagerService {
 
-  constructor() { }
+  constructor() {
+  }
 
   /**
    * Lee un archivo Excel y devuelve una promesa con los datos en JSON
@@ -26,10 +27,15 @@ export class ExcelManagerService {
           const worksheet = workbook.Sheets[firstSheetName];
 
           // Convertimos la hoja a JSON
-          // defval: '' asegura que si una celda está vacía, no desaparezca la propiedad, sino que sea string vacío
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-
-          resolve(jsonData as MetaProduct[]);
+          // defval: '' asegura que si una celda está vacía, no desaparezca la propiedad
+          // range: 2 indica que ignore las primeras 2 filas (índices 0 y 1) y tome la fila 3 como cabecera
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+            defval: '',
+            range: 1
+          });
+          const res = jsonData as MetaProduct[];
+          console.log(`Input file:${JSON.stringify(res)}`);
+          resolve(res);
         } catch (error) {
           reject(error);
         }
@@ -52,9 +58,24 @@ export class ExcelManagerService {
     // 2. Crear un libro de trabajo (Workbook) y añadir la hoja
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Productos');
-
+    console.log(`Output file:${JSON.stringify(workbook)}`);
     // 3. Escribir el archivo y forzar la descarga
-    // SheetJS se encarga de crear el Blob y el link de descarga automáticamente con writeFile
-    XLSX.writeFile(workbook, filename);
+    // Usamos write para obtener el buffer y crear nosotros el Blob y el link de descarga
+    // Esto asegura que el nombre del archivo se respete mejor en algunos navegadores
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, filename);
+  }
+
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
+
+    const url = window.URL.createObjectURL(data);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    console.log(`Output file saved as: ${fileName}`);
   }
 }

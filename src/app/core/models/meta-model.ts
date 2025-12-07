@@ -22,7 +22,7 @@ export interface MetaProduct {
   pattern?: string;
   shipping?: string;
   shipping_weight?: string;
-  // Campos con nombres especiales en el CSV se mapean como strings literales
+  // Campos con nombres especiales en el  se mapean como strings literales
   'video[0].url'?: string;
   'video[0].tag[0]'?: string;
   gtin?: string;
@@ -30,6 +30,6 @@ export interface MetaProduct {
   'product_tags[1]'?: string;
   'style[0]'?: string;
 
-  // Índice de firma para permitir campos extra dinámicos si el CSV cambia
+  // Índice de firma para permitir campos extra dinámicos si el  cambia
   [key: string]: any;
 }

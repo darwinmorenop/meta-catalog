@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\Users\\DRMP\\AppData\\Local\\nvs\\node\\24.11.1\\x64;${env:PATH}"
+    }
+}

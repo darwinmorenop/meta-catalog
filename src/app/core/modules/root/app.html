@@ -9,17 +9,11 @@
       <input type="file" accept=".xlsx" (change)="onFileSelected($event)" #fileInput>
     </div>
 
-    <button
-      (click)="applyBusinessLogic()"
-      [disabled]="products().length === 0"
-      class="btn-primary">
-      ⚙️ Procesar Datos
+    <button (click)="addProduct()" class="btn-primary">
+      ➕ Agregar Producto
     </button>
 
-    <button
-      (click)="exportData()"
-      [disabled]="products().length === 0"
-      class="btn-success">
+    <button (click)="exportData()" [disabled]="products().length === 0" class="btn-success">
       ⬇️ Exportar
     </button>
   </div>
@@ -29,27 +23,32 @@
 
     <table>
       <thead>
-      <tr>
-        <th>ID</th>
-        <th>Título</th>
-        <th>Precio</th>
-        <th>Disponibilidad</th>
-        <th>Marca</th>
-      </tr>
+        <tr>
+          <th>Acciones</th>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Precio</th>
+          <th>Disponibilidad</th>
+          <th>Marca</th>
+        </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let product of products().slice(0, 10)">
-        <td>{{ product.id }}</td>
-        <td>{{ product.title }}</td>
-        <td>{{ product.price }}</td>
-        <td>
+        <tr *ngFor="let product of products().slice(0, 10)">
+          <td>
+            <button (click)="editProduct(product)">✏️</button>
+            <button (click)="deleteProduct(product)">🗑️</button>
+          </td>
+          <td>{{ product.id }}</td>
+          <td>{{ product.title }}</td>
+          <td>{{ product.price }}</td>
+          <td>
             <span [class.stock-ok]="product.availability === 'in stock'"
-                  [class.stock-out]="product.availability === 'out of stock'">
+              [class.stock-out]="product.availability === 'out of stock'">
               {{ product.availability }}
             </span>
-        </td>
-        <td>{{ product.brand }}</td>
-      </tr>
+          </td>
+          <td>{{ product.brand }}</td>
+        </tr>
       </tbody>
     </table>
     <p class="hint" *ngIf="products().length > 10">... y {{ products().length - 10 }} más.</p>
@@ -57,7 +56,7 @@
 
   <ng-template #noData>
     <div class="empty-state">
-      <p>Sube el archivo <code>base.xlsx</code> para comenzar.</p>
+      <p>Sube el archivo <code>base.xlsx</code> o agrega un producto nuevo para comenzar.</p>
     </div>
   </ng-template>
 </div>
