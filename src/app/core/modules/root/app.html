@@ -1,0 +1,63 @@
+<div class="container">
+  <header>
+    <h1>Gestor de Catálogo Facebook/Yanbal</h1>
+    <p>Importa, procesa y exporta tus productos.</p>
+  </header>
+
+  <div class="actions-bar">
+    <div class="file-input-wrapper">
+      <input type="file" accept=".xlsx" (change)="onFileSelected($event)" #fileInput>
+    </div>
+
+    <button
+      (click)="applyBusinessLogic()"
+      [disabled]="products().length === 0"
+      class="btn-primary">
+      ⚙️ Procesar Datos
+    </button>
+
+    <button
+      (click)="exportData()"
+      [disabled]="products().length === 0"
+      class="btn-success">
+      ⬇️ Exportar
+    </button>
+  </div>
+
+  <div class="table-container" *ngIf="products().length > 0; else noData">
+    <p><strong>Registros cargados:</strong> {{ products().length }}</p>
+
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Precio</th>
+        <th>Disponibilidad</th>
+        <th>Marca</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let product of products().slice(0, 10)">
+        <td>{{ product.id }}</td>
+        <td>{{ product.title }}</td>
+        <td>{{ product.price }}</td>
+        <td>
+            <span [class.stock-ok]="product.availability === 'in stock'"
+                  [class.stock-out]="product.availability === 'out of stock'">
+              {{ product.availability }}
+            </span>
+        </td>
+        <td>{{ product.brand }}</td>
+      </tr>
+      </tbody>
+    </table>
+    <p class="hint" *ngIf="products().length > 10">... y {{ products().length - 10 }} más.</p>
+  </div>
+
+  <ng-template #noData>
+    <div class="empty-state">
+      <p>Sube el archivo <code>base.xlsx</code> para comenzar.</p>
+    </div>
+  </ng-template>
+</div>
