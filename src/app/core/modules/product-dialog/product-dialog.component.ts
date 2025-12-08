@@ -57,7 +57,10 @@ export class ProductDialogComponent {
         this.form = this.fb.group({
             // Step 1: Detalles Básicos
             id: [data.product?.id || '', Validators.required],
+            remoteCode: [{ value: data.product?.remoteCode || '', disabled: true }],
+            productCommercialCode: [{ value: data.product?.productCommercialCode || '', disabled: true }],
             title: [data.product?.title || '', Validators.required],
+            summary: [{ value: data.product?.summary || '', disabled: true }],
             description: [data.product?.description || ''],
             brand: [data.product?.brand || ''],
             condition: [data.product?.condition || 'new'],
@@ -71,6 +74,7 @@ export class ProductDialogComponent {
             // Step 3: Multimedia y Links
             link: [data.product?.link || ''],
             image_link: [data.product?.image_link || ''],
+            additional_image_link: [data.product?.additional_image_link || ''],
 
             // Step 4: Categorización y Atributos
             google_product_category: [data.product?.google_product_category || ''],

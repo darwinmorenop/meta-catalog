@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
-import { MetaProduct } from 'src/app/core/models/meta-model';
+import { MetaProduct, sanitizeMetaProduct, META_PRODUCT_HEADERS } from 'src/app/core/models/meta-model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class ExcelManagerService {
             defval: '',
             range: 1
           });
-          const res = jsonData as MetaProduct[];
+          const res = (jsonData as Partial<MetaProduct>[]).map(item => sanitizeMetaProduct(item));
           console.log(`Input file:${JSON.stringify(res)}`);
           resolve(res);
         } catch (error) {
@@ -53,7 +53,11 @@ export class ExcelManagerService {
    */
   exportExcel(data: MetaProduct[], filename: string = 'updated_products.xlsx'): void {
     // 1. Crear una hoja de trabajo (Worksheet) desde el JSON
-    const worksheet = XLSX.utils.json_to_sheet(data);
+    // Usamos META_PRODUCT_HEADERS para forzar el orden de columnas y que aparezcan todas
+    const worksheet = XLSX.utils.json_to_sheet(data, {
+      header: META_PRODUCT_HEADERS,
+      skipHeader: true
+    });
 
     // 2. Crear un libro de trabajo (Workbook) y añadir la hoja
     const workbook = XLSX.utils.book_new();
