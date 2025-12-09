@@ -1,78 +1,180 @@
 .container {
-  font-family: sans-serif;
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 2rem;
+  max-width: 1400px;
+  /* Increased max-width */
+  margin: 0 auto;
 }
 
-.actions-bar {
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+
+  p {
+    color: #666;
+  }
+}
+
+.actions-rows {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
   margin-bottom: 2rem;
+
+  .actions-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  /* Optional: Differentiate rows slightly if desired */
+  .item-actions {
+    border-bottom: 2px solid #ddd;
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.1s;
+
+    &:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    &.btn-primary {
+      background-color: #3f51b5;
+      color: white;
+    }
+
+    &.btn-success {
+      background-color: #4caf50;
+      color: white;
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .btn-warn {
+    background-color: #dc3545;
+    color: white;
+  }
+}
+
+/* Filter Section Styles */
+.filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
   align-items: center;
-  background: #f5f5f5;
-  padding: 1.5rem;
+
+  .global-search {
+    flex: 1 1 300px;
+    /* Global search takes priority space */
+  }
+
+  .column-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex: 2 1 600px;
+    justify-content: flex-start;
+
+    .col-filter {
+      min-width: 150px;
+    }
+  }
+}
+
+
+.table-container {
+  background: white;
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  // padding: 1rem; /* Removed padding for mat-table full width */
+  overflow: auto;
+  max-height: 800px;
+
+  /* Mat-table specific overrides if needed */
+  table {
+    width: 100%;
+
+    tr.mat-mdc-row {
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+
+      &.selected-row {
+        background-color: #e3f2fd;
+        /* Light Blue highlight */
+      }
+    }
+  }
 }
 
-button {
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  background: #007bff;
-  color: white;
-}
-
-.btn-success {
-  background: #28a745;
-  color: white;
-}
-
-.btn-warn {
-  background: #ff9800;
-  color: white;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-}
-
-th,
-td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-}
 
 .stock-ok {
-  color: green;
+  color: #4caf50;
   font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  background: #e8f5e9;
+  border-radius: 4px;
 }
 
 .stock-out {
-  color: red;
+  color: #f44336;
   font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  background: #ffebee;
+  border-radius: 4px;
 }
 
 .empty-state {
   text-align: center;
+  padding: 4rem;
   color: #666;
-  margin-top: 4rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+  border: 2px dashed #ccc;
+
+}
+
+.search-select-container {
+  padding: 0.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: white;
+  border-bottom: 1px solid #eee;
+
+  .search-select-input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    &:focus {
+      outline: none;
+      border-color: #3f51b5;
+    }
+  }
 }

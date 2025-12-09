@@ -1,26 +1,46 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, forkJoin, switchMap } from 'rxjs';
 import { MetaProduct, BackendItem, ChangeRecord, sanitizeMetaProduct } from '../models/meta-model';
+import { GoogleSheetsService } from './google-sheets.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CatalogSyncService {
-    private apiUrl = 'http://localhost:3000/api/products/perfumes';
+    private baseUrl = 'http://localhost:3000/api/products';
+    private categories = ['perfumes'];
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private googleSheetsService: GoogleSheetsService
+    ) { }
 
     syncCatalog(localCatalog: MetaProduct[]): Observable<{ updatedCatalog: MetaProduct[], changes: ChangeRecord[] }> {
-        return this.http.get<BackendItem[]>(this.apiUrl).pipe(
-            map(backendItems => {
-                console.log(`Backend items count: ${backendItems.length}`);
+        // 1. Prepare Backend Requests
+        const backendRequests = this.categories.map(category =>
+            this.http.get<BackendItem[]>(`${this.baseUrl}/${category}`).pipe(
+                map(items => items.map(item => ({ ...item, category }))) // Attach category to each item
+            )
+        );
+
+        // 2. Fetch Backend Data AND Campaign Codes in parallel
+        return forkJoin({
+            backendItems: forkJoin(backendRequests).pipe(map(results => results.flat())),
+            campaignMap: this.googleSheetsService.getCatalogCampaignCodes()
+        }).pipe(
+            map(({ backendItems, campaignMap }) => {
+                console.log(`Total backend items count: ${backendItems.length}`);
 
                 const updatedCatalog = [...localCatalog];
                 const changes: ChangeRecord[] = [];
 
+                // --- SYNC LOGIC (Backend vs Local) ---
+
                 // 1. Map for quick access
                 const catalogMap = new Map<string, MetaProduct>();
+                const backendCodes = new Set<string>();
+
                 updatedCatalog.forEach(p => {
                     // Normalize remoteCode to string for comparison
                     if (p.remoteCode) {
@@ -30,29 +50,44 @@ export class CatalogSyncService {
                     }
                 });
 
-                // 2. Iterate backend items
-                backendItems.forEach(item => {
+                // 2. Identify Backend Codes
+                backendItems.forEach((item: BackendItem) => {
+                    backendCodes.add('' + item.code);
+                });
+
+                // 3. Mark missing items as ARCHIVED
+                updatedCatalog.forEach(p => {
+                    if (p.remoteCode && !backendCodes.has('' + p.remoteCode)) {
+                        if (p.status !== 'archived') {
+                            changes.push({
+                                type: 'UPDATE',
+                                product: p,
+                                changes: [{ field: 'status', oldValue: p.status, newValue: 'archived' }]
+                            });
+                            p.status = 'archived';
+                        }
+                    }
+                });
+
+                // 4. Iterate backend items (Update/Create)
+                backendItems.forEach((item: BackendItem) => {
                     // Normalize item code to string
-                    const existingProduct = catalogMap.get('' + item.productCommercialCode);
+                    const existingProduct = catalogMap.get('' + item.code);
 
                     if (existingProduct) {
                         // Update existing
                         const itemChanges: { field: string, oldValue: any, newValue: any }[] = [];
 
-                        if (item.code != item.productCommercialCode) {
-                            itemChanges.push({ field: 'COMPARE_remoteCode', oldValue: item.code, newValue: item.productCommercialCode });
+                        // Always set status to active if found
+                        if (existingProduct.status !== 'active') {
+                            itemChanges.push({ field: 'status', oldValue: existingProduct.status, newValue: 'active' });
+                            existingProduct.status = 'active';
                         }
 
                         // Ensure remoteCode matches code (e.g. string/number mismatches)
                         if (existingProduct.remoteCode != item.code) {
                             itemChanges.push({ field: 'remoteCode', oldValue: existingProduct.remoteCode, newValue: item.code });
                             existingProduct.remoteCode = item.code;
-                        }
-
-                        // Ensure productCommercialCode matches productCommercialCode (e.g. string/number mismatches)
-                        if (existingProduct.productCommercialCode != item.productCommercialCode) {
-                            itemChanges.push({ field: 'productCommercialCode', oldValue: existingProduct.productCommercialCode, newValue: item.productCommercialCode });
-                            existingProduct.productCommercialCode = item.productCommercialCode;
                         }
 
                         // Map name -> title
@@ -120,7 +155,6 @@ export class CatalogSyncService {
                             existingProduct.summary = item.summary;
                         }
 
-
                         if (itemChanges.length > 0) {
                             changes.push({
                                 type: 'UPDATE',
@@ -129,7 +163,7 @@ export class CatalogSyncService {
                             });
                         }
                     } else {
-                        console.warn(`Not found remoteCode: ${item.productCommercialCode} in map`);
+                        console.warn(`Not found remoteCode: ${item.code} in map`);
                         // Create New
                         // sanitize to ensure mandatory fields have defaults ('UNKNOWN') if missing
                         const newProduct: MetaProduct = sanitizeMetaProduct({
@@ -142,11 +176,11 @@ export class CatalogSyncService {
                             quantity_to_sell_on_facebook: item.totalStock,
                             condition: 'new',
                             remoteCode: item.code,
-                            productCommercialCode: item.productCommercialCode,
                             link: item.url,
                             image_link: item.imageUrl,
                             additional_image_link: item.secondImageUrl,
                             summary: item.summary,
+                            status: 'active', // Default to active for new items
                             brand: 'Yanbal' // Assumption or Default
                         });
 
@@ -155,6 +189,45 @@ export class CatalogSyncService {
                             type: 'NEW',
                             product: newProduct
                         });
+                    }
+                });
+
+                // --- ENRICHMENT LOGIC (Apply Campaign Codes) ---
+                console.log('Enriching synced catalog with campaign codes (Post-Processing)...');
+
+                const localProductSet = new Set(localCatalog);
+                const changeMap = new Map<MetaProduct, ChangeRecord>();
+                changes.forEach(c => changeMap.set(c.product, c));
+
+                updatedCatalog.forEach(product => {
+                    const campaignCode = campaignMap.get(String(product.id).trim());
+                    const newCode = campaignCode || 'N/A';
+                    const currentCode = product.productCommercialCode;
+
+                    if (currentCode !== newCode) {
+                        // Apply change
+                        product.productCommercialCode = newCode;
+
+                        // Log change if product is NOT NEW (exists in localCatalog)
+                        if (localProductSet.has(product)) {
+                            let record = changeMap.get(product);
+                            if (!record) {
+                                record = { type: 'UPDATE', product: product, changes: [] };
+                                changes.push(record);
+                                changeMap.set(product, record);
+                            }
+
+                            if (record.type === 'UPDATE') {
+                                if (!record.changes) {
+                                    record.changes = [];
+                                }
+                                record.changes.push({
+                                    field: 'productCommercialCode',
+                                    oldValue: currentCode,
+                                    newValue: newCode
+                                });
+                            }
+                        }
                     }
                 });
 

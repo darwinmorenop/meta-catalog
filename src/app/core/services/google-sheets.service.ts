@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, forkJoin, map, of } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { MetaProduct, sanitizeMetaProduct } from '../models/meta-model';
 
@@ -12,39 +12,62 @@ export class GoogleSheetsService {
     private sheetId = '14j3x4aCuZ0VW2qPEY8z_0kWIVwwVY-KC';
     // Use 'export?format=xlsx' to download as Excel file
     private xlsxUrl = `https://docs.google.com/spreadsheets/d/${this.sheetId}/export?format=xlsx`;
+    private sheetIdCampaingCodes = '1pNZBJkbqaSLNw0QM-Xn0NvP-FtuEuYv0FU0ETsOhf-s';
+    private xlsxCampaingCodes = `https://docs.google.com/spreadsheets/d/${this.sheetIdCampaingCodes}/export?format=xlsx`;
 
     constructor(private http: HttpClient) { }
 
     /**
      * Fetches the catalog from the public Google Sheets as an XLSX file.
-     * Parses the binary data using XLSX (SheetJS) to ensure consistent behavior with ExcelManagerService.
+     * Also fetches campaign codes and enriches the product data.
      */
     getCatalog(): Observable<MetaProduct[]> {
-        // Fetch as 'arraybuffer' to handle binary Excel data
-        return this.http.get(this.xlsxUrl, { responseType: 'arraybuffer' }).pipe(
+        return this.fetchAndParseSheet(this.xlsxUrl, 1).pipe(
+            map(catalog => {
+                // Sanitize and enrich catalog items
+                const res = (catalog as Partial<MetaProduct>[]).map(item => sanitizeMetaProduct(item));
+
+                console.log(`Enriched Catalog: ${res.length} items processed.`);
+                return res;
+            })
+        );
+    }
+
+    getCatalogCampaignCodes(): Observable<Map<string, string>> {
+        return this.fetchAndParseSheet(this.xlsxCampaingCodes, 0).pipe(
+            map(campaignCodes => {
+                const campaignMap = new Map<string, string>();
+                campaignCodes.forEach((row: any) => {
+                    if (row.catalog_ID && row.campaing_code) {
+                        campaignMap.set(String(row.catalog_ID).trim(), String(row.campaing_code));
+                    }
+                });
+                return campaignMap;
+            }), catchError(err => {
+                console.error('Error fetching campaign codes:', err);
+                return of(new Map<string, string>());
+            })
+        );
+    }
+
+    private fetchAndParseSheet(url: string, startRow: number = 1): Observable<any[]> {
+        return this.http.get(url, { responseType: 'arraybuffer' }).pipe(
             map(buffer => {
-                // Read the binary data
                 const data = new Uint8Array(buffer);
                 const workbook = XLSX.read(data, { type: 'array' });
-
-                // Grab the first sheet
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert to JSON
-                // Using raw: false to ensure everything is treated as text (ids, prices)
-                // NOT using range: 1 here because the public export usually starts at row 0. 
-                // If the user's specific sheet has empty rows, we might need to adjust, 
-                // but the CSV dump showed headers at line 0.
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                return XLSX.utils.sheet_to_json(worksheet, {
                     defval: '',
-                    range: 1
+                    range: startRow // Start at row 1 (skipping header?) Or row 0? 
+                    // Usually public sheets usually start header at row 0, data at 1.
+                    // But 'range: 1' means skip row 0 (header) provided by API? 
+                    // No, sheet_to_json default behavior with header: 
+                    // if no range specified, it assumes row 0 is header.
+                    // if range: 1, it starts parsing from row 1.
+                    // Check previous code: it was using range: 1.
+                    // Let's stick to consistent parsing logic.
                 });
-
-                // Sanitize and enforce mandatory fields
-                const res = (jsonData as Partial<MetaProduct>[]).map(item => sanitizeMetaProduct(item));
-                console.log(`Input Google Sheets:${JSON.stringify(res)}`);
-                return res;
             })
         );
     }

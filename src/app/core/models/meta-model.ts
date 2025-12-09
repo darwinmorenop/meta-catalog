@@ -33,6 +33,7 @@ export interface MetaProduct {
   additional_image_link?: string;
   productCommercialCode: string;
   summary?: string;
+  status: 'active' | 'archived' | string;
 
   // Índice de firma para permitir campos extra dinámicos si el  cambia
   [key: string]: any;
@@ -69,14 +70,13 @@ export const META_PRODUCT_HEADERS = [
   'availability',
   'condition',
   'price',
-  'sale_price',
   'link',
   'image_link',
-  'additional_image_link',
   'brand',
   'google_product_category',
   'fb_product_category',
   'quantity_to_sell_on_facebook',
+  'sale_price',
   'sale_price_effective_date',
   'item_group_id',
   'gender',
@@ -93,7 +93,24 @@ export const META_PRODUCT_HEADERS = [
   'product_tags[0]',
   'product_tags[1]',
   'style[0]',
+  'additional_image_link',
   'remoteCode',
+  'productCommercialCode',
+  'summary',
+  'status'
+];
+
+export const MANDATORY_FIELDS = [
+  'id',
+  'title',
+  'description',
+  'availability',
+  'condition',
+  'price',
+  'sale_price',
+  'link',
+  'image_link',
+  'brand',
   'productCommercialCode'
 ];
 

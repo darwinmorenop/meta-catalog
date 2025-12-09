@@ -1,18 +1,28 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+
 import { ExcelManagerService } from 'src/app/core/services/excel-manager.service';
 import { GoogleSheetsService } from 'src/app/core/services/google-sheets.service';
 import { CatalogSyncService } from 'src/app/core/services/catalog-sync.service';
 import { MetaProduct, ChangeRecord } from 'src/app/core/models/meta-model';
 import { ProductDialogComponent } from '../product-dialog/product-dialog.component';
 import { ChangesDialogComponent } from '../changes-dialog/changes-dialog.component';
+import { ImportExcelDialogComponent } from '../import-excel-dialog/import-excel-dialog.component';
+import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
+import { TableConfig } from 'src/app/core/models/table-config';
 
 @Component({
     selector: 'app-catalog-online',
     standalone: true,
-    imports: [CommonModule, MatDialogModule],
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        FormsModule,
+        SmartTableComponent
+    ],
     templateUrl: './catalog-online.component.html',
     styleUrls: ['./catalog-online.component.scss']
 })
@@ -28,11 +38,29 @@ export class CatalogOnlineComponent implements OnInit {
     changes = signal<ChangeRecord[]>([]);
     fileName = signal<string>('');
     isLoading = signal<boolean>(false);
+    selectedProduct = signal<MetaProduct | null>(null);
+
+    // Table Configuration
+    tableConfig: TableConfig = {
+        columns: [
+            { key: 'productCommercialCode', header: 'productCommercialCode', filterable: true },
+            { key: 'remoteCode', header: 'remoteCode', filterable: true },
+            { key: 'title', header: 'Título', filterable: true },
+            { key: 'sale_price', header: 'Precio de venta', filterable: true, type: 'currency' },
+            { key: 'price', header: 'Precio original', filterable: true, type: 'currency' },
+            { key: 'availability', header: 'Disponibilidad', filterable: true, type: 'badge' },
+        ],
+        searchableFields: ['title'],
+        pageSizeOptions: [10, 20, 50, 100]
+    };
+
+    constructor() {
+    }
 
     ngOnInit() {
-        // Cargar desde Google Sheets al iniciar
         this.loadFromGoogleSheets();
     }
+
 
     loadFromGoogleSheets() {
         this.isLoading.set(true);
@@ -41,9 +69,6 @@ export class CatalogOnlineComponent implements OnInit {
             next: (data) => {
                 this.products.set(data);
                 console.log('Catálogo cargado desde Google Sheets:', data);
-
-                // Sincronizar con backend una vez cargado
-                this.syncWithBackend(data);
             },
             error: (err) => {
                 console.error('Error cargando desde Google Sheets', err);
@@ -52,9 +77,9 @@ export class CatalogOnlineComponent implements OnInit {
         });
     }
 
-    syncWithBackend(currentCatalog: MetaProduct[]) {
+    syncWithBackend() {
         console.log('Iniciando sincronización con backend...');
-        this.catalogSyncService.syncCatalog(currentCatalog).subscribe({
+        this.catalogSyncService.syncCatalog(this.products()).subscribe({
             next: (result) => {
                 this.products.set(result.updatedCatalog);
                 this.changes.set(result.changes);
@@ -64,7 +89,6 @@ export class CatalogOnlineComponent implements OnInit {
             error: (err) => {
                 console.error('Error sincronizando con backend', err);
                 this.isLoading.set(false);
-                // Si falla el backend, nos quedamos con los datos de Google Sheets
             }
         });
     }
@@ -98,27 +122,29 @@ export class CatalogOnlineComponent implements OnInit {
         });
     }
 
-    // 1. IMPORTAR: Al seleccionar el archivo
-    async onFileSelected(event: any) {
-        const file = event.target.files[0];
-        if (file) {
-            this.isLoading.set(true);
-            this.fileName.set(file.name);
+    openImportDialog() {
+        const dialogRef = this.dialog.open(ImportExcelDialogComponent, {
+            width: '600px',
+            disableClose: true
+        });
 
-            try {
-                const data = await this.excelManagerService.importExcel(file);
-                this.products.set(data);
-                // Opcional: sincronizar también si cargan archivo manual?
-                this.syncWithBackend(data);
-            } catch (err) {
-                console.error('Error leyendo archivo', err);
-            } finally {
-                this.isLoading.set(false);
+        dialogRef.afterClosed().subscribe(async (file: File | undefined) => {
+            if (file) {
+                this.isLoading.set(true);
+                this.fileName.set(file.name);
+
+                try {
+                    const data = await this.excelManagerService.importExcel(file);
+                    this.products.set(data);
+                } catch (err) {
+                    console.error('Error leyendo archivo', err);
+                } finally {
+                    this.isLoading.set(false);
+                }
             }
-        }
+        });
     }
 
-    // 2. PROCESAR: Ejemplo de lógica de negocio (Ahora abre diálogo CRUD)
     addProduct() {
         const dialogRef = this.dialog.open(ProductDialogComponent, {
             width: '800px',
@@ -137,7 +163,7 @@ export class CatalogOnlineComponent implements OnInit {
         const dialogRef = this.dialog.open(ProductDialogComponent, {
             width: '800px',
             disableClose: true,
-            data: { product: { ...product } } // Copia para no mutar directamente
+            data: { product: { ...product } }
         });
 
         dialogRef.afterClosed().subscribe((result: MetaProduct | undefined) => {
@@ -155,12 +181,18 @@ export class CatalogOnlineComponent implements OnInit {
         }
     }
 
-
-    // 3. EXPORTAR: Descargar el resultado
     exportData() {
         const data = this.products();
         if (data.length > 0) {
             this.excelManagerService.exportExcel(data, `export_${new Date().getTime()}.xlsx`);
+        }
+    }
+
+    clearData() {
+        if (confirm('¿Estás seguro de que quieres limpiar todos los datos? Esta acción no se puede deshacer.')) {
+            this.products.set([]);
+            this.changes.set([]);
+            this.fileName.set('');
         }
     }
 }

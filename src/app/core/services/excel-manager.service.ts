@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
-import { MetaProduct, sanitizeMetaProduct, META_PRODUCT_HEADERS } from 'src/app/core/models/meta-model';
+import { MetaProduct, sanitizeMetaProduct, META_PRODUCT_HEADERS, MANDATORY_FIELDS } from 'src/app/core/models/meta-model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +26,6 @@ export class ExcelManagerService {
           const firstSheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[firstSheetName];
 
-          // Convertimos la hoja a JSON
-          // defval: '' asegura que si una celda está vacía, no desaparezca la propiedad
-          // range: 2 indica que ignore las primeras 2 filas (índices 0 y 1) y tome la fila 3 como cabecera
           const jsonData = XLSX.utils.sheet_to_json(worksheet, {
             defval: '',
             range: 1
@@ -52,15 +49,25 @@ export class ExcelManagerService {
    * Genera un archivo Excel a partir de los datos y dispara la descarga
    */
   exportExcel(data: MetaProduct[], filename: string = 'updated_products.xlsx'): void {
-    // 1. Crear una hoja de trabajo (Worksheet) desde el JSON
-    // Usamos META_PRODUCT_HEADERS para forzar el orden de columnas y que aparezcan todas
-    const worksheet = XLSX.utils.json_to_sheet(data, {
-      header: META_PRODUCT_HEADERS,
-      skipHeader: true
-    });
+    // 1. Create custom header rows
+    // Row 1: "mandatory" or "optional"
+    const headerStatusRow = META_PRODUCT_HEADERS.map(header =>
+      MANDATORY_FIELDS.includes(header) ? '#mandatory' : '#optional'
+    );
 
-    // 2. Crear un libro de trabajo (Workbook) y añadir la hoja
+    // Row 2: Field Names
+    const headerNamesRow = META_PRODUCT_HEADERS;
+
+    // 2. Create workbook and empty worksheet
     const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([headerStatusRow, headerNamesRow]);
+
+    // 3. Append data starting at A3
+    XLSX.utils.sheet_add_json(worksheet, data, {
+      header: META_PRODUCT_HEADERS,
+      skipHeader: true, // We already added headers manually
+      origin: 'A3'
+    });
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Productos');
     console.log(`Output file:${JSON.stringify(workbook)}`);
     // 3. Escribir el archivo y forzar la descarga

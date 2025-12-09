@@ -4,63 +4,54 @@
         <p>Importa, procesa y exporta tus productos.</p>
     </header>
 
-    <div class="actions-bar">
-        <div class="file-input-wrapper">
-            <input type="file" accept=".xlsx" (change)="onFileSelected($event)" #fileInput>
+    <div class="actions-rows">
+        <!-- Row 1: Item Actions (Add, Edit, Delete, Clear) -->
+        <div class="actions-row item-actions">
+            <button (click)="addProduct()" class="btn-primary">
+                ➕ Agregar Producto
+            </button>
+
+            <button (click)="editProduct(selectedProduct()!)" [disabled]="!selectedProduct()" class="btn-primary">
+                ✏️ Editar
+            </button>
+
+            <button (click)="deleteProduct(selectedProduct()!)" [disabled]="!selectedProduct()" class="btn-warn">
+                🗑️ Eliminar
+            </button>
+
+            <button (click)="clearData()" *ngIf="products().length > 0" class="btn-warn">
+                🗑️ Limpiar Todo
+            </button>
         </div>
 
-        <button (click)="addProduct()" class="btn-primary">
-            ➕ Agregar Producto
-        </button>
+        <!-- Row 2: Data Actions (Import, Export, Changes, Sync) -->
+        <div class="actions-row data-actions">
+            <button (click)="openImportDialog()" class="btn-primary">
+                📁 Importar Excel
+            </button>
 
-        <button (click)="exportData()" [disabled]="products().length === 0" class="btn-success">
-            ⬇️ Exportar
-        </button>
+            <button (click)="exportData()" [disabled]="products().length === 0" class="btn-success">
+                ⬇️ Exportar
+            </button>
 
-        <button (click)="viewChanges()" *ngIf="changes().length > 0" class="btn-warn">
-            ⚠️ Ver Cambios ({{ changes().length }})
-        </button>
-    </div>
-
-    <div class="table-container" *ngIf="products().length > 0; else noData">
-        <p><strong>Registros cargados:</strong> {{ products().length }}</p>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Acciones</th>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Precio</th>
-                    <th>Disponibilidad</th>
-                    <th>Marca</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let product of products().slice(0, 10)">
-                    <td>
-                        <button (click)="editProduct(product)">✏️</button>
-                        <button (click)="deleteProduct(product)">🗑️</button>
-                    </td>
-                    <td>{{ product.id }}</td>
-                    <td>{{ product.title }}</td>
-                    <td>{{ product.price }}</td>
-                    <td>
-                        <span [class.stock-ok]="product.availability === 'in stock'"
-                            [class.stock-out]="product.availability === 'out of stock'">
-                            {{ product.availability }}
-                        </span>
-                    </td>
-                    <td>{{ product.brand }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <p class="hint" *ngIf="products().length > 10">... y {{ products().length - 10 }} más.</p>
-    </div>
-
-    <ng-template #noData>
-        <div class="empty-state">
-            <p>Sube el archivo <code>base.xlsx</code> o agrega un producto nuevo para comenzar.</p>
+            <button (click)="viewChanges()" *ngIf="changes().length > 0" class="btn-warn">
+                ⚠️ Ver Cambios ({{ changes().length }})
+            </button>
+            <button (click)="syncWithBackend()" class="btn-success">
+                ⬆️ Sincronizar con Backend
+            </button>
         </div>
-    </ng-template>
+    </div>
+
+    <!-- Filter Section -->
+
+
+    <!-- Table Section -->
+    <!-- Smart Table -->
+    <app-smart-table [data]="products()" [config]="tableConfig" (selectionChange)="selectedProduct.set($event)">
+    </app-smart-table>
+
+    <div class="empty-state" *ngIf="products().length === 0">
+        <p>Sube el archivo <code>base.xlsx</code> o agrega un producto nuevo para comenzar.</p>
+    </div>
 </div>
