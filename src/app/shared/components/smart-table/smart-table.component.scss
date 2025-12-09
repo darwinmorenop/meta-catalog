@@ -93,3 +93,23 @@
     border-radius: 8px;
     border: 2px dashed #ccc;
 }
+
+.state-new {
+    color: #2e7d32;
+    /* Green 800 */
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    background: #e8f5e9;
+    /* Green 50 */
+    border-radius: 4px;
+}
+
+.state-changed {
+    color: #ef6c00;
+    /* Orange 800 */
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    background: #fff3e0;
+    /* Orange 50 */
+    border-radius: 4px;
+}

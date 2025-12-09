@@ -145,6 +145,7 @@ export class SmartTableComponent implements AfterViewInit {
         } else {
             this.selectedRow = row;
         }
+        console.log('Selected Row:', this.selectedRow);
         this.selectionChange.emit(this.selectedRow);
     }
 }

@@ -37,8 +37,9 @@
             <button (click)="viewChanges()" *ngIf="changes().length > 0" class="btn-warn">
                 ⚠️ Ver Cambios ({{ changes().length }})
             </button>
-            <button (click)="syncWithBackend()" class="btn-success">
-                ⬆️ Sincronizar con Backend
+            <button (click)="syncWithBackend()" [disabled]="isLoading()" class="btn-success">
+                <span *ngIf="isLoading()">⏳ Sincronizando...</span>
+                <span *ngIf="!isLoading()">⬆️ Sincronizar con Backend</span>
             </button>
         </div>
     </div>

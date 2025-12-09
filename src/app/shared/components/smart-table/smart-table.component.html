@@ -30,7 +30,9 @@
                 <ng-container [ngSwitch]="col.type">
                     <!-- Badge Type -->
                     <span *ngSwitchCase="'badge'" [class.stock-ok]="element[col.key] === 'in stock'"
-                        [class.stock-out]="element[col.key] === 'out of stock'">
+                        [class.stock-out]="element[col.key] === 'out of stock'"
+                        [class.state-new]="element[col.key] === 'new'"
+                        [class.state-changed]="element[col.key] === 'changed'">
                         {{element[col.key]}}
                     </span>
 

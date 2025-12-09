@@ -44,7 +44,7 @@ export interface BackendItem {
   productCommercialCode: string; // Was code
   summary: string; // Was name/description
   originalPrice: number; // Was price (numeric?)
-  salePrice?: number; // Keeping optional if needed, or derived
+  sale_price?: number; // Keeping optional if needed, or derived
   url: string;
   imageUrl: string;
   secondImageUrl?: string;
@@ -103,7 +103,6 @@ export const META_PRODUCT_HEADERS = [
 export const MANDATORY_FIELDS = [
   'id',
   'title',
-  'description',
   'availability',
   'condition',
   'price',
@@ -120,7 +119,6 @@ export function sanitizeMetaProduct(product: Partial<MetaProduct>): MetaProduct 
     // Mandatory fields with fallback
     id: product.id || META_DEFAULTS.MANDATORY,
     title: product.title || META_DEFAULTS.MANDATORY,
-    description: product.description || META_DEFAULTS.MANDATORY,
     availability: product.availability || META_DEFAULTS.MANDATORY,
     condition: product.condition || META_DEFAULTS.MANDATORY,
     price: product.price || META_DEFAULTS.MANDATORY,
@@ -129,6 +127,10 @@ export function sanitizeMetaProduct(product: Partial<MetaProduct>): MetaProduct 
     image_link: product.image_link || META_DEFAULTS.MANDATORY,
     brand: product.brand || META_DEFAULTS.MANDATORY,
     productCommercialCode: product.productCommercialCode || META_DEFAULTS.MANDATORY,
+    remoteCode: product.remoteCode || META_DEFAULTS.MANDATORY,
     // Ensure other fields are at least present if needed, or keep optional
+    description: product.description || "",
+    summary: product.summary || "",
+    additional_image_link: product.additional_image_link || "",
   } as MetaProduct;
 }
