@@ -1,0 +1,36 @@
+export interface ProductCompleteEntity {
+    // Product
+    product_id: number;
+    product_created_at: Date;
+    product_updated_at: Date;
+    product_sku: string;
+    product_name: string;
+    product_status: string;
+    product_description: string;
+    product_summary: string;
+    product_ean: string;
+    // Category
+    category_leaf: string;
+    category_full_path: string;
+    // Brand
+    brand_name: string,
+    // Attributes
+    attribute_gender: string,
+    attribute_olfactory_family: string,
+    attribute_skin_type: string,
+    attribute_format: string,
+    attribute_size: number,
+    attribute_unit: string,
+    attribute_is_vegan: boolean,
+    attribute_is_cruelty_free: boolean,
+    attribute_is_refillable: boolean,
+    attribute_pao: string,
+    attribute_inci: string[],
+    attribute_notes: any,
+    product_price: number,
+    product_discount: number,
+    product_stock: number,
+    product_manufacturer_stock: number,
+    product_min_stock_alert: number,
+    product_media: any[]
+}
