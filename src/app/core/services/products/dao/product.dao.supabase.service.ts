@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { ProductCompleteEntity } from 'src/app/shared/entity/product.complete.entity';
+import { ProductCompleteEntity } from 'src/app/shared/entity/view/product.complete.entity';
+import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductDaoSupabaseService {
   private supabase: SupabaseClient;
+  private dateUtils = inject(DateUtilsService);
 
   constructor() {
     this.supabase = createClient(
@@ -26,29 +28,14 @@ export class ProductDaoSupabaseService {
     return from(promise).pipe(
       tap(response => {
         if (response.error) throw response.error;
-        console.log('DB before parsed:', response.data);
       }),
       map(response => {        
         const data = (response.data as any[]) || [];
-        const res = data.map(item => {
-          const parseDate = (dateStr: string) => {
-            if (!dateStr) return new Date();
-            // Si no tiene 'Z' ni '+', asumimos que es UTC y se lo añadimos
-            const formattedStr = (dateStr.includes('Z') || dateStr.includes('+')) 
-              ? dateStr 
-              : `${dateStr}Z`;
-            return new Date(formattedStr);
-          };
-
-          return {
-            ...item,
-            product_created_at: parseDate(item.product_created_at),
-            product_updated_at: parseDate(item.product_updated_at)
-          };
-        }) as ProductCompleteEntity[];
-        
-        console.log('DB after parsed:', res);
-        return res;
+        return data.map(item => ({
+          ...item,
+          product_created_at: this.dateUtils.parseDbDate(item.product_created_at),
+          product_updated_at: this.dateUtils.parseDbDate(item.product_updated_at)
+        })) as ProductCompleteEntity[];
       }),
       catchError(error => {
         console.error('Error fetching products:', error);

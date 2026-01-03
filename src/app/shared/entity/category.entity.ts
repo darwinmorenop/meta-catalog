@@ -3,8 +3,7 @@ export interface CategoryEntity {
     created_at: Date;
     updated_at: Date;
     name: string;
-    slug: string;
+    slug: string; // SEO URL
     description: string;
     parent_id?: number; // Relación con el padre
-    children?: CategoryEntity[]; // Campo virtual para el árbol
 }

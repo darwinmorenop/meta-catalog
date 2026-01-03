@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ProductCompleteEntity } from "src/app/shared/entity/product.complete.entity";
+import { ProductCompleteEntity } from "src/app/shared/entity/view/product.complete.entity";
 import { Product } from "src/app/core/models/products/product.model";
 import { ProductStatusEnum } from "src/app/core/models/products/product.status.enum";
 import { ProductAttributesGender, ProductAttributesUnit } from "src/app/core/models/products/product.attributes.model";

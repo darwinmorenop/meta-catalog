@@ -6,6 +6,9 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { TableConfig, TableColumn } from 'src/app/core/models/table-config';
 
@@ -20,6 +23,9 @@ import { TableConfig, TableColumn } from 'src/app/core/models/table-config';
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatButtonModule,
         FormsModule
     ],
     templateUrl: './smart-table.component.html',
@@ -28,7 +34,10 @@ import { TableConfig, TableColumn } from 'src/app/core/models/table-config';
 export class SmartTableComponent implements AfterViewInit {
     @Input() data: any[] = [];
     @Input() config!: TableConfig;
+    @Input() isLoading: boolean = false;
     @Output() selectionChange = new EventEmitter<any>();
+    @Output() edit = new EventEmitter<any>();
+    @Output() delete = new EventEmitter<any>();
 
     dataSource = new MatTableDataSource<any>([]);
     displayedColumns: string[] = [];
@@ -66,6 +75,9 @@ export class SmartTableComponent implements AfterViewInit {
         }
         if (changes['config'] && this.config) {
             this.displayedColumns = this.config.columns.map(c => c.key);
+            if (this.edit.observed || this.delete.observed) {
+                this.displayedColumns.push('actions');
+            }
             this.initFilters();
             this.setupFilterPredicate();
         }

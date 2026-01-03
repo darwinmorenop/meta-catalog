@@ -38,12 +38,48 @@
     margin: 0.5rem 0 0;
     color: #64748b;
   }
+
+  .subtitle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+
+    .subtitle {
+      margin: 0;
+    }
+
+    .active-pulse {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #22c55e;
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .header-actions {
   display: flex;
   gap: 1rem;
   align-items: center;
+
+  .refresh-button {
+    background-color: white;
+    color: #64748b;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+    &:hover:not(:disabled) {
+      color: #1e293b;
+      background-color: #f1f5f9;
+    }
+  }
 }
 
 .stats-grid {
@@ -57,6 +93,11 @@
   border-radius: 12px;
   border: none;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
 
   .stat-icon {
     width: 48px;
@@ -70,8 +111,8 @@
     padding: 8px;
   }
 
-  .products-icon { background-color: #e0f2fe; color: #0ea5e9; }
-  .active-icon { background-color: #fef2f2; color: #ef4444; }
+  .campaigns-icon { background-color: #e0f2fe; color: #0ea5e9; }
+  .current-icon { background-color: #f0fdf4; color: #22c55e; }
 
   .stat-value {
     font-size: 2.5rem;
@@ -80,61 +121,24 @@
     display: block;
     margin-top: 1rem;
   }
-
-  .changes-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-}
-
-.actions-card-row {
-  margin-bottom: 1.5rem;
-}
-
-.actions-card {
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-
-  .actions-toolbar {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    flex-wrap: wrap;
-
-    .spacer {
-      flex: 1 1 auto;
-    }
-  }
 }
 
 .table-card {
   border-radius: 12px;
   border: none;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+
+  mat-card-title {
+    padding: 1rem 0;
+    font-weight: 600;
+  }
 }
 
-.empty-state {
-  text-align: center;
-  padding: 4rem;
-  color: #64748b;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+.spinning {
+  animation: rotate 1s linear infinite;
+}
 
-  .empty-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    color: #cbd5e1;
-  }
-
-  code {
-    background: #f1f5f9;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    color: #475569;
-  }
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

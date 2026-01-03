@@ -1,22 +1,22 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-import-excel-dialog',
+    selector: 'app-file-import-dialog',
     standalone: true,
     imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule],
     template: `
-    <h2 mat-dialog-title>Importar Catálogo Excel</h2>
+    <h2 mat-dialog-title>{{ title }}</h2>
     <mat-dialog-content>
       <div class="upload-container">
         <div class="drop-zone" (click)="fileInput.click()" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
           <mat-icon class="upload-icon">cloud_upload</mat-icon>
           <p *ngIf="!selectedFile">Arrastra tu archivo aquí o haz clic para seleccionar</p>
           <p *ngIf="selectedFile" class="file-name">📄 {{ selectedFile.name }}</p>
-          <input type="file" #fileInput hidden accept=".xlsx" (change)="onFileSelected($event)">
+          <input type="file" #fileInput hidden [accept]="accept" (change)="onFileSelected($event)">
         </div>
       </div>
     </mat-dialog-content>
@@ -56,8 +56,11 @@ import { MatIconModule } from '@angular/material/icon';
     }
   `]
 })
-export class ImportExcelDialogComponent {
-    dialogRef = inject(MatDialogRef<ImportExcelDialogComponent>);
+export class FileImportDialogComponent {
+    @Input() accept: string = '.xlsx';
+    @Input() title: string = 'Importar Archivo';
+
+    dialogRef = inject(MatDialogRef<FileImportDialogComponent>);
     selectedFile: File | null = null;
 
     onFileSelected(event: any) {

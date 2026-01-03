@@ -8,15 +8,20 @@ import { ExcelManagerService } from 'src/app/core/services/excel-manager.service
 import { GoogleSheetsService } from 'src/app/core/services/google-sheets.service';
 import { CatalogSyncService } from 'src/app/core/services/catalog-sync.service';
 import { MetaProduct, ChangeRecord } from 'src/app/core/models/meta-model';
-import { ProductDialogComponent } from '../product-dialog/product-dialog.component';
-import { ChangesDialogComponent } from '../changes-dialog/changes-dialog.component';
-import { ImportExcelDialogComponent } from '../import-excel-dialog/import-excel-dialog.component';
+import { ProductDialogComponent } from 'src/app/core/modules/product-dialog/product-dialog.component';
+import { ChangesDialogComponent } from 'src/app/shared/components/changes-dialog/changes-dialog.component';
+import { FileImportDialogComponent } from 'src/app/shared/components/file-import-dialog/file-import-dialog.component';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/core/models/table-config';
 
 interface MetaProductUI extends MetaProduct {
     syncState?: 'new' | 'changed' | 'updated' | 'archived' | string;
 }
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-catalog-online',
@@ -25,7 +30,11 @@ interface MetaProductUI extends MetaProduct {
         CommonModule,
         MatDialogModule,
         FormsModule,
-        SmartTableComponent
+        SmartTableComponent,
+        MatButtonModule,
+        MatIconModule,
+        MatCardModule,
+        RouterModule
     ],
     templateUrl: './catalog-online.component.html',
     styleUrls: ['./catalog-online.component.scss']
@@ -128,10 +137,12 @@ export class CatalogOnlineComponent implements OnInit {
     }
 
     openImportDialog() {
-        const dialogRef = this.dialog.open(ImportExcelDialogComponent, {
+        const dialogRef = this.dialog.open(FileImportDialogComponent, {
             width: '600px',
             disableClose: true
         });
+        dialogRef.componentInstance.accept = '.xlsx';
+        dialogRef.componentInstance.title = 'Importar Catálogo Excel';
 
         dialogRef.afterClosed().subscribe(async (file: File | undefined) => {
             if (file) {

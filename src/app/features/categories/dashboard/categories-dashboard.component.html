@@ -1,0 +1,50 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-title-wrapper">
+      <button mat-icon-button routerLink="/" class="back-button">
+        <mat-icon>home</mat-icon>
+      </button>
+      <div class="header-content">
+        <h1>Gestión de Categorías</h1>
+        <p class="subtitle">Administra la jerarquía de categorías del catálogo</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button mat-flat-button color="primary" (click)="addCategory()">
+        <mat-icon>add</mat-icon>
+        Nueva Categoría
+      </button>
+      <button mat-icon-button (click)="loadCategories()" [disabled]="isLoading()" class="refresh-button">
+        <mat-icon [class.spinning]="isLoading()">refresh</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="stat-icon categories-icon">category</mat-icon>
+        <mat-card-title>Total Categorías</mat-card-title>
+        <mat-card-subtitle>En la jerarquía</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <span class="stat-value">{{ categories().length }}</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Jerarquía de Categorías</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-smart-table
+        [data]="categories()"
+        [config]="tableConfig"
+        [isLoading]="isLoading()"
+        (edit)="editCategory($event)"
+        (delete)="deleteCategory($event)">
+      </app-smart-table>
+    </mat-card-content>
+  </mat-card>
+</div>

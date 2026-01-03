@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="category-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" placeholder="Ej. Perfumes">
+      <mat-error *ngIf="form.get('name')?.hasError('required')">
+        El nombre es obligatorio
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Slug (URL SEO)</mat-label>
+      <input matInput formControlName="slug" placeholder="Ej. perfumes-mujer">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Categoría Padre</mat-label>
+      <mat-select formControlName="parent_id">
+        <mat-option [value]="null">Ninguna (Categoría Raíz)</mat-option>
+        <mat-option *ngFor="let cat of categories" [value]="cat.id">
+          {{ cat.full_path || cat.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="description" rows="3" placeholder="Descripción de la categoría..."></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="form.invalid">
+    {{ isEditMode ? 'Actualizar' : 'Crear' }}
+  </button>
+</mat-dialog-actions>
