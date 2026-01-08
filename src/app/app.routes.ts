@@ -7,6 +7,7 @@ import { CampaignDashboardComponent } from './features/campaigns/dashboard/campa
 import { ScrapsDashboardComponent } from './features/scraps/dashboard/scraps-dashboard.component';
 import { ScrapDetailComponent } from './features/scraps/detail/scrap-detail.component';
 import { SyncProposalComponent } from './features/scraps/sync-proposal/sync-proposal.component';
+import { ProductScrapDetailComponent } from './features/scraps/product-detail/product-scrap-detail.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -15,6 +16,7 @@ export const routes: Routes = [
     { path: 'campaigns', component: CampaignDashboardComponent },
     { path: 'scraps', component: ScrapsDashboardComponent },
     { path: 'scraps/sync', component: SyncProposalComponent },
+    { path: 'scraps/:scrapId/products/:productId', component: ProductScrapDetailComponent },
     { path: 'scraps/:id', component: ScrapDetailComponent },
     { path: '**', component: HomeComponent }
 ];

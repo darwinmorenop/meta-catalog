@@ -9,6 +9,7 @@ import { ScrapService } from 'src/app/core/services/scrap/scrap.service';
 import { ProductScrapEntity } from 'src/app/shared/entity/view/product.scrap.entity';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
 
 @Component({
   selector: 'app-scrap-detail',
@@ -29,6 +30,8 @@ export class ScrapDetailComponent implements OnInit {
   private scrapService = inject(ScrapService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private loggerService = inject(LoggerService);
+  private readonly CLASS_NAME = ScrapDetailComponent.name;
 
   scrapId: number | null = null;
   products = signal<ProductScrapEntity[]>([]);
@@ -75,5 +78,11 @@ export class ScrapDetailComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/scraps']);
+  }
+
+  onProductSelected(product: ProductScrapEntity) {
+    this.loggerService.debug(`Product selected: ${JSON.stringify(product)}`, this.CLASS_NAME);
+    this.scrapService.setCurrentProduct(product);
+    this.router.navigate(['/scraps', this.scrapId, 'products', product.product_id]);
   }
 }

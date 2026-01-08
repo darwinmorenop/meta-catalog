@@ -76,6 +76,31 @@ export class ScrapDaoSupabaseService {
     );
   }
 
+  getProductScrapDetail(scrapId: number, productId: number): Observable<ProductScrapEntity | null> {
+    const promise = this.supabase
+      .from('v_product_for_scrapping')
+      .select('*')
+      .eq('source_scrap_id', scrapId)
+      .eq('product_id', productId)
+      .single();
+    return from(promise).pipe(
+      tap(response => {
+        if (response.error) throw response.error;
+      }),
+      map(response => {
+        if (!response.data) return null;
+        return {
+          ...response.data,
+          last_scraped_at: this.dateUtils.parseDbDate(response.data.last_scraped_at),
+        } as ProductScrapEntity;
+      }),
+      catchError(error => {
+        console.error('Error fetching product scrap detail:', error);
+        return of(null);
+      })
+    );
+  }
+
   getAll(): Observable<ScrapEntity[]> {
     return from(
       this.supabase

@@ -30,6 +30,7 @@
             <app-smart-table 
                 [data]="products()" 
                 [config]="tableConfig" 
+                (selectionChange)="onProductSelected($event)"
                 [isLoading]="isLoading()">
             </app-smart-table>
         </div>

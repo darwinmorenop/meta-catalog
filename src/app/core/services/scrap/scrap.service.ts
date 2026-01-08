@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, forkJoin, of } from 'rxjs';
 import { ProductScrapEntity } from 'src/app/shared/entity/view/product.scrap.entity';
@@ -19,8 +19,20 @@ export class ScrapService {
     private categories = ['perfumes'];
     private http: HttpClient = inject(HttpClient);
     private scrapDaoSupabaseService: ScrapDaoSupabaseService = inject(ScrapDaoSupabaseService);
-    private intercomLoggerService: LoggerService = inject(LoggerService);
+    private loggerService: LoggerService = inject(LoggerService);
     private readonly CLASS_NAME = ScrapService.name;
+    private currentProduct = signal<ProductScrapEntity | null>(null);
+
+    setCurrentProduct(product: ProductScrapEntity | null) {
+        this.loggerService.debug(`Setting current product: ${JSON.stringify(product)}`, this.CLASS_NAME);
+        this.currentProduct.set(product);
+    }
+
+    getAndClearCurrentProduct(): ProductScrapEntity | null {
+        const product = this.currentProduct();
+        this.currentProduct.set(null);
+        return product;
+    }
 
     getAll(): Observable<ScrapEntity[]> {
         return this.scrapDaoSupabaseService.getAll();
@@ -32,6 +44,10 @@ export class ScrapService {
 
     getProductsByScrapId(scrapId: number): Observable<ProductScrapEntity[]> {
         return this.scrapDaoSupabaseService.getProductsScrapById(scrapId);
+    }
+
+    getProductScrapDetail(scrapId: number, productId: number): Observable<ProductScrapEntity | null> {
+        return this.scrapDaoSupabaseService.getProductScrapDetail(scrapId, productId);
     }
 
     applyChanges(changes: ProductScrapSyncPendingChange[], scrapId: number): Observable<any> {
@@ -103,8 +119,8 @@ export class ScrapService {
                         }
                     });
                 }
-                this.intercomLoggerService.info(`Synced ${changes.length} products`, this.CLASS_NAME);
-                this.intercomLoggerService.debug(`Synced products:${JSON.stringify(changes)}`, this.CLASS_NAME);
+                this.loggerService.info(`Synced ${changes.length} products`, this.CLASS_NAME);
+                this.loggerService.debug(`Synced products:${JSON.stringify(changes)}`, this.CLASS_NAME);
                 return changes;
             })
         );

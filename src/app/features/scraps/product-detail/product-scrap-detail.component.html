@@ -1,0 +1,95 @@
+<div class="detail-container">
+    <mat-card class="header-card">
+        <div class="header-content">
+            <div class="title-section">
+                <div class="title-with-back">
+                    <button mat-icon-button (click)="goBack()" class="back-button">
+                        <mat-icon>arrow_back</mat-icon>
+                    </button>
+                    <h1>Detalle del Producto en Scrap</h1>
+                </div>
+                <p>Información capturada para este producto específico</p>
+            </div>
+        </div>
+    </mat-card>
+
+    @if (isLoading()) {
+        <div class="loading-container">
+            <mat-spinner diameter="50"></mat-spinner>
+            <p>Cargando detalles...</p>
+        </div>
+    } @else if (product()) {
+        <div class="content-grid">
+            <mat-card class="info-card main-info">
+                <mat-card-header>
+                    <mat-card-title>{{ product()!.product_name }}</mat-card-title>
+                    <mat-card-subtitle>Ref. Fabricante: {{ product()!.product_manufacturer_ref }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="status-badge-container">
+                        <mat-chip-listbox>
+                            <mat-chip [color]="product()!.source_status === 'created' ? 'primary' : (product()!.source_status === 'updated' ? 'accent' : 'warn')" selected>
+                                {{ product()!.source_status | uppercase }}
+                            </mat-chip>
+                            <mat-chip [color]="product()!.product_status === 'active' ? 'primary' : 'warn'" selected>
+                                PRODUCTO: {{ product()!.product_status | uppercase }}
+                            </mat-chip>
+                        </mat-chip-listbox>
+                    </div>
+                    
+                    <mat-divider></mat-divider>
+                    
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">Precio Venta (Scrap)</span>
+                            <span class="value currency">{{ product()!.source_sale_price | currency:'EUR':'symbol':'1.2-2' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Stock (Scrap)</span>
+                            <span class="value">{{ product()!.source_stock }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Último scraping</span>
+                            <span class="value">{{ product()!.last_scraped_at | date:'dd/MM/yyyy HH:mm' }}</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="info-card source-info">
+                <mat-card-header>
+                    <mat-card-title>Origen y Enlaces</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="detail-grid">
+                        <div class="detail-item full-width">
+                            <span class="label">URL Fuente</span>
+                            <a [href]="product()!.source_url" target="_blank" class="value link">
+                                {{ product()!.source_url }}
+                                <mat-icon>open_in_new</mat-icon>
+                            </a>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Referencia en Fuente</span>
+                            <span class="value">{{ product()!.source_url_source }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">ID Scrap</span>
+                            <span class="value">{{ product()!.source_scrap_id }}</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    } @else {
+        <div class="error-container">
+            <mat-card>
+                <mat-card-content>
+                    <mat-icon color="warn">error</mat-icon>
+                    <p>No se encontró la información del producto para este scrap.</p>
+                    <button mat-button color="primary" (click)="goBack()">Volver</button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    }
+</div>
