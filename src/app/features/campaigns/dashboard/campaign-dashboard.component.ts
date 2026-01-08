@@ -8,7 +8,7 @@ import { CampaignService } from 'src/app/core/services/campaigns/campaign.servic
 import { CampaignEntity } from 'src/app/shared/entity/view/campaign.entity';
 import { Observable, map, of, shareReplay, BehaviorSubject, tap, catchError, switchMap } from 'rxjs';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
-import { TableConfig } from 'src/app/core/models/table-config';
+import { TableConfig } from 'src/app/shared/models/table-config';
 import { RouterModule } from '@angular/router';
 import { CampaignDialogComponent } from '../dialog/campaign.dialog.component';
 

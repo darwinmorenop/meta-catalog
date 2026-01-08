@@ -39,20 +39,6 @@ export interface MetaProduct {
   [key: string]: any;
 }
 
-export interface BackendItem {
-  code: string;
-  productCommercialCode: string; // Was code
-  summary: string; // Was name/description
-  originalPrice: number; // Was price (numeric?)
-  sale_price?: number; // Keeping optional if needed, or derived
-  url: string;
-  imageUrl: string;
-  secondImageUrl?: string;
-  totalStock: number;
-  name: string;
-  description?: string;
-}
-
 export interface ChangeRecord {
   type: 'UPDATE' | 'NEW';
   product: MetaProduct;

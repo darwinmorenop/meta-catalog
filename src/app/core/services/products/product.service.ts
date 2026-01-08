@@ -15,7 +15,7 @@ export class ProductService {
     constructor() { }
 
     getAll(): Observable<Product[]> {
-        return this.productDaoSupabaseService.getProducts().pipe(
+        return this.productDaoSupabaseService.getProductsComplete().pipe(
             map(products => products.map(product => this.productUtilsService.mapProduct(product)))
         );
     }

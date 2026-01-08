@@ -1,0 +1,16 @@
+export interface ProductScrapEntity {
+    product_id: number,
+    product_manufacturer_ref: string,
+    product_name: string,
+    product_status: "archived" | "active",
+    product_description: string,
+    product_summary: string,
+    source_status: "updated" | "created" | "archived",
+    source_stock: number,
+    source_original_price: number,
+    source_sale_price: number,
+    source_url: string,
+    source_url_source: string,
+    source_scrap_id: number,
+    last_scraped_at: Date,
+}

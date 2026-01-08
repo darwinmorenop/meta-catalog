@@ -8,7 +8,7 @@ import { Product } from 'src/app/core/models/products/product.model';
 import { Observable, map, of, shareReplay, BehaviorSubject, tap, catchError } from 'rxjs';
 import { ProductStatusEnum } from 'src/app/core/models/products/product.status.enum';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
-import { TableConfig } from 'src/app/core/models/table-config';
+import { TableConfig } from 'src/app/shared/models/table-config';
 import { RouterModule } from '@angular/router';
 
 @Component({

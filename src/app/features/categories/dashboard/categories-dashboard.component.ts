@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CategoryService } from 'src/app/core/services/categories/category.service';
 import { CategoryHierarchyEntity } from 'src/app/shared/entity/view/category.hierarchy.entity';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
-import { TableConfig } from 'src/app/core/models/table-config';
+import { TableConfig } from 'src/app/shared/models/table-config';
 import { CategoryDialogComponent } from 'src/app/features/categories/dialog/category.dialog.component';
 import { CategoryEntity } from 'src/app/shared/entity/category.entity';
 import { MatCardModule } from '@angular/material/card';

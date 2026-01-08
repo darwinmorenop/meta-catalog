@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import { TableConfig, TableColumn } from 'src/app/core/models/table-config';
+import { TableConfig, TableColumn } from 'src/app/shared/models/table-config';
 
 @Component({
     selector: 'app-smart-table',
@@ -75,9 +75,22 @@ export class SmartTableComponent implements AfterViewInit {
         }
         if (changes['config'] && this.config) {
             this.displayedColumns = this.config.columns.map(c => c.key);
-            if (this.edit.observed || this.delete.observed) {
+            
+            // Normalize Actions Config
+            this.config.actions = {
+                show: this.config.actions?.show ?? true,
+                edit: this.config.actions?.edit ?? true,
+                editIcon: this.config.actions?.editIcon ?? 'edit',
+                delete: this.config.actions?.delete ?? true,
+                deleteIcon: this.config.actions?.deleteIcon ?? 'delete',
+                view: this.config.actions?.view ?? false,
+                viewIcon: this.config.actions?.viewIcon ?? 'visibility'
+            };
+
+            if (this.config.actions.show) {
                 this.displayedColumns.push('actions');
             }
+            
             this.initFilters();
             this.setupFilterPredicate();
         }

@@ -1,0 +1,92 @@
+<div class="dashboard-container">
+    <mat-card class="header-card">
+        <div class="header-content">
+            <div class="title-section">
+                <div class="title-with-back">
+                    <button mat-icon-button (click)="goBack()" class="back-button">
+                        <mat-icon>arrow_back</mat-icon>
+                    </button>
+                    <h1>Sincronización de Catálogo</h1>
+                </div>
+                <p>Configura las opciones y carga la propuesta de cambios</p>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h3>Opciones de Sincronización</h3>
+            <div class="options-grid">
+                <mat-checkbox [(ngModel)]="syncOptions.syncStatus">Sincronizar Estado (Nuevos/Archivados)</mat-checkbox>
+                <mat-checkbox [(ngModel)]="syncOptions.syncPrices">Sincronizar Precios</mat-checkbox>
+                <mat-checkbox [(ngModel)]="syncOptions.syncStock">Sincronizar Stock</mat-checkbox>
+                <mat-checkbox [(ngModel)]="syncOptions.syncProperties">Sincronizar Propiedades (Nombre, Desc, etc)</mat-checkbox>
+            </div>
+            <div class="config-actions">
+                <button mat-flat-button color="primary" (click)="loadProposal()" [disabled]="isSyncing()">
+                    <mat-icon [class.spinning]="isSyncing()">sync</mat-icon>
+                    Cargar Propuesta
+                </button>
+            </div>
+        </div>
+    </mat-card>
+
+    @if (showProposal()) {
+        <mat-card class="proposal-card">
+            <mat-card-header>
+                <mat-card-title>Propuesta Detectada</mat-card-title>
+                <div class="header-actions">
+                    <button mat-flat-button color="warn" (click)="applyAll('ALL')" [disabled]="isSyncing()">
+                        Aplicar Todo
+                    </button>
+                </div>
+            </mat-card-header>
+            
+            <mat-tab-group class="proposal-tabs">
+                <mat-tab label="Nuevos ({{createChanges().length}})">
+                    <div class="tab-content">
+                        <div class="tab-actions" *ngIf="createChanges().length > 0">
+                            <button mat-raised-button color="primary" (click)="applyAll('CREATE')" [disabled]="isSyncing()">
+                                Guardar Todos
+                            </button>
+                        </div>
+                        <app-smart-table 
+                            [data]="createChanges()" 
+                            [config]="proposalTableConfig" 
+                            [isLoading]="isSyncing()"
+                            (edit)="applySingle($event)">
+                        </app-smart-table>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Actualizaciones ({{updateChanges().length}})">
+                    <div class="tab-content">
+                        <div class="tab-actions" *ngIf="updateChanges().length > 0">
+                            <button mat-raised-button color="accent" (click)="applyAll('UPDATE')" [disabled]="isSyncing()">
+                                Guardar Todas
+                            </button>
+                        </div>
+                        <app-smart-table 
+                            [data]="updateChanges()" 
+                            [config]="proposalTableConfig" 
+                            [isLoading]="isSyncing()"
+                            (edit)="applySingle($event)">
+                        </app-smart-table>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Para Archivar ({{archiveChanges().length}})">
+                    <div class="tab-content">
+                        <div class="tab-actions" *ngIf="archiveChanges().length > 0">
+                            <button mat-raised-button color="warn" (click)="applyAll('ARCHIVE')" [disabled]="isSyncing()">
+                                Archivar Todos
+                            </button>
+                        </div>
+                        <app-smart-table 
+                            [data]="archiveChanges()" 
+                            [config]="proposalTableConfig" 
+                            [isLoading]="isSyncing()"
+                            (edit)="applySingle($event)">
+                        </app-smart-table>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card>
+    }
+</div>

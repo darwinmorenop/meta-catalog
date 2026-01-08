@@ -13,6 +13,9 @@ import { MatButtonModule } from '@angular/material/button';
 export class HomeComponent {
   private router = inject(Router);
 
+  constructor() {
+  }
+
   goToProducts() {
     this.router.navigate(['/products']);
   }
@@ -23,5 +26,9 @@ export class HomeComponent {
 
   goToCategories() {
     this.router.navigate(['/categories']);
+  }
+
+  goToScraps() {
+    this.router.navigate(['/scraps']);
   }
 }

@@ -43,7 +43,12 @@
 
                         <!-- Currency Type (Simple placeholder) -->
                         <span *ngSwitchCase="'currency'">
-                            {{ element[col.key] }}
+                            {{ element[col.key] | currency:'EUR':'symbol':'1.2-2' }}
+                        </span>
+
+                        <!-- Date Type -->
+                        <span *ngSwitchCase="'date'">
+                            {{ element[col.key] | date: 'dd/MM/yyyy HH:mm' }}
                         </span>
 
                         <!-- Default Text -->
@@ -58,11 +63,14 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Acciones </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-icon-button color="primary" (click)="edit.emit(element); $event.stopPropagation()">
-                        <mat-icon>edit</mat-icon>
+                    <button *ngIf="config.actions?.view" mat-icon-button color="primary" (click)="selectionChange.emit(element); $event.stopPropagation();">
+                        <mat-icon>{{config.actions?.viewIcon}}</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="delete.emit(element); $event.stopPropagation()">
-                        <mat-icon>delete</mat-icon>
+                    <button *ngIf="config.actions?.edit" mat-icon-button color="primary" (click)="edit.emit(element); $event.stopPropagation()">
+                        <mat-icon>{{config.actions?.editIcon}}</mat-icon>
+                    </button>
+                    <button *ngIf="config.actions?.delete" mat-icon-button color="warn" (click)="delete.emit(element); $event.stopPropagation()">
+                        <mat-icon>{{config.actions?.deleteIcon}}</mat-icon>
                     </button>
                 </td>
             </ng-container>
