@@ -5,6 +5,8 @@ export interface ProductScrapEntity {
     product_status: "archived" | "active",
     product_description: string,
     product_summary: string,
+    source_id: number,
+    source_is_active: boolean,
     source_status: "updated" | "created" | "archived",
     source_stock: number,
     source_original_price: number,
@@ -12,5 +14,7 @@ export interface ProductScrapEntity {
     source_url: string,
     source_url_source: string,
     source_scrap_id: number,
-    last_scraped_at: Date,
+    source_scrap_client: string,
+    source_scraped_at: Date,
+    campaign_name: string,
 }

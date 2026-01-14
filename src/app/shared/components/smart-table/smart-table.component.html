@@ -51,6 +51,18 @@
                             {{ element[col.key] | date: 'dd/MM/yyyy HH:mm' }}
                         </span>
 
+                        <!-- Config Type (Generic Icons) -->
+                        <div *ngSwitchCase="'config'" class="config-icons">
+                            <ng-container *ngFor="let iconConfig of element[col.key]">
+                                <mat-icon 
+                                    *ngIf="iconConfig.active" 
+                                    [color]="iconConfig.color || 'primary'" 
+                                    [title]="iconConfig.tooltip || ''">
+                                    {{iconConfig.icon}}
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+
                         <!-- Default Text -->
                         <span *ngSwitchDefault>
                             {{ element[col.key] }}
@@ -63,7 +75,7 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Acciones </th>
                 <td mat-cell *matCellDef="let element">
-                    <button *ngIf="config.actions?.view" mat-icon-button color="primary" (click)="selectionChange.emit(element); $event.stopPropagation();">
+                    <button *ngIf="config.actions?.view" mat-icon-button color="primary" (click)="view.emit(element); $event.stopPropagation();">
                         <mat-icon>{{config.actions?.viewIcon}}</mat-icon>
                     </button>
                     <button *ngIf="config.actions?.edit" mat-icon-button color="primary" (click)="edit.emit(element); $event.stopPropagation()">

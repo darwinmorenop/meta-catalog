@@ -18,6 +18,58 @@
             </div>
         </div>
     </mat-card>
+    
+    @if (scrapSummary()) {
+        <div class="summary-grid">
+            <mat-card class="summary-card">
+                <mat-card-header>
+                    <mat-card-title>Estadísticas del Scrap</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="label">Creados:</span>
+                            <span class="value created">{{scrapSummary()?.total_created}}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Actualizados:</span>
+                            <span class="value updated">{{scrapSummary()?.total_updated}}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Archivados:</span>
+                            <span class="value archived">{{scrapSummary()?.total_archived}}</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="summary-card">
+                <mat-card-header>
+                    <mat-card-title>Configuración Aplicada</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="config-display">
+                        <div class="config-item" [class.active]="scrapSummary()?.config?.syncStatus">
+                            <mat-icon>{{scrapSummary()?.config?.syncStatus ? 'sync' : 'sync_disabled'}}</mat-icon>
+                            <span>Estado</span>
+                        </div>
+                        <div class="config-item" [class.active]="scrapSummary()?.config?.syncPrices">
+                            <mat-icon>{{scrapSummary()?.config?.syncPrices ? 'payments' : 'money_off'}}</mat-icon>
+                            <span>Precios</span>
+                        </div>
+                        <div class="config-item" [class.active]="scrapSummary()?.config?.syncStock">
+                            <mat-icon>{{scrapSummary()?.config?.syncStock ? 'inventory_2' : 'block'}}</mat-icon>
+                            <span>Stock</span>
+                        </div>
+                        <div class="config-item" [class.active]="scrapSummary()?.config?.syncProperties">
+                            <mat-icon>{{scrapSummary()?.config?.syncProperties ? 'settings_suggest' : 'settings_off'}}</mat-icon>
+                            <span>Propiedades</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    }
 
     <mat-card class="table-card">
         <div class="table-container">
@@ -30,7 +82,7 @@
             <app-smart-table 
                 [data]="products()" 
                 [config]="tableConfig" 
-                (selectionChange)="onProductSelected($event)"
+                (view)="onProductView($event)"
                 [isLoading]="isLoading()">
             </app-smart-table>
         </div>

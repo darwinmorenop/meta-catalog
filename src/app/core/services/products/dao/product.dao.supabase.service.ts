@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { ProductCompleteEntity } from 'src/app/shared/entity/view/product.complete.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { ProductEntity } from 'src/app/shared/entity/product.entity';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,8 @@ import { ProductEntity } from 'src/app/shared/entity/product.entity';
 export class ProductDaoSupabaseService {
   private supabase: SupabaseClient;
   private dateUtils = inject(DateUtilsService);
+  private logger = inject(LoggerService);
+  private readonly CLASS_NAME = ProductDaoSupabaseService.name;
 
   constructor() {
     this.supabase = createClient(
@@ -22,15 +25,16 @@ export class ProductDaoSupabaseService {
   }
 
   getProductsComplete(): Observable<ProductCompleteEntity[]> {
+    const context = 'getProductsComplete'
     const promise = this.supabase
       .from('v_product_complete')
       .select('*');
-    
+
     return from(promise).pipe(
       tap(response => {
         if (response.error) throw response.error;
       }),
-      map(response => {        
+      map(response => {
         const data = (response.data as any[]) || [];
         return data.map(item => ({
           ...item,
@@ -39,22 +43,23 @@ export class ProductDaoSupabaseService {
         })) as ProductCompleteEntity[];
       }),
       catchError(error => {
-        console.error('Error fetching products:', error);
+        this.logger.error('Error fetching products:', error, this.CLASS_NAME, context);
         return of([]);
       })
     );
   }
 
   getProducts(): Observable<ProductEntity[]> {
+    const context = 'getProducts'
     const promise = this.supabase
       .from('product')
       .select('*');
-    
+
     return from(promise).pipe(
       tap(response => {
         if (response.error) throw response.error;
       }),
-      map(response => {        
+      map(response => {
         const data = (response.data as any[]) || [];
         return data.map(item => ({
           ...item,
@@ -63,7 +68,7 @@ export class ProductDaoSupabaseService {
         })) as ProductEntity[];
       }),
       catchError(error => {
-        console.error('Error fetching products:', error);
+        this.logger.error('Error fetching products:', error, this.CLASS_NAME, context);
         return of([]);
       })
     );

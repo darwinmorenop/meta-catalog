@@ -12,6 +12,7 @@ import { CategoryDialogComponent } from 'src/app/features/categories/dialog/cate
 import { CategoryEntity } from 'src/app/shared/entity/category.entity';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
 
 @Component({
   selector: 'app-categories-dashboard',
@@ -32,6 +33,8 @@ import { RouterModule } from '@angular/router';
 export class CategoriesDashboardComponent implements OnInit {
   private categoryService = inject(CategoryService);
   private dialog = inject(MatDialog);
+  private loggerService = inject(LoggerService)
+  private readonly CLASS_NAME = CategoriesDashboardComponent.name
 
   categories = signal<CategoryHierarchyEntity[]>([]);
   isLoading = signal<boolean>(false);
@@ -53,6 +56,7 @@ export class CategoriesDashboardComponent implements OnInit {
   }
 
   loadCategories() {
+    const  context = 'loadCategories';
     this.isLoading.set(true);
     this.categoryService.getCategoriesHierarchy().subscribe({
       next: (data) => {
@@ -60,7 +64,7 @@ export class CategoriesDashboardComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Error loading categories:', err);
+        this.loggerService.error('Error loading categories:', err, this.CLASS_NAME, context);
         this.isLoading.set(false);
       }
     });

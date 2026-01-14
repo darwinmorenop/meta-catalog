@@ -1,0 +1,51 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon color="primary">info</mat-icon>
+    Detalle de Cambios
+  </h2>
+  
+  <mat-dialog-content class="dialog-content">
+    <div class="product-info">
+      <h3>{{ data.productName }}</h3>
+      <p class="ref">Ref: {{ data.manufacturerRef }}</p>
+      <span class="type-badge" [ngClass]="data.type.toLowerCase()">
+        {{ data.type }}
+      </span>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="changes-section">
+      <h4>Cambios en campos:</h4>
+      
+      <div *ngIf="data.fields.length === 0" class="no-changes">
+        No hay cambios específicos detectados.
+      </div>
+
+      <div *ngFor="let field of data.fields" class="field-change">
+        <div class="field-name">{{ field.field | titlecase }}</div>
+        <div class="diff-container">
+          <div class="old-value">
+            <span class="label">Anterior:</span>
+            <span class="val">{{ field.oldValue !== null ? field.oldValue : 'N/A' }}</span>
+          </div>
+          <mat-icon class="arrow">arrow_forward</mat-icon>
+          <div class="new-value">
+            <span class="label">Nuevo:</span>
+            <span class="val">{{ field.newValue }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="original-data" *ngIf="data.type === 'CREATE'">
+      <mat-divider></mat-divider>
+      <h4>Datos del Scrap:</h4>
+      <pre>{{ data.originalScrap | json }}</pre>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">Cerrar</button>
+  </mat-dialog-actions>
+</div>

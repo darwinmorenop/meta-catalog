@@ -15,35 +15,65 @@
         <div class="config-section">
             <h3>Opciones de Sincronización</h3>
             <div class="options-grid">
-                <mat-checkbox [(ngModel)]="syncOptions.syncStatus">Sincronizar Estado (Nuevos/Archivados)</mat-checkbox>
-                <mat-checkbox [(ngModel)]="syncOptions.syncPrices">Sincronizar Precios</mat-checkbox>
-                <mat-checkbox [(ngModel)]="syncOptions.syncStock">Sincronizar Stock</mat-checkbox>
-                <mat-checkbox [(ngModel)]="syncOptions.syncProperties">Sincronizar Propiedades (Nombre, Desc, etc)</mat-checkbox>
+                <mat-checkbox [disabled]="true" [(ngModel)]="syncOptions.syncStatus">Sincronizar Estado (Nuevos/Archivados)</mat-checkbox>
+                <mat-checkbox [disabled]="scrapId() > 0" [(ngModel)]="syncOptions.syncPrices">Sincronizar Precios</mat-checkbox>
+                <mat-checkbox [disabled]="scrapId() > 0" [(ngModel)]="syncOptions.syncStock">Sincronizar Stock</mat-checkbox>
+                <mat-checkbox [disabled]="scrapId() > 0" [(ngModel)]="syncOptions.syncProperties">Sincronizar Propiedades (Nombre, Desc, etc)</mat-checkbox>
             </div>
             <div class="config-actions">
-                <button mat-flat-button color="primary" (click)="loadProposal()" [disabled]="isSyncing()">
+                <button [disabled]="scrapId() > 0 || isSyncing()" mat-flat-button color="primary" (click)="loadProposal()">
                     <mat-icon [class.spinning]="isSyncing()">sync</mat-icon>
                     Cargar Propuesta
                 </button>
             </div>
         </div>
     </mat-card>
+    
+    @if (scrapInfo() || clientName() || scrapTotalSize() > 0) {
+        <div class="summary-grid">
+            @if (scrapInfo()) {
+                <mat-card class="summary-card">
+                    <mat-card-header>
+                        <mat-card-title>Detalles del Scrap Origen</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p><strong>ID:</strong> {{scrapInfo()?.id}}</p>
+                        <p><strong>Cliente:</strong> {{scrapInfo()?.client}}</p>
+                        <p><strong>Fecha Creación:</strong> {{scrapInfo()?.created_at | date:'dd/MM/yyyy HH:mm'}}</p>
+                    </mat-card-content>
+                </mat-card>
+            }
+
+            @if (clientName() || scrapTotalSize() > 0) {
+                <mat-card class="summary-card">
+                    <mat-card-header>
+                        <mat-card-title>Configuración de Sincronización</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p><strong>Cliente Detectado:</strong> {{clientName()}}</p>
+                        <p><strong>Tamaño:</strong> {{scrapTotalSize()}}</p>
+                        <p><strong>Estado:</strong> Propuesta Cargada</p>
+                    </mat-card-content>
+                </mat-card>
+            }
+        </div>
+    }
 
     @if (showProposal()) {
         <mat-card class="proposal-card">
             <mat-card-header>
                 <mat-card-title>Propuesta Detectada</mat-card-title>
                 <div class="header-actions">
-                    <button mat-flat-button color="warn" (click)="applyAll('ALL')" [disabled]="isSyncing()">
-                        Aplicar Todo
+                    <button mat-flat-button color="warn" (click)="applyAll('ALL')" [disabled]="isSyncing() || (createPendingCount() + updatePendingCount() + archivePendingCount()) === 0">
+                        Aplicar Todo ({{createPendingCount() + updatePendingCount() + archivePendingCount()}})
                     </button>
                 </div>
             </mat-card-header>
             
             <mat-tab-group class="proposal-tabs">
-                <mat-tab label="Nuevos ({{createChanges().length}})">
+                <mat-tab label="Nuevos ({{createPendingCount()}})">
                     <div class="tab-content">
-                        <div class="tab-actions" *ngIf="createChanges().length > 0">
+                        <div class="tab-actions" *ngIf="createPendingCount() > 0">
                             <button mat-raised-button color="primary" (click)="applyAll('CREATE')" [disabled]="isSyncing()">
                                 Guardar Todos
                             </button>
@@ -52,13 +82,14 @@
                             [data]="createChanges()" 
                             [config]="proposalTableConfig" 
                             [isLoading]="isSyncing()"
-                            (edit)="applySingle($event)">
+                            (edit)="applySingle($event)"
+                            (view)="onViewDetail($event)">
                         </app-smart-table>
                     </div>
                 </mat-tab>
-                <mat-tab label="Actualizaciones ({{updateChanges().length}})">
+                <mat-tab label="Actualizaciones ({{updatePendingCount()}})">
                     <div class="tab-content">
-                        <div class="tab-actions" *ngIf="updateChanges().length > 0">
+                        <div class="tab-actions" *ngIf="updatePendingCount() > 0">
                             <button mat-raised-button color="accent" (click)="applyAll('UPDATE')" [disabled]="isSyncing()">
                                 Guardar Todas
                             </button>
@@ -67,13 +98,14 @@
                             [data]="updateChanges()" 
                             [config]="proposalTableConfig" 
                             [isLoading]="isSyncing()"
-                            (edit)="applySingle($event)">
+                            (edit)="applySingle($event)"
+                            (view)="onViewDetail($event)">
                         </app-smart-table>
                     </div>
                 </mat-tab>
-                <mat-tab label="Para Archivar ({{archiveChanges().length}})">
+                <mat-tab label="Para Archivar ({{archivePendingCount()}})">
                     <div class="tab-content">
-                        <div class="tab-actions" *ngIf="archiveChanges().length > 0">
+                        <div class="tab-actions" *ngIf="archivePendingCount() > 0">
                             <button mat-raised-button color="warn" (click)="applyAll('ARCHIVE')" [disabled]="isSyncing()">
                                 Archivar Todos
                             </button>
@@ -82,7 +114,8 @@
                             [data]="archiveChanges()" 
                             [config]="proposalTableConfig" 
                             [isLoading]="isSyncing()"
-                            (edit)="applySingle($event)">
+                            (edit)="applySingle($event)"
+                            (view)="onViewDetail($event)">
                         </app-smart-table>
                     </div>
                 </mat-tab>

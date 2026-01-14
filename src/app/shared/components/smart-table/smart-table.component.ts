@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit, effect, signal, OnChanges, SimpleChanges, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit, effect, signal, OnChanges, SimpleChanges, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { TableConfig, TableColumn } from 'src/app/shared/models/table-config';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
 
 @Component({
     selector: 'app-smart-table',
@@ -38,6 +39,10 @@ export class SmartTableComponent implements AfterViewInit {
     @Output() selectionChange = new EventEmitter<any>();
     @Output() edit = new EventEmitter<any>();
     @Output() delete = new EventEmitter<any>();
+    @Output() view = new EventEmitter<any>();
+
+    private loggerService = inject(LoggerService)
+    private readonly CLASS_NAME = SmartTableComponent.name
 
     dataSource = new MatTableDataSource<any>([]);
     displayedColumns: string[] = [];
@@ -75,7 +80,7 @@ export class SmartTableComponent implements AfterViewInit {
         }
         if (changes['config'] && this.config) {
             this.displayedColumns = this.config.columns.map(c => c.key);
-            
+
             // Normalize Actions Config
             this.config.actions = {
                 show: this.config.actions?.show ?? true,
@@ -90,7 +95,7 @@ export class SmartTableComponent implements AfterViewInit {
             if (this.config.actions.show) {
                 this.displayedColumns.push('actions');
             }
-            
+
             this.initFilters();
             this.setupFilterPredicate();
         }
@@ -165,12 +170,13 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     selectRow(row: any) {
+        const context = 'selectRow'
         if (this.selectedRow === row) {
             this.selectedRow = null;
         } else {
             this.selectedRow = row;
         }
-        console.log('Selected Row:', this.selectedRow);
+        this.loggerService.debug('Selected Row:', this.selectedRow, this.CLASS_NAME, context);
         this.selectionChange.emit(this.selectedRow);
     }
 }

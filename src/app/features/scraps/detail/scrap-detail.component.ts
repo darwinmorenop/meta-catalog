@@ -10,6 +10,7 @@ import { ProductScrapEntity } from 'src/app/shared/entity/view/product.scrap.ent
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
+import { ScrapSummaryEntry } from 'src/app/shared/entity/view/scrap.entry';
 
 @Component({
   selector: 'app-scrap-detail',
@@ -35,6 +36,7 @@ export class ScrapDetailComponent implements OnInit {
 
   scrapId: number | null = null;
   products = signal<ProductScrapEntity[]>([]);
+  scrapSummary = signal<ScrapSummaryEntry | null>(null);
   isLoading = signal<boolean>(false);
 
   tableConfig: TableConfig = {
@@ -56,13 +58,15 @@ export class ScrapDetailComponent implements OnInit {
       if (id) {
         this.scrapId = +id;
         this.loadProducts();
+        this.loadSummary();
       }
     });
   }
 
   loadProducts() {
+    const  context = 'loadProducts';
     if (this.scrapId === null) return;
-    
+
     this.isLoading.set(true);
     this.scrapService.getProductsByScrapId(this.scrapId).subscribe({
       next: (data) => {
@@ -70,9 +74,18 @@ export class ScrapDetailComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Error loading products for scrap:', err);
+        this.loggerService.error('Error loading products for scrap:', err, this.CLASS_NAME, context);
         this.isLoading.set(false);
       }
+    });
+  }
+
+  loadSummary() {
+    const  context = 'loadSummary';
+    if (this.scrapId === null) return;
+    this.scrapService.getSummaryById(this.scrapId).subscribe({
+      next: (summary) => this.scrapSummary.set(summary),
+      error: (err) => this.loggerService.error('Error loading summary:', err, this.CLASS_NAME, context)
     });
   }
 
@@ -80,8 +93,9 @@ export class ScrapDetailComponent implements OnInit {
     this.router.navigate(['/scraps']);
   }
 
-  onProductSelected(product: ProductScrapEntity) {
-    this.loggerService.debug(`Product selected: ${JSON.stringify(product)}`, this.CLASS_NAME);
+  onProductView(product: ProductScrapEntity) {
+    const  context = 'onProductView';
+    this.loggerService.debug(`Product selected: ${JSON.stringify(product)}`, this.CLASS_NAME, context);
     this.scrapService.setCurrentProduct(product);
     this.router.navigate(['/scraps', this.scrapId, 'products', product.product_id]);
   }

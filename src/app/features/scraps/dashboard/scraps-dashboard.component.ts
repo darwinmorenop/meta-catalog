@@ -6,10 +6,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { Router, RouterModule } from '@angular/router';
 import { ScrapService } from 'src/app/core/services/scrap/scrap.service';
-import { ScrapEntity } from 'src/app/shared/entity/scrap.entity';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { ScrapSummaryEntry } from 'src/app/shared/entity/view/scrap.entry';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
 
 @Component({
   selector: 'app-scraps-dashboard',
@@ -29,6 +29,8 @@ import { ScrapSummaryEntry } from 'src/app/shared/entity/view/scrap.entry';
 export class ScrapsDashboardComponent implements OnInit {
   private scrapService = inject(ScrapService);
   private router = inject(Router);
+  private loggerService = inject(LoggerService)
+  private readonly CLASS_NAME = ScrapsDashboardComponent.name
 
   scraps = signal<ScrapSummaryEntry[]>([]);
   isLoading = signal<boolean>(false);
@@ -41,6 +43,7 @@ export class ScrapsDashboardComponent implements OnInit {
       { key: 'total_updated', header: 'Actualizados', filterable: false },
       { key: 'total_created', header: 'Creados', filterable: false },
       { key: 'total_archived', header: 'Archivados', filterable: false },
+      { key: 'configDisplay', header: 'Config', filterable: false, type: 'config' }
     ],
     searchableFields: ['campaign_description'],
     pageSizeOptions: [10, 20, 50],
@@ -52,14 +55,24 @@ export class ScrapsDashboardComponent implements OnInit {
   }
 
   loadScraps() {
+    const context = 'loadScraps';
     this.isLoading.set(true);
     this.scrapService.getAllSummary().subscribe({
       next: (data) => {
-        this.scraps.set(data);
+        const mappedData = data.map(item => ({
+          ...item,
+          configDisplay: [
+            { icon: 'sync', tooltip: 'Sincronizar Estado', active: item.config?.syncStatus },
+            { icon: 'payments', tooltip: 'Sincronizar Precios', active: item.config?.syncPrices, color: 'accent' },
+            { icon: 'inventory_2', tooltip: 'Sincronizar Stock', active: item.config?.syncStock },
+            { icon: 'settings_suggest', tooltip: 'Sincronizar Propiedades', active: item.config?.syncProperties }
+          ]
+        }));
+        this.scraps.set(mappedData as any);
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Error loading scraps:', err);
+        this.loggerService.error('Error loading scraps:', err, this.CLASS_NAME, context);
         this.isLoading.set(false);
       }
     });
@@ -73,7 +86,7 @@ export class ScrapsDashboardComponent implements OnInit {
     this.router.navigate(['/scraps/sync']);
   }
 
-  onScrapSelected(scrap: ScrapSummaryEntry) {
+  onScrapView(scrap: ScrapSummaryEntry) {
     if (scrap && scrap.scrap_id) {
       this.router.navigate(['/scraps', scrap.scrap_id]);
     }

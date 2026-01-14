@@ -4,24 +4,36 @@
       <button mat-icon-button routerLink="/" class="back-button">
         <mat-icon>home</mat-icon>
       </button>
+      
       <div class="header-content">
         <h1>Dashboard de Campañas</h1>
-        <div class="subtitle-wrapper" *ngIf="activeCampaign$ | async as active; else noActive">
-          <mat-icon class="active-pulse">radio_button_checked</mat-icon>
-          <span class="subtitle">Campaña Activa: <strong>{{ active.name }}</strong> ({{ active.started_at | date:'dd/MM/yyyy HH:mm' }} - {{ active.finished_at | date:'dd/MM/yyyy HH:mm' }})</span>
-        </div>
-        <ng-template #noActive>
+        
+        @if (activeCampaign(); as active) {
+          <div class="subtitle-wrapper">
+            <mat-icon class="active-pulse">radio_button_checked</mat-icon>
+            <span class="subtitle">
+              Campaña Activa: <strong>{{ active.name }}</strong> 
+              ({{ active.started_at | date:'dd/MM/yyyy HH:mm' }} - {{ active.finished_at | date:'dd/MM/yyyy HH:mm' }})
+            </span>
+          </div>
+        } @else {
           <p class="subtitle">Sin campaña activa en este momento</p>
-        </ng-template>
+        }
       </div>
     </div>
+
     <div class="header-actions">
       <button mat-flat-button color="primary" (click)="addCampaign()">
         <mat-icon>add</mat-icon>
         Nueva Campaña
       </button>
-      <button mat-icon-button (click)="loadCampaigns()" [disabled]="(loading$ | async)" class="refresh-button">
-        <mat-icon [class.spinning]="(loading$ | async)">refresh</mat-icon>
+
+      <button 
+        mat-icon-button 
+        (click)="loadCampaigns()" 
+        [disabled]="campaignsResource.isLoading()" 
+        class="refresh-button">
+        <mat-icon [class.spinning]="campaignsResource.isLoading()">refresh</mat-icon>
       </button>
     </div>
   </header>
@@ -34,7 +46,7 @@
         <mat-card-subtitle>Histórico registrado</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <span class="stat-value">{{ (campaigns$ | async)?.length || 0 }}</span>
+        <span class="stat-value">{{ campaignsResource.value()?.length ?? 0 }}</span>
       </mat-card-content>
     </mat-card>
   </div>
@@ -45,9 +57,9 @@
     </mat-card-header>
     <mat-card-content>
       <app-smart-table
-        [data]="(tableData$ | async) || []"
+        [data]="tableData()"
         [config]="tableConfig"
-        [isLoading]="(loading$ | async) || false"
+        [isLoading]="campaignsResource.isLoading()"
         (edit)="editCampaign($event)"
         (delete)="deleteCampaign($event)">
       </app-smart-table>

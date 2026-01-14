@@ -133,3 +133,16 @@
     /* Orange 50 */
     border-radius: 4px;
 }
+
+.config-icons {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+
+    mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        cursor: help;
+    }
+}

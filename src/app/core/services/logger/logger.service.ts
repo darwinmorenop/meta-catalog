@@ -1,6 +1,6 @@
-import {inject, Injectable} from '@angular/core';
-import {INGXLoggerConfig, NGXLogger, NgxLoggerLevel} from 'ngx-logger';
-import {HttpHeaders} from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { INGXLoggerConfig, NGXLogger, NgxLoggerLevel } from 'ngx-logger';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +72,7 @@ export class LoggerService {
   }
 
   updateHeader(key: string, value: string, doLog?: boolean) {
+    const context = 'updateHeader'
     let httpHeaders = this.logger.getConfigSnapshot().customHttpHeaders;
     if (!httpHeaders) {
       httpHeaders = new HttpHeaders();
@@ -85,7 +86,7 @@ export class LoggerService {
     this.logger.partialUpdateConfig(loggerConfig);
     if (doLog) {
       // do not use this.info ??
-      this.logger.info(`Updated logger config with partial: ${JSON.stringify(loggerConfig)}`, this.CLASS_NAME);
+      this.logger.info(`Updated logger config with partial: ${JSON.stringify(loggerConfig)}`, this.CLASS_NAME, context);
     }
 
   }

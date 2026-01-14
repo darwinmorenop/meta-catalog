@@ -38,7 +38,7 @@
                 [data]="scraps()" 
                 [config]="tableConfig" 
                 [isLoading]="isLoading()"
-                (selectionChange)="onScrapSelected($event)"
+                (view)="onScrapView($event)"
                 (delete)="deleteScrap($event)">
             </app-smart-table>
         </div>

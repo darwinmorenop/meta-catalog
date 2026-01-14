@@ -9,8 +9,20 @@
         "originalPrice": 27,
         "url": "https://www.yanbal.com/es/<CLIENT>/p/20013423/limpiador-accion-antimanchas-3-en-1-pigment-control",
         "urlSource": "yanbal",
-        "clientScrap": "yanbal",
         "imageUrl": "https://www.yanbal.com/es/<CLIENT>/p/20013423/limpiador-accion-antimanchas-3-en-1-pigment-control",
         "secondImageUrl": "https://www.yanbal.com/es/<CLIENT>/p/20013423/limpiador-accion-antimanchas-3-en-1-pigment-control"
+    },
+    {
+        "code": "201",
+        "totalStock": 101,
+        "name": "Arom Eau de Parfum",
+        "description": "Un elegante aroma maderoso que mezcla notas de sándalo, romero y bergamota, creado para el hombre que prevalece en el tiempo. Una fragancia con estilo clásico, elegante y atemporal.<BR><BR>Una de las fragancias más emblemáticas y favoritas. ¡Pruébala!",
+        "summary": "Trasciende, prevalece",
+        "salePrice": 10,
+        "originalPrice": 20,
+        "url": "https://www.yanbal.com/es/<CLIENT>/p/201/arom-eau-de-parfum",
+        "urlSource": "yanbal",
+        "imageUrl": "https://www.yanbal.com/es/<CLIENT>/p/201/arom-eau-de-parfum-image",
+        "secondImageUrl": "https://www.yanbal.com/es/<CLIENT>/p/201/arom-eau-de-parfum-second-image"
     }
 ]

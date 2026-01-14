@@ -1,15 +1,17 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
+import { rxResource } from '@angular/core/rxjs-interop';
+
+// Services & Models
 import { ProductService } from 'src/app/core/services/products/product.service';
-import { Product } from 'src/app/core/models/products/product.model';
-import { Observable, map, of, shareReplay, BehaviorSubject, tap, catchError } from 'rxjs';
 import { ProductStatusEnum } from 'src/app/core/models/products/product.status.enum';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product-dashboard',
@@ -25,40 +27,48 @@ import { RouterModule } from '@angular/router';
   templateUrl: './product-dashboard.component.html',
   styleUrl: './product-dashboard.component.scss'
 })
-export class ProductDashboardComponent implements OnInit {
-  private productService = inject(ProductService);
+export class ProductDashboardComponent {
+  private readonly productService = inject(ProductService);
+  private readonly loggerService = inject(LoggerService);
+  private readonly CLASS_NAME = ProductDashboardComponent.name;
 
-  private loadingSubject = new BehaviorSubject<boolean>(true);
-  loading$ = this.loadingSubject.asObservable();
+  /** * Usamos rxResource con 'stream' para manejar el Observable del servicio.
+   * Esto elimina la necesidad de BehaviorSubject y loading$ manual.
+   */
+  productsResource = rxResource({
+    stream: () => this.productService.getAll()
+  });
 
-  products$: Observable<Product[]> = this.productService.getAll().pipe(
-    tap(() => this.loadingSubject.next(false)),
-    catchError(err => {
-      this.loadingSubject.next(false);
-      console.error('Error loading products:', err);
-      return of([]);
-    }),
-    shareReplay(1)
-  );
+  // --- Signals Derivados (Computed) ---
 
-  activeCount$: Observable<number> = this.products$.pipe(
-    map(products => products.filter(p => p.status === ProductStatusEnum.Active).length)
-  );
-  lowStockCount$: Observable<number> = this.products$.pipe(
-    map(products => products.filter(p => p.stock.internal_stock < 10).length)
-  );
+  // Conteo de productos activos
+  activeCount = computed(() => {
+    const products = this.productsResource.value() ?? [];
+    return products.filter(p => p.status === ProductStatusEnum.Active).length;
+  });
 
-  tableData$: Observable<any[]> = this.products$.pipe(
-    map(products => products.map(p => ({
+  // Conteo de productos con stock bajo
+  lowStockCount = computed(() => {
+    const products = this.productsResource.value() ?? [];
+    return products.filter(p => p.stock.internal_stock < 10).length;
+  });
+
+  // Datos formateados para la tabla
+  tableData = computed(() => {
+    const products = this.productsResource.value() ?? [];
+    return products.map(p => ({
       ...p,
       category_name: p.category.name,
-      price_display: new Intl.NumberFormat('es-ES', { style: 'currency', currency: p.pricing.currency }).format(p.pricing.price),
+      price_display: new Intl.NumberFormat('es-ES', { 
+        style: 'currency', 
+        currency: p.pricing.currency 
+      }).format(p.pricing.price),
       stock_display: p.stock.internal_stock,
       status_display: p.status.toUpperCase()
-    })))
-  );
+    }));
+  });
 
-  tableConfig: TableConfig = {
+  readonly tableConfig: TableConfig = {
     columns: [
       { key: 'name', header: 'Producto', filterable: true },
       { key: 'sku', header: 'SKU', filterable: true },
@@ -71,13 +81,17 @@ export class ProductDashboardComponent implements OnInit {
     pageSizeOptions: [5, 10, 20]
   };
 
-  ngOnInit(): void {}
+  // --- Métodos de Acción ---
 
-  onEdit(product: any) {
-    console.log('Edit product:', product);
+  onEdit(product: any): void {
+    this.loggerService.log('Edit product:', product, this.CLASS_NAME, 'onEdit');
   }
 
-  onDelete(product: any) {
-    console.log('Delete product:', product);
+  onDelete(product: any): void {
+    this.loggerService.log('Delete product:', product, this.CLASS_NAME, 'onDelete');
+  }
+
+  reloadProducts(): void {
+    this.productsResource.reload();
   }
 }

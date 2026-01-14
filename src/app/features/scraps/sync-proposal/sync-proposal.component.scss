@@ -110,3 +110,40 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  .summary-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    background: white;
+    
+    mat-card-header {
+      padding: 1rem 1.5rem 0.5rem 1.5rem;
+      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 1rem;
+      
+      mat-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #334155;
+      }
+    }
+
+    mat-card-content {
+      padding: 0 1.5rem 1.5rem 1.5rem;
+      p {
+        margin: 0.5rem 0;
+        color: #64748b;
+        
+        strong {
+          color: #1e293b;
+        }
+      }
+    }
+  }
+}
