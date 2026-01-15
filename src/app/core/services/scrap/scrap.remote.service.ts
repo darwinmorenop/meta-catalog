@@ -4,7 +4,6 @@ import { Observable, map, forkJoin, of, switchMap } from 'rxjs';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ProductScrapSyncOptions, ProductScrapSyncPendingChange } from 'src/app/core/models/products/scrap/product.scrap.sync.model';
 import { ScrapService } from 'src/app/core/services/scrap/scrap.service';
-import { UserService } from 'src/app/core/services/users/user.service';
 import { ProductScrap } from 'src/app/core/models/products/scrap/product.scrap.model';
 import { ProductScrapEntity } from 'src/app/shared/entity/view/product.scrap.entity';
 
@@ -16,21 +15,18 @@ export class ScrapRemoteService {
     private baseUrl = 'http://localhost:3000/api/products';
     private categories = ['perfumes'];
     private http: HttpClient = inject(HttpClient);
-    private userService = inject(UserService);
     private scrapService: ScrapService = inject(ScrapService);
     private loggerService: LoggerService = inject(LoggerService);
     private readonly CLASS_NAME = ScrapRemoteService.name;
 
-    getChanges(options: ProductScrapSyncOptions): Observable<{ changes: ProductScrapSyncPendingChange[], clientName: string, scrapSize: number }> {
+    getChanges(options: ProductScrapSyncOptions): Observable<{ changes: ProductScrapSyncPendingChange[], scrapSize: number }> {
         const context = 'getChanges';
         this.loggerService.debug(`Starting`, this.CLASS_NAME, context);
-        return this.userService.getAnyBrandIdRequest().pipe(
-            switchMap(clientBrandId => forkJoin({
-                clientName: of(clientBrandId),
-                scrap: this.getAllProductsScrap(clientBrandId),
-                db: this.scrapService.getAllProductsScrap()
-            })),
-            map(({ clientName, scrap, db }) => {
+        return forkJoin({
+            scrap: this.getAllProductsScrap(),
+            db: this.scrapService.getAllProductsScrap()
+        }).pipe(
+            map(({ scrap, db }) => {
                 const changes: ProductScrapSyncPendingChange[] = [];
                 const dbMap = new Map(db.map(p => [p.product_manufacturer_ref, p]));
                 const scrapMap = new Map(scrap.map(s => [s.code, s]));
@@ -87,16 +83,15 @@ export class ScrapRemoteService {
                 }
                 this.loggerService.info(`Recovered: ${scrap.length}, synced:${changes.length}`, this.CLASS_NAME, context);
                 this.loggerService.debug(`Recovered: ${scrap.length}, synced:${JSON.stringify(changes)}`, this.CLASS_NAME, context);
-                return { changes, clientName, scrapSize: scrap.length };
+                return { changes, scrapSize: scrap.length };
             })
         );
     }
 
-    private getAllProductsScrap(clientName: string): Observable<ProductScrap[]> {
+    private getAllProductsScrap(): Observable<ProductScrap[]> {
         const categoriesArray = this.categories.join(',');
-        const oid64 = btoa(clientName);
-        return this.http.get<ProductScrap[]>(`scrap.request.json?oid64=${oid64}`);
-        //return this.http.get<ProductScrapResponse>(`${this.baseUrl}/${categoriesArray}?oid64=${oid64}`);
+        return this.http.get<ProductScrap[]>(`scrap.request.json`);
+        //return this.http.get<ProductScrap[]>(`${this.baseUrl}/${categoriesArray}`);
     }
 
 

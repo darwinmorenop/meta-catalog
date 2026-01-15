@@ -41,6 +41,7 @@ export class ScrapDetailComponent implements OnInit {
 
   tableConfig: TableConfig = {
     columns: [
+      { key: 'product_main_image', header: 'Imagen', type: 'image' },
       { key: 'product_name', header: 'Producto', filterable: true },
       { key: 'product_manufacturer_ref', header: 'Ref. Fabr.', filterable: true },
       { key: 'source_status', header: 'Estado Fuente', filterable: true, type: 'badge' },
@@ -64,7 +65,7 @@ export class ScrapDetailComponent implements OnInit {
   }
 
   loadProducts() {
-    const  context = 'loadProducts';
+    const context = 'loadProducts';
     if (this.scrapId === null) return;
 
     this.isLoading.set(true);
@@ -81,7 +82,7 @@ export class ScrapDetailComponent implements OnInit {
   }
 
   loadSummary() {
-    const  context = 'loadSummary';
+    const context = 'loadSummary';
     if (this.scrapId === null) return;
     this.scrapService.getSummaryById(this.scrapId).subscribe({
       next: (summary) => this.scrapSummary.set(summary),
@@ -94,7 +95,7 @@ export class ScrapDetailComponent implements OnInit {
   }
 
   onProductView(product: ProductScrapEntity) {
-    const  context = 'onProductView';
+    const context = 'onProductView';
     this.loggerService.debug(`Product selected: ${JSON.stringify(product)}`, this.CLASS_NAME, context);
     this.scrapService.setCurrentProduct(product);
     this.router.navigate(['/scraps', this.scrapId, 'products', product.product_id]);

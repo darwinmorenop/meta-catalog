@@ -3,8 +3,8 @@ export enum ProductMediaType {
     VIDEO = 'video',
 }
 export interface ProductMedia {
-    id: string;
-    product_id: string;
+    id: number;
+    product_id: number;
     url: string;
     type: ProductMediaType;
     is_main: boolean;

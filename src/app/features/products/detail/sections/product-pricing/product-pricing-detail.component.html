@@ -1,0 +1,64 @@
+<div class="section-container">
+    <div class="grid-layout">
+        <mat-card class="info-card pricing-main">
+            <mat-card-header>
+                <mat-card-title>Configuración de Precios</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="price-display">
+                    <div class="price-item original" [class.has-discount]="hasOffer()">
+                        <span class="label">Precio Original</span>
+                        <span class="value">{{ pricing()?.price | currency:pricing()?.currency || 'EUR' }}</span>
+                    </div>
+
+                    @if (hasOffer()) {
+                    <div class="price-item sale">
+                        <span class="label">Precio de Oferta</span>
+                        <div class="sale-value-row">
+                            <span class="value">{{ pricing()?.sale_price | currency:pricing()?.currency || 'EUR'
+                                }}</span>
+                            <span class="discount-badge">-{{ discountPercentage() }}%</span>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <mat-divider></mat-divider>
+
+                <div class="currency-info">
+                    <span class="label">Moneda por defecto</span>
+                    <span class="value">{{ pricing()?.currency || 'EUR' }}</span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="info-card offer-period">
+            <mat-card-header>
+                <mat-card-title>Periodo de Oferta</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                @if (hasOffer()) {
+                <div class="detail-row">
+                    <span class="label">Inicio de Oferta</span>
+                    <div class="value-with-icon">
+                        <mat-icon color="primary">calendar_today</mat-icon>
+                        <span class="value">{{ pricing()?.offer_start_date }}</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Fin de Oferta</span>
+                    <div class="value-with-icon">
+                        <mat-icon color="warn">event_busy</mat-icon>
+                        <span class="value">{{ pricing()?.offer_end_date }}</span>
+                    </div>
+                </div>
+                } @else {
+                <div class="no-offer-state">
+                    <mat-icon>notifications_off</mat-icon>
+                    <p>No hay ninguna oferta activa para este producto.</p>
+                </div>
+                }
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

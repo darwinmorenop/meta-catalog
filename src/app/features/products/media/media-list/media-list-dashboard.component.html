@@ -1,0 +1,51 @@
+<div class="dashboard-container">
+  @if (!isChildRoute()) {
+  <header class="dashboard-header">
+    <div class="header-title-wrapper">
+      <button mat-icon-button routerLink="/products/media-dashboard" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-content">
+        <h1>Media de {{ productName() }}</h1>
+        <p class="subtitle">Gestiona las imágenes y videos de este producto</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button color="primary" (click)="openReorderDialog()" [disabled]="mediaResource.isLoading() || tableData().length < 2">
+        <mat-icon>reorder</mat-icon>
+        Ordenar Imágenes
+      </button>
+      <button mat-flat-button color="primary" (click)="addMedia()">
+        <mat-icon>add</mat-icon>
+        Añadir Media
+      </button>
+      <button mat-icon-button (click)="mediaResource.reload()" [disabled]="mediaResource.isLoading()">
+        <mat-icon [class.spinning]="mediaResource.isLoading()">refresh</mat-icon>
+      </button>
+    </div>
+  </header>
+  }
+
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Listado de Media</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (mediaResource.error()) {
+        <div class="error-container">
+          <mat-icon color="warn">error</mat-icon>
+          <span>Error al cargar la media. Por favor, intente de nuevo.</span>
+        </div>
+      }
+
+      <app-smart-table
+        [data]="tableData()"
+        [config]="tableConfig"
+        [isLoading]="mediaResource.isLoading()"
+        (view)="onView($event)"
+        (edit)="onEdit($event)"
+        (delete)="onDelete($event)">
+      </app-smart-table>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -176,7 +176,7 @@ export class SmartTableComponent implements AfterViewInit {
         } else {
             this.selectedRow = row;
         }
-        this.loggerService.debug('Selected Row:', this.selectedRow, this.CLASS_NAME, context);
+        this.loggerService.debug(`Selected Row: ${JSON.stringify(this.selectedRow)}`, this.CLASS_NAME, context);
         this.selectionChange.emit(this.selectedRow);
     }
 }

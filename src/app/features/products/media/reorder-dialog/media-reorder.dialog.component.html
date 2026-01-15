@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Ordenar Imágenes</h2>
+<mat-dialog-content>
+  <p class="subtitle">Arrastra las imágenes para cambiar su orden de visualización.</p>
+  
+  <div cdkDropList class="media-list" (cdkDropListDropped)="drop($event)">
+    @for (item of mediaItems(); track item.id) {
+      <div class="media-item" cdkDrag>
+        <div class="drag-handle" cdkDragHandle>
+          <mat-icon>drag_indicator</mat-icon>
+        </div>
+        
+        <div class="image-preview">
+          @if (item.type === 'image') {
+            <img [src]="item.url" [alt]="item.title">
+          } @else {
+            <div class="video-placeholder">
+              <mat-icon>videocam</mat-icon>
+            </div>
+          }
+        </div>
+        
+        <div class="item-info">
+          <span class="item-title">{{ item.title || 'Sin título' }}</span>
+          <span class="item-order">Orden: {{ item.display_order }}</span>
+        </div>
+
+        <div class="item-actions">
+          <button mat-icon-button (click)="markAsMain(item)" [color]="item.is_main ? 'primary' : ''" matTooltip="Marcar como imagen principal">
+            <mat-icon>{{ item.is_main ? 'star' : 'star_border' }}</mat-icon>
+          </button>
+        </div>
+
+        @if (item.is_main) {
+          <div class="main-badge">
+            <span class="badge-text">Principal</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSave()">Aplicar Cambios</button>
+</mat-dialog-actions>

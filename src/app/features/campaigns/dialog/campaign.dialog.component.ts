@@ -9,6 +9,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CampaignEntity } from 'src/app/shared/entity/view/campaign.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
+import { DateTimeRangeComponent } from 'src/app/shared/components/date-time-range/date-time-range.component';
 
 @Component({
   selector: 'app-campaign-dialog',
@@ -21,7 +22,8 @@ import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service
     MatInputModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    DateTimeRangeComponent
   ],
   templateUrl: './campaign.dialog.component.html',
   styleUrls: ['./campaign.dialog.component.scss']

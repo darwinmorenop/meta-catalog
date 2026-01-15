@@ -22,6 +22,9 @@
         <div class="content-grid">
             <mat-card class="info-card main-info">
                 <mat-card-header>
+                    @if (product()?.product_main_image) {
+                        <img mat-card-avatar [src]="product()!.product_main_image" class="product-header-image">
+                    }
                     <mat-card-title>{{ product()!.product_name }}</mat-card-title>
                     <mat-card-subtitle>Ref. Fabricante: {{ product()!.product_manufacturer_ref }}</mat-card-subtitle>
                 </mat-card-header>

@@ -1,0 +1,166 @@
+<div class="section-container" [formGroup]="form">
+    <div class="grid-layout">
+        <!-- Physical & Format -->
+        <mat-card class="edit-card">
+            <mat-card-header>
+                <mat-card-title>Características Físicas</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Género</mat-label>
+                        <mat-select formControlName="gender">
+                            @for (opt of genderOptions; track opt) {
+                                <mat-option [value]="opt">{{ opt }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Formato</mat-label>
+                        <mat-select formControlName="format">
+                            @for (opt of formatOptions; track opt) {
+                                <mat-option [value]="opt">{{ opt }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <div class="size-unit">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Tamaño</mat-label>
+                            <input matInput type="number" formControlName="size">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Unidad</mat-label>
+                            <mat-select formControlName="unit">
+                                @for (opt of unitOptions; track opt) {
+                                    <mat-option [value]="opt">{{ opt }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>PAO (Period After Opening)</mat-label>
+                        <input matInput formControlName="pao" placeholder="Ej: 12M">
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Ethics & Claims -->
+        <mat-card class="edit-card" formGroupName="claims">
+            <mat-card-header>
+                <mat-card-title>Declaraciones y Ética</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="checkbox-group">
+                    <mat-checkbox formControlName="is_vegan" color="primary">Producto Vegano</mat-checkbox>
+                    <mat-checkbox formControlName="is_cruelty_free" color="primary">Cruelty Free</mat-checkbox>
+                    <mat-checkbox formControlName="is_refillable" color="primary">Recargable (Refillable)</mat-checkbox>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Pirámide Olfativa -->
+        <mat-card class="edit-card full-width">
+            <mat-card-header>
+                <mat-card-title>Pirámide Olfativa</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Notas de Salida</mat-label>
+                    <mat-chip-grid #chipGridTop aria-label="Notas de Salida">
+                        @for (note of notesTopList(); track note) {
+                        <mat-chip-row (removed)="remove('top', note)">
+                            {{note}}
+                            <button matChipRemove [attr.aria-label]="'remove ' + note">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                        }
+                        <input placeholder="Nueva nota..."
+                               [matChipInputFor]="chipGridTop"
+                               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                               [matChipInputAddOnBlur]="true"
+                               (matChipInputTokenEnd)="add('top', $event)" />
+                    </mat-chip-grid>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Notas de Corazón</mat-label>
+                    <mat-chip-grid #chipGridHeart aria-label="Notas de Corazón">
+                        @for (note of notesHeartList(); track note) {
+                        <mat-chip-row (removed)="remove('heart', note)">
+                            {{note}}
+                            <button matChipRemove [attr.aria-label]="'remove ' + note">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                        }
+                        <input placeholder="Nueva nota..."
+                               [matChipInputFor]="chipGridHeart"
+                               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                               [matChipInputAddOnBlur]="true"
+                               (matChipInputTokenEnd)="add('heart', $event)" />
+                    </mat-chip-grid>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Notas de Fondo</mat-label>
+                    <mat-chip-grid #chipGridBase aria-label="Notas de Fondo">
+                        @for (note of notesBaseList(); track note) {
+                        <mat-chip-row (removed)="remove('base', note)">
+                            {{note}}
+                            <button matChipRemove [attr.aria-label]="'remove ' + note">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                        }
+                        <input placeholder="Nueva nota..."
+                               [matChipInputFor]="chipGridBase"
+                               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                               [matChipInputAddOnBlur]="true"
+                               (matChipInputTokenEnd)="add('base', $event)" />
+                    </mat-chip-grid>
+                </mat-form-field>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- INCI -->
+        <mat-card class="edit-card full-width">
+            <mat-card-header>
+                <mat-card-title>Ingredientes (INCI)</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Listado de Ingredientes</mat-label>
+                    <mat-chip-grid #chipGridInci aria-label="Ingredientes">
+                        @for (ingredient of inciList(); track ingredient) {
+                        <mat-chip-row (removed)="remove('inci', ingredient)">
+                            {{ingredient}}
+                            <button matChipRemove [attr.aria-label]="'remove ' + ingredient">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                        }
+                        <input placeholder="Añadir ingrediente..."
+                               [matChipInputFor]="chipGridInci"
+                               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                               [matChipInputAddOnBlur]="true"
+                               (matChipInputTokenEnd)="add('inci', $event)" />
+                    </mat-chip-grid>
+                </mat-form-field>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="actions-row">
+        <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">
+            <mat-icon>save</mat-icon>
+            Guardar Atributos
+        </button>
+    </div>
+</div>

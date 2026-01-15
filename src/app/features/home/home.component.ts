@@ -31,4 +31,8 @@ export class HomeComponent {
   goToScraps() {
     this.router.navigate(['/scraps']);
   }
+
+  goToMedia() {
+    this.router.navigate(['/products/media-dashboard']);
+  }
 }

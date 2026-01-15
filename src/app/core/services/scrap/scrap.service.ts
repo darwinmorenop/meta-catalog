@@ -55,12 +55,12 @@ export class ScrapService {
         return this.scrapReadDaoSupabaseService.getProductScrapDetail(scrapId, productId);
     }
 
-    applyChanges(changes: ProductScrapSyncPendingChange[], scrapId: number, clientName: string, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
-        return this.scrapWriteDaoSupabaseService.applyChanges(changes, scrapId, clientName, options);
+    applyChanges(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
+        return this.scrapWriteDaoSupabaseService.applyChanges(changes, scrapId, options);
     }
 
-    applyChangesAll(changes: ProductScrapSyncPendingChange[], scrapId: number, clientName: string, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
-        return this.scrapWriteDaoSupabaseService.applyChangesAll(changes, scrapId, clientName, options);
+    applyChangesAll(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
+        return this.scrapWriteDaoSupabaseService.applyChangesAll(changes, scrapId, options);
     }
 
     delete(scrapId: number): Observable<any> {

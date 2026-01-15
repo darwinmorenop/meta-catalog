@@ -1,8 +1,7 @@
 export interface ProductPricing {
-    id: string;
-    product_id: string;
     price: number;
+    sale_price: number;
     currency: string;
-    created_at: Date;
-    updated_at: Date;
+    offer_start_date: Date;
+    offer_end_date: Date;
 }

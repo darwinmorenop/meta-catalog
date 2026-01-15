@@ -72,6 +72,8 @@
         [config]="tableConfig"
         [isLoading]="productsResource.isLoading()"
         (edit)="onEdit($event)"
+        (view)="onView($event)"
+        (selectionChange)="onSelectionChange($event)"
         (delete)="onDelete($event)">
       </app-smart-table>
     </mat-card-content>

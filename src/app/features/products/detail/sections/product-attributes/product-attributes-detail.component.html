@@ -1,0 +1,103 @@
+<div class="section-container">
+    <div class="grid-layout">
+        <!-- Main Physical Attributes -->
+        <mat-card class="info-card physical">
+            <mat-card-header>
+                <mat-card-title>Atributos Físicos</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="attr-grid">
+                    <div class="attr-item">
+                        <span class="label">Género</span>
+                        <span class="value">{{ attributes()?.gender || 'N/A' }}</span>
+                    </div>
+                    <div class="attr-item">
+                        <span class="label">Formato</span>
+                        <span class="value">{{ attributes()?.format || 'N/A' }}</span>
+                    </div>
+                    <div class="attr-item">
+                        <span class="label">Tamaño / Capacidad</span>
+                        <span class="value">{{ attributes()?.size }} {{ attributes()?.unit }}</span>
+                    </div>
+                    <div class="attr-item">
+                        <span class="label">PAO</span>
+                        <div class="value-with-icon">
+                            <mat-icon>shutter_speed</mat-icon>
+                            <span class="value">{{ attributes()?.pao || 'N/A' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Claims & Ethics -->
+        <mat-card class="info-card ethics">
+            <mat-card-header>
+                <mat-card-title>Certificaciones y Ética</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                @if (claims().length > 0) {
+                    <div class="claims-list">
+                        @for (claim of claims(); track claim.label) {
+                            <div class="claim-badge">
+                                <mat-icon>{{ claim.icon }}</mat-icon>
+                                <span>{{ claim.label }}</span>
+                            </div>
+                        }
+                    </div>
+                } @else {
+                    <p class="no-data">Sin certificaciones registradas.</p>
+                }
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Olfactory Notes (if application) -->
+        <mat-card class="info-card notes full-width">
+            <mat-card-header>
+                <mat-card-title>Pirámide Olfativa / Notas</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="notes-pyramid">
+                    <div class="note-section top">
+                        <span class="section-label">Notas de Salida</span>
+                        <mat-chip-set>
+                            @for (note of attributes()?.notes?.top; track note) {
+                                <mat-chip>{{ note }}</mat-chip>
+                            }
+                        </mat-chip-set>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="note-section heart">
+                        <span class="section-label">Notas de Corazón</span>
+                        <mat-chip-set>
+                            @for (note of attributes()?.notes?.heart; track note) {
+                                <mat-chip>{{ note }}</mat-chip>
+                            }
+                        </mat-chip-set>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="note-section base">
+                        <span class="section-label">Notas de Fondo</span>
+                        <mat-chip-set>
+                            @for (note of attributes()?.notes?.base; track note) {
+                                <mat-chip>{{ note }}</mat-chip>
+                            }
+                        </mat-chip-set>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- INCI / Ingredients -->
+        <mat-card class="info-card inci full-width">
+            <mat-card-header>
+                <mat-card-title>Ingredientes (INCI)</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="inci-container">
+                    {{ attributes()?.inci?.join(', ') || 'Información no disponible.' }}
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

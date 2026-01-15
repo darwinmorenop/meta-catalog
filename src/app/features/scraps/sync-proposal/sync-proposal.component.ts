@@ -59,7 +59,6 @@ export class SyncProposalComponent implements OnInit {
   scrapId = signal<number>(-1);
 
   // Added signals
-  clientName = signal<string>('');
   scrapTotalSize = signal<number>(-1);
   scrapInfo = signal<ScrapEntity | null>(null);
 
@@ -113,7 +112,6 @@ export class SyncProposalComponent implements OnInit {
     this.isSyncing.set(true);
     this.scrapRemoteService.getChanges(this.syncOptions).subscribe({
       next: (response) => {
-        this.clientName.set(response.clientName);
         this.scrapId.set(-1);
         this.scrapTotalSize.set(response.scrapSize);
         this.createChanges.set(response.changes.filter(c => c.type === 'CREATE'));
@@ -148,7 +146,7 @@ export class SyncProposalComponent implements OnInit {
         this.isSyncing.set(false);
         return;
       }
-      this.scrapService.applyChangesAll(changesToApply, this.scrapId(), this.clientName(), this.syncOptions).subscribe({
+      this.scrapService.applyChangesAll(changesToApply, this.scrapId(), this.syncOptions).subscribe({
         next: (response: ScrapRcpResponseEntity) => {
           if (!response.success) {
             this.logger.error('Error applying changes: ' + JSON.stringify(response), this.CLASS_NAME, context);
@@ -175,7 +173,7 @@ export class SyncProposalComponent implements OnInit {
         this.isSyncing.set(false);
         return;
       }
-      this.scrapService.applyChanges(changesToApply, this.scrapId(), this.clientName(), this.syncOptions).subscribe({
+      this.scrapService.applyChanges(changesToApply, this.scrapId(), this.syncOptions).subscribe({
         next: (response: ScrapRcpResponseEntity) => {
           if (!response.success) {
             this.logger.error('Error applying changes: ' + JSON.stringify(response), this.CLASS_NAME, context);
@@ -207,7 +205,7 @@ export class SyncProposalComponent implements OnInit {
     if (!confirm(`¿Estás seguro de aplicar el cambio?`)) return;
     this.logger.info(`Applying single change: ${JSON.stringify(change)}`, this.CLASS_NAME, context);
     this.isSyncing.set(true);
-    this.scrapService.applyChanges([change], this.scrapId(), this.clientName(), this.syncOptions).subscribe({
+    this.scrapService.applyChanges([change], this.scrapId(), this.syncOptions).subscribe({
       next: (response: ScrapRcpResponseEntity) => {
         if (!response.success) {
           this.logger.error('Error applying changes: ' + JSON.stringify(response), this.CLASS_NAME, context);

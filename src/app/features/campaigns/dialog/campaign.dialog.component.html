@@ -10,17 +10,13 @@
       </mat-error>
     </mat-form-field>
 
-    <div class="date-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Fecha y Hora Inicio</mat-label>
-        <input matInput type="datetime-local" formControlName="started_at">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Fecha y Hora Fin</mat-label>
-        <input matInput type="datetime-local" formControlName="finished_at">
-      </mat-form-field>
-    </div>
+    <app-date-time-range 
+      [formGroup]="form"
+      startControlName="started_at"
+      endControlName="finished_at"
+      startLabel="Fecha y Hora Inicio"
+      endLabel="Fecha y Hora Fin">
+    </app-date-time-range>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Descripción</mat-label>

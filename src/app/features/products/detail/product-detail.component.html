@@ -1,0 +1,60 @@
+<div class="product-detail-container">
+    @if (isLoading()) {
+    <div class="loading-overlay">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
+    } @else if (product()) {
+    <!-- Premium Header -->
+    <header class="product-header">
+        <div class="header-main">
+            <button mat-icon-button (click)="goBack()" class="back-button" matTooltip="Volver a productos">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            
+            <div class="product-image-wrapper" *ngIf="productMainImage()">
+                <img [src]="productMainImage()" [alt]="product()?.name">
+            </div>
+
+            <div class="header-info">
+                <div class="title-row">
+                    <h1>{{ product()?.name }}</h1>
+                    <span class="status-badge" [attr.data-status]="product()?.status">
+                        {{ product()?.status | uppercase }}
+                    </span>
+                </div>
+                <div class="meta-row">
+                    <span class="sku">SKU: <strong>{{ product()?.sku }}</strong></span>
+                    <mat-divider vertical></mat-divider>
+                    <span class="ean">EAN: {{ product()?.ean || 'N/A' }}</span>
+                    <mat-divider vertical></mat-divider>
+                    <span class="brand">{{ product()?.brand }}</span>
+                </div>
+            </div>
+        </div>
+
+        <nav mat-tab-nav-bar [tabPanel]="tabPanel" color="primary">
+            @for (link of navLinks; track link.path) {
+                <a mat-tab-link
+                   [routerLink]="link.path"
+                   routerLinkActive #rla="routerLinkActive"
+                   [active]="rla.isActive">
+                    <mat-icon class="nav-icon">{{ link.icon }}</mat-icon>
+                    {{ link.label }}
+                </a>
+            }
+        </nav>
+    </header>
+
+    <main class="product-content">
+        <mat-tab-nav-panel #tabPanel>
+            <router-outlet></router-outlet>
+        </mat-tab-nav-panel>
+    </main>
+    } @else {
+    <div class="error-state">
+        <mat-icon color="warn">error_outline</mat-icon>
+        <h2>Producto no encontrado</h2>
+        <button mat-flat-button color="primary" (click)="goBack()">Volver al listado</button>
+    </div>
+    }
+</div>

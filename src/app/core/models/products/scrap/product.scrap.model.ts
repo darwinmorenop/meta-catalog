@@ -1,8 +1,3 @@
-export interface ProductScrapResponse {
-    owner: string;
-    products: ProductScrap[];
-}
-
 export interface ProductScrap {
     code: string;
     totalStock: number;

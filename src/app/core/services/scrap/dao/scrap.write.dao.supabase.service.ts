@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { ProductScrapSyncOptions, ProductScrapSyncPendingChange } from 'src/app/core/models/products/scrap/product.scrap.sync.model';
 import { environment } from 'src/environments/environment';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
@@ -34,7 +34,7 @@ export class ScrapWriteDaoSupabaseService {
     ).pipe(map(res => res.data));
   }
 
-  applyChangesAll(changes: ProductScrapSyncPendingChange[], scrapId: number, clientName: string, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
+  applyChangesAll(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
     if (changes.length === 0) return of(this.getDefaultResponse());
 
     const createChanges = changes.filter(c => c.type === 'CREATE');
@@ -52,7 +52,7 @@ export class ScrapWriteDaoSupabaseService {
     // 1. Create
     if (createChanges.length > 0) {
       obs$ = obs$.pipe(
-        switchMap(state => this.createProducts(createChanges, state.scrap_id, clientName, options).pipe(
+        switchMap(state => this.createProducts(createChanges, state.scrap_id, options).pipe(
           map(res => ({
             success: state.success && res.success,
             total_processed: state.total_processed + (res.total_processed || 0),
@@ -68,7 +68,7 @@ export class ScrapWriteDaoSupabaseService {
       obs$ = obs$.pipe(
         switchMap(state => {
           if (!state.success) return of(state);
-          return this.updateProducts(updateChanges, state.scrap_id, clientName, options).pipe(
+          return this.updateProducts(updateChanges, state.scrap_id, options).pipe(
             map(res => ({
               success: state.success && res.success,
               total_processed: state.total_processed + (res.total_processed || 0),
@@ -85,7 +85,7 @@ export class ScrapWriteDaoSupabaseService {
       obs$ = obs$.pipe(
         switchMap(state => {
           if (!state.success) return of(state);
-          return this.archiveProducts(archiveChanges, state.scrap_id, clientName, options).pipe(
+          return this.archiveProducts(archiveChanges, state.scrap_id, options).pipe(
             map(res => ({
               success: state.success && res.success,
               total_processed: state.total_processed + (res.total_processed || 0),
@@ -100,12 +100,12 @@ export class ScrapWriteDaoSupabaseService {
     return obs$;
   }
 
-  applyChanges(changes: ProductScrapSyncPendingChange[], scrapId: number, clientName: string, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
+  applyChanges(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
     if (changes.length === 0) return of(this.getDefaultResponse());
     const type = changes[0].type;
-    if (type === 'CREATE') return this.createProducts(changes, scrapId, clientName, options);
-    if (type === 'UPDATE') return this.updateProducts(changes, scrapId, clientName, options);
-    if (type === 'ARCHIVE') return this.archiveProducts(changes, scrapId, clientName, options);
+    if (type === 'CREATE') return this.createProducts(changes, scrapId, options);
+    if (type === 'UPDATE') return this.updateProducts(changes, scrapId, options);
+    if (type === 'ARCHIVE') return this.archiveProducts(changes, scrapId, options);
     return of(this.getDefaultResponse());
   }
 
@@ -118,7 +118,7 @@ export class ScrapWriteDaoSupabaseService {
     };
   }
 
-  private createProducts(changes: ProductScrapSyncPendingChange[], scrapId: number, clientName: string, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
+  private createProducts(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
     const context = 'createProducts';
     const products: ScrapRcpInsertEntity[] = changes.map(c => {
       return {
@@ -131,37 +131,45 @@ export class ScrapWriteDaoSupabaseService {
         scrap_id: scrapId,
         original_price: c.originalScrap.originalPrice,
         sale_price: c.originalScrap.salePrice,
-        stock_status: c.originalScrap.totalStock
+        stock_status: c.originalScrap.totalStock,
+        img_main: c.originalScrap.imageUrl,
+        img_sec: c.originalScrap.secondImageUrl
       };
     });
     const dataToSend: ScrapRcpInsertRequestEntity = {
-      p_scrap_client: clientName,
       p_scrap_id: scrapId,
       p_sources: products,
       p_config: options
     };
     this.logger.info(`Sending data to Supabase: ${JSON.stringify(dataToSend)}`, this.CLASS_NAME, context);
     return from(this.supabase.rpc('complex_scrapInsert', dataToSend)).pipe(
-      map(res => res.data as ScrapRcpResponseEntity)
+      tap((res: any) => { if (res.error) throw res.error; }),
+      map((res: any) => {
+        if (!res.data) throw new Error(`RPC 'complex_scrapInsert' returned no data`);
+        return res.data as ScrapRcpResponseEntity;
+      })
     );
   }
 
-  private archiveProducts(changes: ProductScrapSyncPendingChange[], scrapId: number, clientName: string, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
+  private archiveProducts(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
     const context = 'archiveProducts'
     const products: number[] = changes.map(c => c.productId).filter(id => id !== undefined);
     const dataToSend: ScrapRcpArchivedRequestEntity = {
-      p_scrap_client: clientName,
       p_scrap_id: scrapId,
       p_product_ids: products,
       p_config: options
     };
     this.logger.info(`Sending data to Supabase: ${JSON.stringify(dataToSend)}`, this.CLASS_NAME, context);
     return from(this.supabase.rpc('complex_scrapArchive', dataToSend)).pipe(
-      map(res => res.data as ScrapRcpResponseEntity)
+      tap((res: any) => { if (res.error) throw res.error; }),
+      map((res: any) => {
+        if (!res.data) throw new Error(`RPC 'complex_scrapArchive' returned no data`);
+        return res.data as ScrapRcpResponseEntity;
+      })
     );
   }
 
-  private updateProducts(changes: ProductScrapSyncPendingChange[], scrapId: number, clientName: string, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
+  private updateProducts(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
     const context = 'updateProducts'
     const products: ScrapRcpUpdateEntity[] = changes.map(c => {
       return {
@@ -175,18 +183,23 @@ export class ScrapWriteDaoSupabaseService {
         scrap_id: scrapId,
         original_price: c.originalScrap.originalPrice,
         sale_price: c.originalScrap.salePrice,
-        stock_status: c.originalScrap.totalStock
+        stock_status: c.originalScrap.totalStock,
+        img_main: c.originalScrap.imageUrl,
+        img_sec: c.originalScrap.secondImageUrl
       };
     });
     const dataToSend: ScrapRcpUpdateRequestEntity = {
-      p_scrap_client: clientName,
       p_scrap_id: scrapId,
       p_sources: products,
       p_config: options
     };
     this.logger.info(`Sending data to Supabase: ${JSON.stringify(dataToSend)}`, this.CLASS_NAME, context);
     return from(this.supabase.rpc('complex_scrapUpdate', dataToSend)).pipe(
-      map(res => res.data as ScrapRcpResponseEntity)
+      tap((res: any) => { if (res.error) throw res.error; }),
+      map((res: any) => {
+        if (!res.data) throw new Error(`RPC 'complex_scrapUpdate' returned no data`);
+        return res.data as ScrapRcpResponseEntity;
+      })
     );
   }
 }

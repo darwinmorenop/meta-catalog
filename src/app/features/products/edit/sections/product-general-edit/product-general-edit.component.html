@@ -1,0 +1,85 @@
+<div class="section-container" [formGroup]="form">
+    <div class="grid-layout">
+        <mat-card class="edit-card main-info">
+            <mat-card-header>
+                <mat-card-title>Identidad del Producto</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Nombre del Producto</mat-label>
+                    <input matInput formControlName="name" placeholder="Ej: Perfume Sauvage">
+                    <mat-error *ngIf="form.get('name')?.hasError('required')">El nombre es obligatorio</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Categoría</mat-label>
+                    <mat-select formControlName="category_id">
+                        @for (cat of categories(); track cat.id) {
+                            <mat-option [value]="cat.id">
+                                {{ cat.full_path }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                    <mat-error *ngIf="form.get('category_id')?.hasError('required')">La categoría es obligatoria</mat-error>
+                </mat-form-field>
+
+                <div class="row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Marca</mat-label>
+                        <mat-select formControlName="brand_id">
+                            @for (brand of brands(); track brand.id) {
+                                <mat-option [value]="brand.id">{{ brand.name }}</mat-option>
+                            }
+                        </mat-select>
+                        <mat-error *ngIf="form.get('brand_id')?.hasError('required')">La marca es obligatoria</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Estado</mat-label>
+                        <mat-select formControlName="status">
+                            @for (status of statusOptions; track status) {
+                                <mat-option [value]="status">{{ status | titlecase }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>SKU (No editable)</mat-label>
+                        <input matInput formControlName="sku">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>EAN (Código de Barras)</mat-label>
+                        <input matInput formControlName="ean">
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="edit-card descriptions full-width">
+            <mat-card-header>
+                <mat-card-title>Contenidos y Descripciones</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Resumen Corto</mat-label>
+                    <textarea matInput formControlName="summary" rows="3" placeholder="Breve descripción para listados..."></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Descripción Completa</mat-label>
+                    <textarea matInput formControlName="description" rows="8" placeholder="Escribe aquí toda la información detallada del producto..."></textarea>
+                </mat-form-field>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="actions-row">
+        <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">
+            <mat-icon>save</mat-icon>
+            Guardar General
+        </button>
+    </div>
+</div>

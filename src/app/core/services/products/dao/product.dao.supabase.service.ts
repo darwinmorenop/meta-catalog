@@ -74,4 +74,32 @@ export class ProductDaoSupabaseService {
     );
   }
 
+  getProductCompleteById(id: number): Observable<ProductCompleteEntity | null> {
+    const context = 'getProductCompleteById'
+    const promise = this.supabase
+      .from('v_product_complete')
+      .select('*')
+      .eq('product_id', id)
+      .single();
+
+    return from(promise).pipe(
+      tap(response => {
+        if (response.error) throw response.error;
+      }),
+      map(response => {
+        const item = response.data;
+        if (!item) return null;
+        return {
+          ...item,
+          product_created_at: this.dateUtils.parseDbDate(item.product_created_at),
+          product_updated_at: this.dateUtils.parseDbDate(item.product_updated_at)
+        } as ProductCompleteEntity;
+      }),
+      catchError(error => {
+        this.logger.error(`Error fetching product complete with id ${id}:`, error, this.CLASS_NAME, context);
+        return of(null);
+      })
+    );
+  }
+
 }

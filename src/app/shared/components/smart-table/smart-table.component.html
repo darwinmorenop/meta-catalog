@@ -51,6 +51,11 @@
                             {{ element[col.key] | date: 'dd/MM/yyyy HH:mm' }}
                         </span>
 
+                        <!-- Image Type -->
+                        <div *ngSwitchCase="'image'" class="image-cell">
+                            <img [src]="element[col.key]" class="row-image">
+                        </div>
+
                         <!-- Config Type (Generic Icons) -->
                         <div *ngSwitchCase="'config'" class="config-icons">
                             <ng-container *ngFor="let iconConfig of element[col.key]">
@@ -61,6 +66,13 @@
                                     {{iconConfig.icon}}
                                 </mat-icon>
                             </ng-container>
+                        </div>
+
+                        <!-- Boolean Type -->
+                        <div *ngSwitchCase="'boolean'" class="boolean-cell">
+                            <mat-icon [color]="element[col.key] ? 'primary' : 'disabled'">
+                                {{ element[col.key] ? 'check_circle' : 'cancel' }}
+                            </mat-icon>
                         </div>
 
                         <!-- Default Text -->

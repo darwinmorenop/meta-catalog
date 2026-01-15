@@ -16,12 +16,12 @@
             <h3>Opciones de Sincronización</h3>
             <div class="options-grid">
                 <mat-checkbox [disabled]="true" [(ngModel)]="syncOptions.syncStatus">Sincronizar Estado (Nuevos/Archivados)</mat-checkbox>
-                <mat-checkbox [disabled]="scrapId() > 0" [(ngModel)]="syncOptions.syncPrices">Sincronizar Precios</mat-checkbox>
-                <mat-checkbox [disabled]="scrapId() > 0" [(ngModel)]="syncOptions.syncStock">Sincronizar Stock</mat-checkbox>
-                <mat-checkbox [disabled]="scrapId() > 0" [(ngModel)]="syncOptions.syncProperties">Sincronizar Propiedades (Nombre, Desc, etc)</mat-checkbox>
+                <mat-checkbox [disabled]="scrapTotalSize() > 0" [(ngModel)]="syncOptions.syncPrices">Sincronizar Precios</mat-checkbox>
+                <mat-checkbox [disabled]="scrapTotalSize() > 0" [(ngModel)]="syncOptions.syncStock">Sincronizar Stock</mat-checkbox>
+                <mat-checkbox [disabled]="scrapTotalSize() > 0" [(ngModel)]="syncOptions.syncProperties">Sincronizar Propiedades (Nombre, Desc, etc)</mat-checkbox>
             </div>
             <div class="config-actions">
-                <button [disabled]="scrapId() > 0 || isSyncing()" mat-flat-button color="primary" (click)="loadProposal()">
+                <button [disabled]="scrapTotalSize() > 0 || isSyncing()" mat-flat-button color="primary" (click)="loadProposal()">
                     <mat-icon [class.spinning]="isSyncing()">sync</mat-icon>
                     Cargar Propuesta
                 </button>
@@ -29,7 +29,7 @@
         </div>
     </mat-card>
     
-    @if (scrapInfo() || clientName() || scrapTotalSize() > 0) {
+    @if (scrapInfo() || scrapTotalSize() > 0) {
         <div class="summary-grid">
             @if (scrapInfo()) {
                 <mat-card class="summary-card">
@@ -44,13 +44,12 @@
                 </mat-card>
             }
 
-            @if (clientName() || scrapTotalSize() > 0) {
+            @if (scrapTotalSize() > 0) {
                 <mat-card class="summary-card">
                     <mat-card-header>
                         <mat-card-title>Configuración de Sincronización</mat-card-title>
                     </mat-card-header>
                     <mat-card-content>
-                        <p><strong>Cliente Detectado:</strong> {{clientName()}}</p>
                         <p><strong>Tamaño:</strong> {{scrapTotalSize()}}</p>
                         <p><strong>Estado:</strong> Propuesta Cargada</p>
                     </mat-card-content>
