@@ -1,0 +1,112 @@
+<div class="premium-dialog-header">
+  <div class="title-container">
+    <mat-icon color="primary">add_link</mat-icon>
+    <div class="text">
+      <h2>Vincular Stock</h2>
+      <p>Asocia este registro a una entrada oficial</p>
+    </div>
+  </div>
+  <button mat-icon-button (click)="dialogRef.close()" class="close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="no-scroll-content">
+  <div class="dialog-inner">
+    <!-- Stock Info Card -->
+    <div class="stock-info-card">
+      <div class="info-row">
+        <span class="label">Producto</span>
+        <span class="value">{{ data.entry.product_name }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">SKU</span>
+        <span class="value sku-code">{{ data.entry.product_sku }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Cantidad actual</span>
+        <span class="value highlight">{{ data.entry.quantity }} unidades</span>
+      </div>
+    </div>
+
+    <!-- Inbound Selector Section -->
+    <div class="section-container">
+      <h3 class="section-title">Entrada de Inventario (Inbound)</h3>
+      
+      <div class="selection-box" [class.selected]="selectedInbound()" (click)="!selectedInbound() ? openSelector() : null">
+        <ng-container *ngIf="selectedInbound() as inbound; else selectPlaceholder">
+          <div class="inbound-item">
+            <div class="icon-box">
+              <mat-icon>inventory_2</mat-icon>
+            </div>
+            <div class="details">
+              <span class="ref">#{{ inbound.id }} - {{ inbound.reference_number }}</span>
+              <span class="status-tag" [attr.data-status]="inbound.status">{{ inbound.status }}</span>
+            </div>
+            <button mat-icon-button (click)="openSelector(); $event.stopPropagation()" matTooltip="Cambiar">
+              <mat-icon>sync</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+        
+        <ng-template #selectPlaceholder>
+          <div class="placeholder-content">
+            <mat-icon>search</mat-icon>
+            <span>Click para buscar una entrada existente</span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Configuration Form -->
+    <form [formGroup]="form" class="config-form" *ngIf="selectedInbound()">
+      <div class="form-header">
+        <mat-icon>settings</mat-icon>
+        <span>Ajustes de Vinculación</span>
+      </div>
+      
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="compact-field">
+          <mat-label>Cantidad</mat-label>
+          <input matInput type="number" formControlName="quantity">
+          <mat-icon matPrefix>format_list_numbered</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="compact-field">
+          <mat-label>Costo Unitario</mat-label>
+          <input matInput type="number" formControlName="unit_cost">
+          <mat-icon matPrefix>payments</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="compact-field">
+          <mat-label>Lote (Batch Number)</mat-label>
+          <input matInput formControlName="batch_number" placeholder="Opcional">
+          <mat-icon matPrefix>tag</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="compact-field">
+          <mat-label>Fecha Expiración</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="expiry_date">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-icon matPrefix>event_busy</mat-icon>
+        </mat-form-field>
+      </div>
+      <p class="form-tip">La cantidad se asociará permanentemente a este Inbound.</p>
+    </form>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="premium-actions">
+  <button mat-button (click)="dialogRef.close()" class="cancel-btn">Cancelar</button>
+  <button mat-flat-button 
+          class="confirm-btn"
+          color="primary" 
+          [disabled]="form.invalid || !selectedInbound()" 
+          (click)="save()">
+    <mat-icon>check_circle</mat-icon>
+    Vincular a Entrada
+  </button>
+</mat-dialog-actions>

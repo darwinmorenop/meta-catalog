@@ -12,7 +12,11 @@
       </div>
     </div>
     <div class="header-actions">
-       <button mat-icon-button (click)="stockHistoryResource.reload()" [disabled]="stockHistoryResource.isLoading()">
+      <button mat-flat-button color="primary" (click)="onAddStock()" [disabled]="stockHistoryResource.isLoading()">
+        <mat-icon>add</mat-icon>
+        Añadir
+      </button>
+       <button mat-icon-button (click)="stockHistoryResource.reload()" [disabled]="stockHistoryResource.isLoading()" matTooltip="Actualizar">
         <mat-icon [class.spinning]="stockHistoryResource.isLoading()">refresh</mat-icon>
       </button>
     </div>

@@ -8,9 +8,12 @@ import { ScrapsDashboardComponent } from './features/scraps/dashboard/scraps-das
 import { ScrapDetailComponent } from './features/scraps/detail/scrap-detail.component';
 import { SyncProposalComponent } from './features/scraps/sync-proposal/sync-proposal.component';
 import { ProductScrapDetailComponent } from './features/scraps/product-detail/product-scrap-detail.component';
+import { InventoryInboundRegisterComponent } from './features/products/inventory/inbound/register/inventory-inbound-register.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
+    { path: '', component: HomeComponent, pathMatch: 'full' },
+    { path: 'inventory/inbound/register', component: InventoryInboundRegisterComponent },
+    { path: 'inventory/inbound/:id', loadComponent: () => import('./features/products/inventory/inbound/detail/inventory-inbound-detail.component').then(m => m.InventoryInboundDetailComponent) },
     { path: 'categories', component: CategoriesDashboardComponent },
     { path: 'products/:id', 
       loadComponent: () => import('./features/products/detail/product-detail.component').then(m => m.ProductDetailComponent),

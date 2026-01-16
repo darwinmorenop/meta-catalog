@@ -5,11 +5,9 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
-import { ProductDashboardPriceEntity } from 'src/app/shared/entity/view/product.price.dashboard.entity';
-import { PriceHistoryEntity } from 'src/app/shared/entity/price.history.entity';
-import { ProductInventoryStockEntryEntity } from 'src/app/shared/entity/product.inventory.stock-entry.entity';
-import { ProductInventoryStockEntryDashboardEntity, UserInventoryStockEntryDashboardEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.dashboard.entity';
 import { ProductInventoryStockEntryDetailedEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.detailed.entity';
+import { ProductInventoryStockEntryDashboardEntity, UserInventoryStockEntryDashboardEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.dashboard.entity';
+import { ProductInventoryStockEntryEntity } from 'src/app/shared/entity/product.inventory.stock-entry.entity';
 
 export type StockScopeType = 'Todos' | 'Grupal' | 'Personal';
 
@@ -22,7 +20,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = ProductInventoryStockEntryDaoSupabaseService.name;
   private readonly TABLE_NAME = 'inventory_stock_entry';
-  private readonly VIEW_DASHBOARD_NAME = 'v_product_inventory_stock_entry_dashboard';
+  private readonly RPC_DASHBOARD_NAME = 'get_product_stock_entry_dashboard_by_users';
   private readonly VIEW_DETAILED_NAME = 'v_product_inventory_stock_entry_detailed';
 
   constructor() {
@@ -59,7 +57,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
 
   getAllDashboardData(userIds: number[] = []): Observable<ProductInventoryStockEntryDashboardEntity[]> {
     const context = 'getAllDashboardData';
-    const query = this.supabase.rpc('get_product_dashboard_by_users', {
+    const query = this.supabase.rpc(this.RPC_DASHBOARD_NAME, {
       p_user_ids: userIds.length > 0 ? userIds : null
     });
 
@@ -76,12 +74,12 @@ export class ProductInventoryStockEntryDaoSupabaseService {
   }
 
 
-  update(id: number, priceHistory: Partial<PriceHistoryEntity>): Observable<boolean> {
-    const context = 'updatePriceHistory';
-    this.logger.debug(`Updating price history for product ${id} with data:${JSON.stringify(priceHistory)}`, this.CLASS_NAME, context);
+  update(id: number, stockEntry: Partial<ProductInventoryStockEntryEntity>): Observable<boolean> {
+    const context = 'update';
+    this.logger.debug(`Updating stock entry for product ${id} with data:${JSON.stringify(stockEntry)}`, this.CLASS_NAME, context);
     const promise = this.supabase
       .from(this.TABLE_NAME)
-      .update(priceHistory)
+      .update(stockEntry)
       .eq('id', id);
 
     return from(promise).pipe(
@@ -91,6 +89,25 @@ export class ProductInventoryStockEntryDaoSupabaseService {
       map(() => true),
       catchError(error => {
         this.logger.error(`Error updating ${id}:`, error, this.CLASS_NAME, context);
+        return of(false);
+      })
+    );
+  }
+
+  insert(stockEntry: Partial<ProductInventoryStockEntryEntity>): Observable<boolean> {
+    const context = 'insert';
+    this.logger.debug(`Inserting stock entry for product ${stockEntry.product_id} with data:${JSON.stringify(stockEntry)}`, this.CLASS_NAME, context);
+    const promise = this.supabase
+      .from(this.TABLE_NAME)
+      .insert(stockEntry);
+
+    return from(promise).pipe(
+      tap(response => {
+        if (response.error) throw response.error;
+      }),
+      map(() => true),
+      catchError(error => {
+        this.logger.error(`Error inserting stock entry for product ${stockEntry.product_id}:`, error, this.CLASS_NAME, context);
         return of(false);
       })
     );

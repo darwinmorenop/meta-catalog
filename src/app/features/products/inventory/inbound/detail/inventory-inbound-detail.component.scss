@@ -1,0 +1,124 @@
+.detail-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--stat-value);
+    }
+    
+    .subtitle {
+      margin: 0;
+      color: var(--stat-label);
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  align-items: start;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-card, .products-card {
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+
+  mat-card-header {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--stat-label);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--stat-value);
+    }
+  }
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: rgba(var(--primary-rgb, 63, 81, 181), 0.05);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+
+    .name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--stat-value);
+    }
+    .id {
+      font-size: 0.75rem;
+      color: var(--stat-label);
+    }
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem;
+  color: var(--stat-label);
+  gap: 1rem;
+}

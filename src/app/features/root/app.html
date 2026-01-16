@@ -46,8 +46,12 @@
     <!-- Submenu Entrada -->
     <mat-menu #entryMenu="matMenu">
       <button mat-menu-item (click)="navigateTo('/inventory/stock-entry')">
-        <mat-icon>warehouse</mat-icon>
-        <span>Física</span>
+        <mat-icon>inventory_2</mat-icon>
+        <span>Stock físico</span>
+      </button>
+      <button mat-menu-item (click)="navigateTo('/inventory/inbound/register')">
+        <mat-icon>add_circle</mat-icon>
+        <span>Registrar entrada</span>
       </button>
     </mat-menu>
 

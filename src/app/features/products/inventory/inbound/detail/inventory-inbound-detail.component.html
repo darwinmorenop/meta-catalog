@@ -1,0 +1,85 @@
+<div class="detail-container" *ngIf="inboundResource.value() as inbound">
+  <header class="page-header">
+    <div class="title-wrapper">
+      <button mat-icon-button (click)="goBack()" matTooltip="Volver">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-text">
+        <h1>Entrada #{{ inbound.id }}</h1>
+        <p class="subtitle">{{ inbound.reference_number }}</p>
+      </div>
+    </div>
+    <div class="actions">
+      <mat-chip-listbox>
+        <mat-chip-option [selectable]="false" color="primary" selected>
+          {{ getStatusLabel(inbound.status) }}
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+  </header>
+
+  <div class="content-grid">
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>info</mat-icon>
+        <mat-card-title>Información General</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="details-list">
+          <div class="detail-item">
+            <span class="label">Origen (Source)</span>
+            <div class="user-badge" *ngIf="inbound.user_source">
+              <img [src]="inbound.user_source.image || 'assets/images/default-avatar.png'" [alt]="inbound.user_source.firstName">
+              <div class="user-info">
+                <span class="name">{{ inbound.user_source.firstName }} {{ inbound.user_source.lastName }}</span>
+                <span class="id">{{ inbound.user_source.identifier }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <span class="label">Destino (Target)</span>
+            <div class="user-badge" *ngIf="inbound.user_target">
+              <img [src]="inbound.user_target.image || 'assets/images/default-avatar.png'" [alt]="inbound.user_target.firstName">
+              <div class="user-info">
+                <span class="name">{{ inbound.user_target.firstName }} {{ inbound.user_target.lastName }}</span>
+                <span class="id">{{ inbound.user_target.identifier }}</span>
+              </div>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="detail-item">
+            <span class="label">Fecha Recibido</span>
+            <span class="value">{{ inbound.received_at | date:'dd/MM/yyyy' }}</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="label">Fecha Creación</span>
+            <span class="value">{{ inbound.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="products-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>inventory_2</mat-icon>
+        <mat-card-title>Productos Incluidos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-smart-table
+          [data]="tableData()"
+          [config]="tableConfig"
+          [isLoading]="inboundResource.isLoading()">
+        </app-smart-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="loading-state" *ngIf="inboundResource.isLoading()">
+  <mat-spinner diameter="40"></mat-spinner>
+  <p>Cargando detalles de la entrada...</p>
+</div>

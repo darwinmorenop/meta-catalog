@@ -32,7 +32,12 @@
       </div>
       <div class="info-item">
         <span class="label">Origen/Inbound</span>
-        <span class="value">{{ data.entry.inbound_description || 'N/A' }}</span>
+        <div class="inbound-link">
+          <span class="value">{{ data.entry.inbound_description || 'N/A' }}</span>
+          <button mat-icon-button color="primary" *ngIf="data.entry.inbound_id" (click)="goToInbound()" matTooltip="Ver detalles del inbound">
+            <mat-icon>open_in_new</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
 

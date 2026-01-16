@@ -1,0 +1,10 @@
+mat-dialog-content {
+  min-width: 850px;
+}
+
+/* Ensure only one scrollbar appears by making table container expand */
+::ng-deep .table-container {
+  max-height: none !important;
+  overflow: visible !important;
+  box-shadow: none !important;
+}

@@ -42,6 +42,12 @@ export class ProductInventoryStockEntryService {
     return this.dao.update(id, entity);
   }
 
+  insert(data: any): Observable<boolean> {
+    this.loggerService.debug(`Inserting stock entry: ${JSON.stringify(data)}`, this.CLASS_NAME, 'insert');
+    const entity: Partial<ProductInventoryStockEntryEntity> = this.mapToInsertEntity(data);
+    return this.dao.insert(entity);
+  }
+
   delete(id: number): Observable<boolean> {
     return this.dao.delete(id);
   }
@@ -52,6 +58,19 @@ export class ProductInventoryStockEntryService {
       expiry_date: data.expiry_date,
       batch_number: data.batch_number,
       unit_cost: data.unit_cost,
+    };
+    return entity;
+  }
+
+  private mapToInsertEntity(data:any): Partial<ProductInventoryStockEntryEntity> {
+    const entity: Partial<ProductInventoryStockEntryEntity> = {
+      quantity: data.quantity,
+      expiry_date: data.expiry_date,
+      batch_number: data.batch_number,
+      unit_cost: data.unit_cost,
+      product_id: data.product_id,
+      user_owner_id: data.user_owner_id,
+      inbound_id: data.inbound_id
     };
     return entity;
   }

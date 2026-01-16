@@ -31,6 +31,7 @@ export class AppComponent {
   ];
 
   navigateTo(route: string) {
+    console.log('Navigating to:', route);
     this.router.navigate([route]);
   }
 

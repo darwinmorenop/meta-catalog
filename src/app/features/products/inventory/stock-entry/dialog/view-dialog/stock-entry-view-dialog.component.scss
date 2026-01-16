@@ -1,33 +1,47 @@
 .dialog-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #1e293b;
+  gap: 0.75rem;
+  color: var(--stat-value);
+  font-weight: 800;
+  
+  mat-icon {
+    color: var(--primary-color);
+  }
 }
 
 .detail-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1rem 0;
+  gap: 2rem;
+  padding: 1.5rem 0;
 }
 
 .main-stats {
   display: flex;
-  gap: 3rem;
+  gap: 4rem;
+  background: rgba(var(--primary-rgb, 63, 81, 181), 0.04);
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+
   .stat-item {
     display: flex;
     flex-direction: column;
+    gap: 0.25rem;
+
     .label {
-      font-size: 0.8rem;
-      color: #64748b;
-      font-weight: 600;
+      font-size: 0.75rem;
+      color: var(--stat-label);
+      font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .value {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #0f172a;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--stat-value);
+      line-height: 1;
     }
   }
 }
@@ -35,20 +49,40 @@
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
+  gap: 2rem;
+  
   .info-item {
     display: flex;
     flex-direction: column;
+    gap: 0.4rem;
+
     .label {
-      font-size: 0.75rem;
-      color: #94a3b8;
+      font-size: 0.7rem;
+      color: var(--stat-label);
       font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .value {
-      font-size: 1rem;
-      color: #334155;
-      font-weight: 500;
+      font-size: 1.1rem;
+      color: var(--stat-value);
+      font-weight: 600;
+    }
+
+    .inbound-link {
+       display: flex;
+       align-items: center;
+       gap: 0.5rem;
+       
+       button {
+         width: 32px;
+         height: 32px;
+         line-height: 32px;
+         
+         mat-icon {
+           font-size: 18px;
+         }
+       }
     }
   }
 }
@@ -56,7 +90,11 @@
 .meta-info {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.75rem;
-  color: #94a3b8;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--bg-color);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: var(--stat-label);
+  border: 1px solid var(--border-color);
 }

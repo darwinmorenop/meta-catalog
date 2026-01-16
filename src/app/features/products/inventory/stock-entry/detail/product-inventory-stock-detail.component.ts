@@ -11,6 +11,7 @@ import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { StockEntryViewDialogComponent } from 'src/app/features/products/inventory/stock-entry/dialog/view-dialog/stock-entry-view-dialog.component';
 import { StockEntryEditDialogComponent } from 'src/app/features/products/inventory/stock-entry/dialog/edit-dialog/stock-entry-edit-dialog.component';
+import { LinkStockToInboundDialogComponent } from 'src/app/features/products/inventory/stock-entry/dialog/link-inbound/link-stock-to-inbound-dialog.component';
 
 // Services & Models
 import { ProductInventoryStockEntryService } from 'src/app/core/services/products/product-inventory-stock-entry.service';
@@ -107,6 +108,38 @@ export class ProductInventoryStockDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.stockService.update(result).subscribe(success => {
+          if (success) {
+            this.stockHistoryResource.reload();
+          }
+        });
+      }
+    });
+  }
+
+  onAddStock() {
+    const info = this.productInfo();
+    const entry = {
+      product_id: info?.product_id,
+      user_owner_id: info?.user_owner_id,
+      product_name: info?.product_name,
+      product_sku: info?.product_sku,
+      quantity: 1,
+      unit_cost: 0
+    };
+
+    const dialogRef = this.dialog.open(LinkStockToInboundDialogComponent, {
+      width: '600px',
+      autoFocus: false,
+      data: { entry }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const insertData = {
+          ...entry,
+          ...result
+        };
+        this.stockService.insert(insertData).subscribe(success => {
           if (success) {
             this.stockHistoryResource.reload();
           }

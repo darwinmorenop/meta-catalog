@@ -7,7 +7,7 @@
   </mat-form-field>
 
   <mat-selection-list [multiple]="false" (selectionChange)="onSelectionChange($event)">
-    <mat-list-option *ngFor="let user of filteredUsers()" [value]="user" [selected]="userService.currentUser()?.id === user.id">
+    <mat-list-option *ngFor="let user of filteredUsers()" [value]="user" [selected]="!data?.selectOnly && userService.currentUser()?.id === user.id">
       <div class="user-option">
         <div class="avatar-container">
           <img [src]="user.image || 'assets/images/default-avatar.png'" [alt]="user.firstName">
@@ -26,5 +26,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="dialogRef.close()">Cerrar</button>
-  <button mat-flat-button color="warn" (click)="clearActiveUser()">Limpiar activo</button>
+  <button mat-flat-button color="warn" *ngIf="!data?.selectOnly" (click)="clearActiveUser()">Limpiar activo</button>
 </mat-dialog-actions>
