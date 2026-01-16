@@ -1,0 +1,148 @@
+<div class="section-container">
+    <mat-tab-group animationDuration="0ms" class="stock-tabs">
+        <!-- COMPRA (Inventory Inbound) -->
+        <mat-tab label="Compra">
+            <div class="tab-content" [formGroup]="purchaseForm">
+                <div class="grid-layout">
+                    <mat-card class="edit-card">
+                        <mat-card-header>
+                            <mat-card-title>Detalles de Entrada</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <div class="row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>ID Parent (Producto)</mat-label>
+                                    <input matInput type="number" formControlName="parent" readonly>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Cantidad</mat-label>
+                                    <input matInput type="number" formControlName="quantity">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Coste Unitario</mat-label>
+                                    <input matInput type="number" formControlName="unit_cost">
+                                    <span matTextPrefix>€&nbsp;</span>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Lote</mat-label>
+                                    <input matInput formControlName="batch_number" placeholder="Ej: LOT-2024-001">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Fuente / Proveedor</mat-label>
+                                    <input matInput formControlName="source" placeholder="Ej: Distribuidora Central">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Fecha de Recepción</mat-label>
+                                    <input matInput type="datetime-local" formControlName="received_at">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Fecha de Caducidad</mat-label>
+                                    <input matInput type="date" formControlName="expiry_date">
+                                </mat-form-field>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="actions-row">
+                    <button mat-flat-button color="primary" (click)="onSavePurchase()" [disabled]="purchaseForm.invalid">
+                        <mat-icon>save</mat-icon>
+                        Guardar Compra
+                    </button>
+                </div>
+            </div>
+        </mat-tab>
+
+        <!-- VENTA (Inventory Outbound) -->
+        <mat-tab label="Venta">
+            <div class="tab-content" [formGroup]="saleForm">
+                <div class="grid-layout">
+                    <mat-card class="edit-card">
+                        <mat-card-header>
+                            <mat-card-title>Detalles de Salida / Venta</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <div class="row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>ID Parent (Producto)</mat-label>
+                                    <input matInput type="number" formControlName="parent" readonly>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Destinatario / Cliente</mat-label>
+                                    <input matInput formControlName="target" placeholder="Ej: Pedido #12345">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Cantidad</mat-label>
+                                    <input matInput type="number" formControlName="quantity">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Precio Unitario Venta</mat-label>
+                                    <input matInput type="number" formControlName="unit_price">
+                                    <span matTextPrefix>€&nbsp;</span>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Importe Total</mat-label>
+                                    <input matInput type="number" formControlName="total_amount">
+                                    <span matTextPrefix>€&nbsp;</span>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Método de Pago</mat-label>
+                                    <mat-select formControlName="payment_method">
+                                        <mat-option value="Efectivo">Efectivo</mat-option>
+                                        <mat-option value="Tarjeta">Tarjeta</mat-option>
+                                        <mat-option value="Transferencia">Transferencia</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Estado</mat-label>
+                                    <mat-select formControlName="status">
+                                        <mat-option value="completed">Completado</mat-option>
+                                        <mat-option value="pending">Pendiente</mat-option>
+                                        <mat-option value="cancelled">Cancelado</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Coste en Venta (U.C.A.S)</mat-label>
+                                    <input matInput type="number" formControlName="unit_cost_at_sale">
+                                    <mat-hint>Coste de adquisición en el momento de la venta</mat-hint>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="row">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Descuento Aplicado</mat-label>
+                                    <input matInput type="number" formControlName="discount_amount">
+                                </mat-form-field>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="actions-row">
+                    <button mat-flat-button color="primary" (click)="onSaveSale()" [disabled]="saleForm.invalid">
+                        <mat-icon>save</mat-icon>
+                        Guardar Venta
+                    </button>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

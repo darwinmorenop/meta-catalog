@@ -33,6 +33,18 @@ export class HomeComponent {
   }
 
   goToMedia() {
-    this.router.navigate(['/products/media-dashboard']);
+    this.router.navigate(['/products-media-dashboard']);
+  }
+
+  goToUsers() {
+    this.router.navigate(['/users']);
+  }
+
+  goToPrice() {
+    this.router.navigate(['/products-price-dashboard']);
+  }
+
+  goToInventoryStock() {
+    this.router.navigate(['/inventory/stock-entry']);
   }
 }

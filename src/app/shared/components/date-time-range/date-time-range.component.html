@@ -1,0 +1,11 @@
+<div class="date-row" [formGroup]="formGroup">
+  <mat-form-field appearance="outline">
+    <mat-label>{{ startLabel }}</mat-label>
+    <input matInput type="datetime-local" [formControl]="startControl">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{ endLabel }}</mat-label>
+    <input matInput type="datetime-local" [formControl]="endControl">
+  </mat-form-field>
+</div>

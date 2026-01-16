@@ -1,0 +1,50 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>inventory</mat-icon>
+  Detalles de Entrada de Stock
+</h2>
+<mat-dialog-content>
+  <div class="detail-container">
+    <div class="main-stats">
+      <div class="stat-item">
+        <span class="label">Cantidad</span>
+        <span class="value">{{ data.entry.quantity }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="label">Costo Unitario</span>
+        <span class="value">{{ data.entry.unit_cost | currency:'EUR' }}</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="label">Número de Lote</span>
+        <span class="value">{{ data.entry.batch_number || 'N/A' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Fecha Vencimiento</span>
+        <span class="value">{{ data.entry.expiry_date ? (data.entry.expiry_date | date:'dd/MM/yyyy') : 'N/A' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Usuario Propietario</span>
+        <span class="value">{{ data.entry.user_owner_first_name }} {{ data.entry.user_owner_last_name }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Origen/Inbound</span>
+        <span class="value">{{ data.entry.inbound_description || 'N/A' }}</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="meta-info">
+      <span>ID Registro: #{{ data.entry.id }}</span>
+      <span>Creado el: {{ data.entry.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+      <span>Actualizado el: {{ data.entry.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

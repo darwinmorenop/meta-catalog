@@ -1,0 +1,89 @@
+<div class="history-container" [class.embedded]="embedded">
+    @if (!embedded) {
+      <header class="history-header">
+        <div class="header-title-wrapper">
+          <button mat-icon-button (click)="goBack()" class="back-button" matTooltip="Volver al dashboard">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <div class="header-content">
+            <h1>Historial de Precios</h1>
+            @if (product(); as p) {
+              <p class="subtitle">{{ p.product_name }} - SKU: {{ p.product_sku }}</p>
+            } @else {
+              <p class="subtitle">Cargando información del producto...</p>
+            }
+          </div>
+        </div>
+        <div class="header-actions">
+          <button mat-flat-button color="primary" (click)="onCreatePrice()" class="create-button">
+            <mat-icon>add</mat-icon>
+            Nuevo Registro
+          </button>
+          <button mat-icon-button (click)="priceHistoryResource.reload()" [disabled]="priceHistoryResource.isLoading()" matTooltip="Actualizar historial">
+            <mat-icon [class.spinning]="priceHistoryResource.isLoading()">refresh</mat-icon>
+          </button>
+        </div>
+      </header>
+    }
+  
+    <div class="content-grid">
+      <!-- Product Quick Info Bar -->
+      @if (product(); as p) {
+        <mat-card class="product-info-card">
+          <mat-card-content>
+            <div class="info-item">
+              <div class="avatar-container">
+                  <img [src]="p.product_main_image || 'assets/images/default-product.png'" alt="Producto">
+              </div>
+              <div class="text-group">
+                  <span class="label">Categoría</span>
+                  <span class="value">{{ p.category_name }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+                <div class="text-group">
+                    <span class="label">EAN</span>
+                    <span class="value">{{ p.product_ean || 'N/A' }}</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="text-group">
+                    <span class="label">Total Cambios</span>
+                    <span class="value">{{ tableData().length }}</span>
+                </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+  
+      <mat-card class="table-card">
+        <mat-card-header>
+          <mat-card-title>Registros de Precios</mat-card-title>
+          @if (embedded) {
+            <button mat-flat-button color="primary" (click)="onCreatePrice()">
+              <mat-icon>add</mat-icon>
+              Nuevo Registro
+            </button>
+          }
+        </mat-card-header>
+        <mat-card-content>
+          @if (priceHistoryResource.error()) {
+            <div class="error-container">
+              <mat-icon color="warn">error</mat-icon>
+              <span>Error al cargar el historial de precios.</span>
+            </div>
+          }
+  
+          <app-smart-table
+            [data]="tableData()"
+            [config]="tableConfig"
+            [isLoading]="priceHistoryResource.isLoading()"
+            (view)="onViewPrice($event)"
+            (edit)="onEditPrice($event)"
+            (delete)="onDeletePrice($event)">
+          </app-smart-table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  

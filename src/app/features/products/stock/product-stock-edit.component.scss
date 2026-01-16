@@ -41,11 +41,14 @@
     }
 }
 
-.helper-text {
-    font-size: 0.8rem;
-    color: #64748b;
-    font-style: italic;
-    margin-top: -0.5rem;
+.tab-content {
+    padding: 1.5rem 0;
+}
+
+.stock-tabs {
+    ::ng-deep .mat-mdc-tab-body-wrapper {
+        margin-top: 1rem;
+    }
 }
 
 .actions-row {

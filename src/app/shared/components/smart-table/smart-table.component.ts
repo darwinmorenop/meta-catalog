@@ -116,8 +116,14 @@ export class SmartTableComponent implements AfterViewInit {
         if (!this.config || !this.data) return;
 
         this.config.columns.filter(c => c.filterable).forEach(col => {
-            const values = new Set(this.data.map(p => String(p[col.key] || '')));
-            const sortedValues = Array.from(values).sort();
+            let values: Set<string>;
+            if (col.type === 'boolean') {
+                // Para booleanos aseguramos siempre SI (true) y NO (false)
+                values = new Set(['true', 'false']);
+            } else {
+                values = new Set(this.data.map(p => String(p[col.key] ?? '')));
+            }
+            const sortedValues = Array.from(values).sort((a, b) => b.localeCompare(a)); // true before false roughly
             this.filterOptions[col.key] = sortedValues;
             this.filteredFilterOptions[col.key] = sortedValues;
         });
@@ -137,7 +143,7 @@ export class SmartTableComponent implements AfterViewInit {
             // 1. Global Search
             const globalMatch = !searchTerms.global ||
                 this.config.searchableFields.some(field =>
-                    String(data[field] || '').toLowerCase().includes(searchTerms.global.toLowerCase())
+                    String(data[field] ?? '').toLowerCase().includes(searchTerms.global.toLowerCase())
                 );
 
             if (!globalMatch) return false;
@@ -146,7 +152,7 @@ export class SmartTableComponent implements AfterViewInit {
             for (const colKey in searchTerms.columns) {
                 const filterValue = searchTerms.columns[colKey];
                 if (filterValue) {
-                    const dataValue = String(data[colKey] || '').toLowerCase();
+                    const dataValue = String(data[colKey] ?? '').toLowerCase();
                     if (dataValue !== filterValue.toLowerCase()) {
                         return false;
                     }

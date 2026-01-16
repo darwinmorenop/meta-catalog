@@ -1,0 +1,39 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-title-wrapper">
+      <button mat-icon-button routerLink="/" class="back-button">
+        <mat-icon>home</mat-icon>
+      </button>
+      <div class="header-content">
+        <h1>Dashboard de Precios</h1>
+        <p class="subtitle">Gestión histórica de precios y ofertas por producto</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button mat-icon-button (click)="priceResource.reload()" [disabled]="priceResource.isLoading()">
+        <mat-icon [class.spinning]="priceResource.isLoading()">refresh</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Historial de Precios por Producto</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (priceResource.error()) {
+        <div class="error-container">
+          <mat-icon color="warn">error</mat-icon>
+          <span>Error al cargar datos de precios. Por favor, intente de nuevo.</span>
+        </div>
+      }
+
+      <app-smart-table
+        [data]="tableData()"
+        [config]="tableConfig"
+        [isLoading]="priceResource.isLoading()"
+        (view)="onViewPrice($event)">
+      </app-smart-table>
+    </mat-card-content>
+  </mat-card>
+</div>

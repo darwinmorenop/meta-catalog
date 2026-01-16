@@ -1,0 +1,33 @@
+<div class="detail-container">
+  <header class="detail-header">
+    <div class="header-title-wrapper">
+      <button mat-icon-button (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-content">
+        <h1>Entradas de Stock</h1>
+        <p class="subtitle" *ngIf="productInfo()">
+          {{ productInfo().product_name }} - {{ productInfo().user_name }}
+        </p>
+      </div>
+    </div>
+    <div class="header-actions">
+       <button mat-icon-button (click)="stockHistoryResource.reload()" [disabled]="stockHistoryResource.isLoading()">
+        <mat-icon [class.spinning]="stockHistoryResource.isLoading()">refresh</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <mat-card class="table-card">
+    <mat-card-content>
+      <app-smart-table
+        [data]="tableData()"
+        [config]="tableConfig"
+        [isLoading]="stockHistoryResource.isLoading()"
+        (view)="onViewEntry($event)"
+        (edit)="onEditEntry($event)"
+        (delete)="onDeleteEntry($event)">
+      </app-smart-table>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -33,6 +33,7 @@ export class ProductMediaService {
   }
 
   getAllMediaDashboardData(): Observable<ProductDashboardMediaEntity[]> {
+    this.loggerService.debug(`Getting all media dashboard data`, this.CLASS_NAME, 'getAllMediaDashboardData');
     return this.mediaDao.getAllMediaDashboardData();
   }
 

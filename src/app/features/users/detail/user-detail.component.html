@@ -1,0 +1,160 @@
+<div class="user-detail-container">
+  <!-- Header -->
+  <header class="detail-header">
+    <div class="header-left">
+      <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="user-info-brief" *ngIf="user() as u">
+        <div class="avatar-container">
+          <img [src]="u.image || 'assets/images/default-avatar.png'" [alt]="u.fullName">
+        </div>
+        <div class="text-info">
+          <h1>{{ u.fullName }}</h1>
+          <span class="rank-badge">{{ getRankLabel(u.rank) }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <!-- Future actions like edit -->
+    </div>
+  </header>
+
+  <div class="detail-content" *ngIf="!userNetworkResource.isLoading(); else loading">
+    
+    <!-- User Overview Card -->
+    <div class="overview-grid" *ngIf="user() as u">
+      <mat-card class="detail-card">
+        <mat-card-header>
+          <mat-card-title>Información Personal</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-row">
+            <mat-icon>email</mat-icon>
+            <div class="label-value">
+              <span class="label">Email</span>
+              <span class="value">{{ u.email }}</span>
+            </div>
+          </div>
+          <div class="info-row">
+            <mat-icon>phone</mat-icon>
+            <div class="label-value">
+              <span class="label">Teléfono</span>
+              <span class="value">{{ u.phone || 'N/A' }}</span>
+            </div>
+          </div>
+          <div class="info-row">
+            <mat-icon>account_tree</mat-icon>
+            <div class="label-value">
+              <span class="label">ID de Usuario</span>
+              <span class="value">{{ u.id }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="detail-card">
+        <mat-card-header>
+          <mat-card-title>Sponsor Directo</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="sponsor-brief" *ngIf="u.sponsorId; else noSponsor" (click)="viewUser(u.sponsorId)">
+            <div class="avatar-sm">
+              <img [src]="u.sponsorImage || 'assets/images/default-avatar.png'" alt="Sponsor">
+            </div>
+            <div class="sponsor-text">
+              <span class="name">{{ u.sponsorFullName }}</span>
+              <span class="rank">{{ getRankLabel(u.sponsorRank!) }}</span>
+            </div>
+            <mat-icon>chevron_right</mat-icon>
+          </div>
+          <ng-template #noSponsor>
+            <p class="empty-msg">Este usuario no tiene sponsor (Raíz).</p>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Network Tree Section -->
+    <div class="network-section">
+      <div class="section-header">
+        <mat-icon>hub</mat-icon>
+        <h2>Red de Distribución</h2>
+      </div>
+
+      <mat-card class="tree-card">
+        <mat-card-content>
+          <mat-tree #tree="matTree" [dataSource]="dataSource()" [childrenAccessor]="childrenAccessor" class="mlm-tree">
+            <!-- Node without children (Leaf) -->
+            <mat-nested-tree-node *matTreeNodeDef="let node">
+              <div class="mat-tree-node">
+                <button mat-icon-button disabled></button>
+                <div class="node-content leaf level-{{node.relativeLevel}}">
+                  <div class="level-badge">N{{node.relativeLevel}}</div>
+                  <div class="avatar-xs">
+                      <img [src]="node.image || 'assets/images/default-avatar.png'" [alt]="node.fullName">
+                  </div>
+                  <div class="node-text">
+                      <span class="user-rank">{{ getRankLabel(node.rank) }}</span>
+                      <strong>{{node.fullName}}</strong>
+                      <span class="user-email">{{node.email}}</span>
+                  </div>
+                  <div class="node-actions">
+                    <button mat-icon-button (click)="viewUser(node.id)" matTooltip="Ver detalles del usuario">
+                      <mat-icon>person_search</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </mat-nested-tree-node>
+
+            <!-- Node with children (Branch) -->
+            <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+              <div class="mat-tree-node">
+                <button mat-icon-button matTreeNodeToggle
+                        [attr.aria-label]="'Toggle ' + node.fullName">
+                  <mat-icon class="mat-icon-rtl-mirror">
+                    {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                  </mat-icon>
+                </button>
+                <div class="node-content leader level-{{node.relativeLevel}}">
+                  <div class="level-badge">N{{node.relativeLevel}}</div>
+                  <div class="avatar-xs">
+                      <img [src]="node.image || 'assets/images/default-avatar.png'" [alt]="node.fullName">
+                  </div>
+                  <div class="node-text">
+                    <span class="user-rank">{{ getRankLabel(node.rank) }}</span>
+                    <strong>{{node.fullName}}</strong>
+                    <span class="badge" *ngIf="node.children.length > 0">
+                        {{node.children.length}} directos
+                    </span>
+                  </div>
+                  <div class="node-actions">
+                    <button mat-icon-button (click)="viewUser(node.id)" matTooltip="Ver detalles del usuario">
+                      <mat-icon>person_search</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div [class.tree-invisible]="!tree.isExpanded(node)" role="group" class="level-group">
+                <div class="level-separator" *ngIf="tree.isExpanded(node)">
+                    <span class="separator-text">Nivel {{node.relativeLevel + 1}}</span>
+                    <div class="separator-line"></div>
+                </div>
+                <ng-container matTreeNodeOutlet></ng-container>
+              </div>
+            </mat-nested-tree-node>
+          </mat-tree>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando red...</p>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Editar Entrada de Stock</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" class="edit-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" formControlName="quantity">
+        <mat-error *ngIf="form.get('quantity')?.hasError('required')">Requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Costo Unitario</mat-label>
+        <input matInput type="number" step="0.01" formControlName="unit_cost">
+        <mat-icon matSuffix>payments</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Número de Lote</mat-label>
+        <input matInput formControlName="batch_number">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de Vencimiento</mat-label>
+        <input matInput type="date" formControlName="expiry_date">
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">Guardar</button>
+</mat-dialog-actions>

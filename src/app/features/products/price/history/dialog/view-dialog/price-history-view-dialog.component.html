@@ -1,0 +1,62 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>history_edu</mat-icon>
+  Detalles del Registro de Precio
+</h2>
+<mat-dialog-content>
+  <div class="detail-container">
+    <div class="price-section">
+      <div class="price-item">
+        <span class="label">Precio Original</span>
+        <span class="value">{{ data.price.original_price | currency:'EUR' }}</span>
+      </div>
+      <div class="price-item highlight">
+        <span class="label">Precio Oferta</span>
+        <span class="value">{{ data.price.sale_price | currency:'EUR' }}</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="label">Inicio Oferta</span>
+        <span class="value">{{ data.price.offer_start ? (data.price.offer_start | date:'dd/MM/yyyy HH:mm') : 'N/A' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Fin Oferta</span>
+        <span class="value">{{ data.price.offer_end ? (data.price.offer_end | date:'dd/MM/yyyy HH:mm') : 'N/A' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Estado</span>
+        <span class="value badge" [class.active]="data.price.is_active">
+          {{ data.price.is_active ? 'Activo' : 'Inactivo' }}
+        </span>
+      </div>
+      <div class="info-item">
+        <span class="label">ID Registro</span>
+        <span class="value">#{{ data.price.id }}</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="reason-section">
+      <span class="label">Motivo / Notas</span>
+      <p class="reason-text">{{ data.price.reason || 'Sin observaciones.' }}</p>
+    </div>
+
+    <div class="meta-info">
+      <div class="meta-item">
+        <mat-icon>calendar_today</mat-icon>
+        <span>Creado: {{ data.price.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="meta-item">
+        <mat-icon>edit_note</mat-icon>
+        <span>Última modificación: {{ data.price.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

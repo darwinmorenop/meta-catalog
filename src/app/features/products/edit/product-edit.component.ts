@@ -48,8 +48,6 @@ export class ProductEditComponent implements OnInit {
 
   navLinks = [
     { path: 'general', label: 'General', icon: 'edit' },
-    { path: 'pricing', label: 'Precios', icon: 'payments' },
-    { path: 'stock', label: 'Stock', icon: 'inventory_2' },
     { path: 'attributes', label: 'Atributos', icon: 'list_alt' }
   ];
 

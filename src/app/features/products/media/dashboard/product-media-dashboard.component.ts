@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,8 +27,10 @@ import { ProductDashboardMediaEntity } from 'src/app/shared/entity/view/product.
   templateUrl: './product-media-dashboard.component.html',
   styleUrl: './product-media-dashboard.component.scss'
 })
-export class ProductMediaDashboardComponent {
+export class ProductMediaDashboardComponent implements OnInit {
   private readonly mediaService = inject(ProductMediaService);
+  private readonly loggerService = inject(LoggerService);
+  private readonly CLASS_NAME = ProductMediaDashboardComponent.name;
   private readonly router = inject(Router);
   
   mediaResource = rxResource({
@@ -64,6 +66,10 @@ export class ProductMediaDashboardComponent {
 
   onViewMedia(row: ProductDashboardMediaEntity): void {
     this.mediaService.setCurrentProduct(row);
-    this.router.navigate(['/products/media', row.product_id]);
+    this.router.navigate(['/products-media', row.product_id]);
+  }
+
+  ngOnInit(): void {
+    this.loggerService.debug(`ProductMediaDashboardComponent ngOnInit`, this.CLASS_NAME, 'ngOnInit');
   }
 }

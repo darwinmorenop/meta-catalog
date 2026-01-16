@@ -19,7 +19,16 @@
                                 (keydown)="$event.stopPropagation()" placeholder="Buscar..." class="search-select-input">
                         </div>
                         <mat-option value="">Todos</mat-option>
-                        <mat-option *ngFor="let val of filteredFilterOptions[col.key]" [value]="val">{{ val }}</mat-option>
+                        <mat-option *ngFor="let val of filteredFilterOptions[col.key]" [value]="val">
+                            <ng-container [ngSwitch]="col.type">
+                                <ng-container *ngSwitchCase="'boolean'">
+                                    {{ val === 'true' ? 'SI' : 'NO' }}
+                                </ng-container>
+                                <ng-container *ngSwitchDefault>
+                                    {{ val }}
+                                </ng-container>
+                            </ng-container>
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
             </ng-container>

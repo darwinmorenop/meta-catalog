@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Seleccionar Sponsor</h2>
+<mat-dialog-content>
+
+  <div class="table-container">
+    <app-smart-table
+      [data]="tableData()"
+      [config]="tableConfig"
+      (selectionChange)="onSelect($event)">
+    </app-smart-table>
+
+    <div *ngIf="sponsorsResource.isLoading()" class="loading-overlay">
+      <div class="loader"></div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+</mat-dialog-actions>

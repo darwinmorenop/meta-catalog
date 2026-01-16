@@ -28,8 +28,6 @@ export const routes: Routes = [
       children: [
         { path: '', redirectTo: 'general', pathMatch: 'full' },
         { path: 'general', loadComponent: () => import('./features/products/edit/sections/product-general-edit/product-general-edit.component').then(m => m.ProductGeneralEditComponent) },
-        { path: 'pricing', loadComponent: () => import('./features/products/edit/sections/product-pricing-edit/product-pricing-edit.component').then(m => m.ProductPricingEditComponent) },
-        { path: 'stock', loadComponent: () => import('./features/products/edit/sections/product-stock-edit/product-stock-edit.component').then(m => m.ProductStockEditComponent) },
         { path: 'attributes', loadComponent: () => import('./features/products/edit/sections/product-attributes-edit/product-attributes-edit.component').then(m => m.ProductAttributesEditComponent) }
       ]
     },
@@ -39,7 +37,13 @@ export const routes: Routes = [
     { path: 'scraps/sync', component: SyncProposalComponent },
     { path: 'scraps/:scrapId/products/:productId', component: ProductScrapDetailComponent },
     { path: 'scraps/:id', component: ScrapDetailComponent },
-    { path: 'products/media-dashboard', loadComponent: () => import('./features/products/media/dashboard/product-media-dashboard.component').then(m => m.ProductMediaDashboardComponent) },
-    { path: 'products/media/:productId', loadComponent: () => import('./features/products/media/media-list/media-list-dashboard.component').then(m => m.MediaListDashboardComponent) },
+    { path: 'products-media-dashboard', loadComponent: () => import('./features/products/media/dashboard/product-media-dashboard.component').then(m => m.ProductMediaDashboardComponent) },
+    { path: 'products-media/:productId', loadComponent: () => import('./features/products/media/media-list/media-list-dashboard.component').then(m => m.MediaListDashboardComponent) },
+    { path: 'products-price-dashboard', loadComponent: () => import('./features/products/price/dashboard/product-price-dashboard.component').then(m => m.ProductPriceDashboardComponent) },
+    { path: 'products-price/:productId', loadComponent: () => import('./features/products/price/history/product-price-history.component').then(m => m.ProductPriceHistoryComponent) },
+    { path: 'users', loadComponent: () => import('./features/users/dashboard/user-dashboard.component').then(m => m.UserDashboardComponent) },
+    { path: 'users/:id', loadComponent: () => import('./features/users/detail/user-detail.component').then(m => m.UserDetailComponent) },
+    { path: 'inventory/stock-entry', loadComponent: () => import('./features/products/inventory/stock-entry/dashboard/product-inventory-stock-dashboard.component').then(m => m.ProductInventoryStockDashboardComponent) },
+    { path: 'inventory/stock-entry/:productId/:userId', loadComponent: () => import('./features/products/inventory/stock-entry/detail/product-inventory-stock-detail.component').then(m => m.ProductInventoryStockDetailComponent) },
     { path: '**', component: HomeComponent }
 ];

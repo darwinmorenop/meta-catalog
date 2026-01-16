@@ -1,0 +1,54 @@
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.sponsor-section {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+  margin: 0.5rem 0;
+
+  h3 {
+    margin: 0 0 1rem 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+  }
+
+  .sponsor-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sponsor-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #1e293b;
+    font-weight: 500;
+
+    mat-icon {
+      color: #64748b;
+    }
+  }
+}

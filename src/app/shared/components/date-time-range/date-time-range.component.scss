@@ -1,0 +1,14 @@
+.date-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  
+  mat-form-field {
+    flex: 1;
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 0;
+  }
+}

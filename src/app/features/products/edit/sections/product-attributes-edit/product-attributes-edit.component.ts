@@ -65,15 +65,15 @@ export class ProductAttributesEditComponent implements OnInit {
     this.notesBaseList.set(a?.notes?.base || []);
 
     this.form = this.fb.group({
-      gender: [a?.gender || 'unisex'],
-      format: [a?.format.toLowerCase() || 'spray'],
-      size: [a?.size || ''],
-      unit: [a?.unit || 'ml'],
-      pao: [a?.pao || ''],
+      gender: [a?.gender?? 'unisex'],
+      format: [a?.format?.toLowerCase()?? 'spray'],
+      size: [a?.size?? ''],
+      unit: [a?.unit?? 'ml'],
+      pao: [a?.pao?? ''],
       claims: this.fb.group({
-        is_vegan: [a?.claims?.is_vegan || false],
-        is_cruelty_free: [a?.claims?.is_cruelty_free || false],
-        is_refillable: [a?.claims?.is_refillable || false]
+        is_vegan: [a?.claims?.is_vegan?? false],
+        is_cruelty_free: [a?.claims?.is_cruelty_free?? false],
+        is_refillable: [a?.claims?.is_refillable?? false]
       })
     });
   }

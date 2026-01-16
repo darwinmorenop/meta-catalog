@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
-import { MetaProduct, sanitizeMetaProduct, META_PRODUCT_HEADERS, MANDATORY_FIELDS } from 'src/app/core/models/meta-model';
+import { MetaProduct, sanitizeMetaProduct, META_PRODUCT_HEADERS, MANDATORY_FIELDS } from 'src/app/core/models/products/meta/meta-model';
 
 @Injectable({
   providedIn: 'root'

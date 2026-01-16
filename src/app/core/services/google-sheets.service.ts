@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, forkJoin, map, of } from 'rxjs';
 import * as XLSX from 'xlsx';
-import { MetaProduct, sanitizeMetaProduct } from '../models/meta-model';
+import { MetaProduct, sanitizeMetaProduct } from '../models/products/meta/meta-model';
 
 @Injectable({
     providedIn: 'root'

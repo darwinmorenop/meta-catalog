@@ -4,4 +4,5 @@ export interface ProductPricing {
     currency: string;
     offer_start_date: Date;
     offer_end_date: Date;
+    price_reason?: string;
 }
