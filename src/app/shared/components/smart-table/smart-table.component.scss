@@ -9,7 +9,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -43,7 +43,7 @@
 }
 
 .table-container {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: auto;
@@ -51,18 +51,30 @@
 
     table {
         width: 100%;
+        background: transparent;
 
         tr.mat-mdc-row {
             cursor: pointer;
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: #f5f5f5;
+                background-color: rgba(128, 128, 128, 0.05);
             }
 
             &.selected-row {
-                background-color: #e3f2fd;
+                background-color: rgba(63, 81, 181, 0.1);
             }
+        }
+
+        th.mat-mdc-header-cell {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td.mat-mdc-cell {
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
         }
     }
 }
@@ -72,65 +84,63 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: white;
-    border-bottom: 1px solid #eee;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
 
     .search-select-input {
         width: 100%;
         padding: 8px;
         box-sizing: border-box;
-        border: 1px solid #ccc;
+        background: var(--card-bg);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
         border-radius: 4px;
 
         &:focus {
             outline: none;
-            border-color: #3f51b5;
+            border-color: #7b1fa2;
         }
     }
 }
 
 .stock-ok {
-    color: #4caf50;
+    color: #81c784;
     font-weight: bold;
     padding: 0.25rem 0.5rem;
-    background: #e8f5e9;
+    background: rgba(129, 199, 132, 0.1);
     border-radius: 4px;
 }
 
 .stock-out {
-    color: #f44336;
+    color: #e57373;
     font-weight: bold;
     padding: 0.25rem 0.5rem;
-    background: #ffebee;
+    background: rgba(229, 115, 115, 0.1);
     border-radius: 4px;
 }
 
 .empty-state {
     text-align: center;
     padding: 4rem;
-    color: #666;
-    background: #f5f5f5;
+    color: var(--stat-label);
+    background: var(--card-bg);
     border-radius: 8px;
-    border: 2px dashed #ccc;
+    border: 2px dashed var(--border-color);
 }
 
 .state-new {
-    color: #2e7d32;
-    /* Green 800 */
+    color: #4ade80;
     font-weight: bold;
     padding: 0.25rem 0.5rem;
-    background: #e8f5e9;
-    /* Green 50 */
+    background: rgba(74, 222, 128, 0.15);
     border-radius: 4px;
 }
 
 .state-changed {
-    color: #ef6c00;
-    /* Orange 800 */
+    color: #fb923c;
     font-weight: bold;
     padding: 0.25rem 0.5rem;
-    background: #fff3e0;
-    /* Orange 50 */
+    background: rgba(251, 146, 60, 0.15);
     border-radius: 4px;
 }
 
@@ -157,7 +167,7 @@
         height: 40px;
         border-radius: 4px;
         object-fit: cover;
-        background: #f0f0f0;
-        border: 1px solid #ddd;
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
     }
 }

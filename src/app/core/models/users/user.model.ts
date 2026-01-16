@@ -1,3 +1,5 @@
+import { UserSettingsEntity } from "src/app/shared/entity/user.entity";
+
 export enum UserRankEnum {
   unknown = 'Desconocido',
   clienta = 'Clienta',
@@ -20,22 +22,28 @@ export interface UserDashboardModel {
   email: string | null;
   phone: string | null;
   isManual: boolean;
+  identifier: string;
   firstName: string;
   lastName?: string | null;
   rank: UserRankEnum;
   sponsor: UserDashboardModel | null;
   image: string | null;
+  permissions: string[];
+  settings: UserSettingsEntity;
 }
 
 export interface UserCreateModel {
   email: string | null;
   phone: string | null;
+  identifier: string;
   isManual: boolean;
   firstName: string;
   lastName?: string | null;
   rank: UserRankEnum;
   sponsorId: number | null;
   image: string | null;
+  permissions: string[];
+  settings: UserSettingsEntity;
 }
 
 export interface UserUpdateModel extends Omit<UserCreateModel, 'sponsorId'> {

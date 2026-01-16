@@ -1,4 +1,75 @@
 /* You can add global styles to this file, and also import other style files */
-@import "@angular/material/prebuilt-themes/indigo-pink.css";
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "@angular/material/prebuilt-themes/purple-green.css";
+
+:root {
+  --bg-color: #f1f5f9;
+  --text-color: #1e293b;
+  --card-bg: #ffffff;
+  --header-bg: #3f51b5;
+  --header-text: #ffffff;
+  --border-color: #e2e8f0;
+  --stat-label: #64748b;
+  --stat-value: #1e293b;
+}
+
+body.dark-theme {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --card-bg: #1e1e1e;
+  --header-bg: #1f1f1f;
+  --header-text: #ffffff;
+  --border-color: #333333;
+  --stat-label: #94a3b8;
+  --stat-value: #ffffff;
+}
+
+html, body { 
+  height: 100%; 
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body { 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+.main-content {
+  padding: 24px;
+  background-color: var(--bg-color);
+  min-height: calc(100vh - 64px);
+  box-sizing: border-box;
+}
+
+/* Material overrides for themes */
+.mat-mdc-card {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Dark theme specific adjustments for form fields */
+body.dark-theme {
+  .mat-mdc-form-field-label {
+    color: #94a3b8 !important;
+  }
+  
+  .mat-mdc-input-element {
+    color: #ffffff !important;
+  }
+}

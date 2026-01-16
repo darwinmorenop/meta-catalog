@@ -1,5 +1,5 @@
 .dashboard-container {
-    padding: 2rem;
+    padding: 0;
     max-width: 1400px;
     margin: 0 auto;
     animation: fadeIn 0.5s ease-out;
@@ -36,10 +36,7 @@
         margin: 0;
         font-size: 2.25rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: var(--text-color);
         letter-spacing: -0.025em;
     }
 
@@ -75,9 +72,10 @@
 
 .stat-card {
     border-radius: 16px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    background: var(--card-bg);
 
     &:hover {
         transform: translateY(-4px);
@@ -104,14 +102,14 @@
             font-size: 24px;
         }
 
-        &.users { background: #eff6ff; color: #2563eb; }
-        &.manual { background: #ecfdf5; color: #059669; }
+        &.users { background: rgba(37, 99, 235, 0.15); color: #60a5fa; }
+        &.manual { background: rgba(5, 150, 105, 0.15); color: #34d399; }
     }
 
     .stat-value {
         font-size: 1.875rem;
         font-weight: 700;
-        color: #1e293b;
+        color: var(--stat-value);
         line-height: 1;
         margin-bottom: 0.25rem;
     }
@@ -127,9 +125,10 @@
 
 .table-card {
     border-radius: 16px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    background: var(--card-bg);
 
     mat-card-content {
         padding: 1rem !important;
@@ -143,7 +142,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;

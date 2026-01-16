@@ -1,19 +1,20 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { UserEntity } from 'src/app/shared/entity/user.entity';
 import { UserNetworkDetail, UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { UserRankEnum } from 'src/app/core/models/users/user.model';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserDaoSupabaseService {
   private supabase: SupabaseClient;
-  private dateUtils = inject(DateUtilsService);
+  private loggerService: LoggerService = inject(LoggerService);
+  private readonly CLASS_NAME = UserDaoSupabaseService.name;
 
   constructor() {
     this.supabase = createClient(
@@ -22,7 +23,7 @@ export class UserDaoSupabaseService {
     );
   }
 
-  private mapEntity(item: any): UserEntity {
+  private mapToEntity(item: any): UserEntity {
     return {
       id: item.id,
       createdAt: item.created_at,
@@ -36,7 +37,38 @@ export class UserDaoSupabaseService {
       rank: item.rank,
       sponsorId: item.sponsor_id || item.sponsorId,
       path: item.path,
-      image: item.image
+      identifier: item.identifier,
+      image: item.image,
+      permissions: item.permissions,
+      settings: item.settings
+    };
+  }
+
+  private mapToDetailedEntity(item: any): UserNetworkDetail {
+    return {
+      id: item.id,
+      firstName: item.first_name,
+      lastName: item.last_name,
+      fullName: item.full_name,
+      email: item.email,
+      phone: item.phone,
+      rank: item.rank as UserRankEnum,
+      image: item.image,
+      isManual: item.is_manual,
+      identifier: item.identifier,
+      pathStr: item.path_str,
+      relativeLevel: item.relative_level,
+      sponsorId: item.sponsor_id,
+      sponsorFirstName: item.sponsor_first_name,
+      sponsorLastName: item.sponsor_last_name,
+      sponsorFullName: item.sponsor_full_name,
+      sponsorEmail: item.sponsor_email,
+      sponsorIdentifier: item.sponsor_identifier,
+      sponsorPhone: item.sponsor_phone,
+      sponsorRank: item.sponsor_rank as UserRankEnum,
+      sponsorImage: item.sponsor_image,
+      permissions: item.permissions,
+      settings: item.settings
     };
   }
 
@@ -49,10 +81,22 @@ export class UserDaoSupabaseService {
       last_name: user.lastName,
       rank: user.rank,
       sponsor_id: user.sponsorId,
-      path: user.path,
+      identifier: user.identifier,
       image: user.image,
-      external_auth_id: user.externalAuthId
+      external_auth_id: user.externalAuthId,
+      permissions: user.permissions
     };
+  }
+
+  private mapToSponsor(item: any): UserSponsorEntity {
+    return {
+      id: item.id,
+      fullName: item.full_name,
+      email: item.email,
+      rank: item.rank as UserRankEnum,
+      isEligible: item.is_eligible,
+      reason: item.reason
+    }
   }
 
   getAll(): Observable<UserEntity[]> {
@@ -62,7 +106,7 @@ export class UserDaoSupabaseService {
         .select('*')
         .order('first_name')
     ).pipe(
-      map(res => (res.data || []).map(item => this.mapEntity(item)))
+      map(res => (res.data || []).map(item => this.mapToEntity(item)))
     );
   }
 
@@ -70,44 +114,18 @@ export class UserDaoSupabaseService {
     return from(
       this.supabase.rpc('get_available_sponsors', { p_edit_user_id: editingUserId })
     ).pipe(
-      map(res => (res.data || []).map((item: any) => {
-        return {
-          id: item.id,
-          fullName: item.full_name,
-          email: item.email,
-          rank: item.rank as UserRankEnum,
-          isEligible: item.is_eligible,
-          reason: item.reason
-        };
-      }))
+      map(res => (res.data || []).map((item: any) => this.mapToSponsor(item)))
     );
   }
 
   getUserDetailWithNetwork(userId: number): Observable<UserNetworkDetail[]> {
+    const context = 'getUserDetailWithNetwork';
+    this.loggerService.debug(`Recovering data for user ${userId}`, this.CLASS_NAME, context);
     return from(
       this.supabase.rpc('get_user_network_details', { p_user_id: userId })
     ).pipe(
-      map(res => (res.data || []).map((item: any) => ({
-        id: item.id,
-        firstName: item.first_name,
-        lastName: item.last_name,
-        fullName: item.full_name,
-        email: item.email,
-        phone: item.phone,
-        rank: item.rank as UserRankEnum,
-        image: item.image,
-        isManual: item.is_manual,
-        pathStr: item.path_str,
-        relativeLevel: item.relative_level,
-        sponsorId: item.sponsor_id,
-        sponsorFirstName: item.sponsor_first_name,
-        sponsorLastName: item.sponsor_last_name,
-        sponsorFullName: item.sponsor_full_name,
-        sponsorEmail: item.sponsor_email,
-        sponsorPhone: item.sponsor_phone,
-        sponsorRank: item.sponsor_rank as UserRankEnum,
-        sponsorImage: item.sponsor_image
-      })))
+      tap(res => this.loggerService.debug(`Recovered data for user ${userId} with data ${JSON.stringify(res.data)}`, this.CLASS_NAME, context)),
+      map(res => (res.data || []).map((item: any) => this.mapToDetailedEntity(item)))
     );
   }
 
@@ -122,7 +140,7 @@ export class UserDaoSupabaseService {
     ).pipe(
       map(res => {
         if (res.error) throw res.error;
-        return this.mapEntity(res.data);
+        return this.mapToEntity(res.data);
       })
     );
   }
@@ -139,7 +157,7 @@ export class UserDaoSupabaseService {
     ).pipe(
       map(res => {
         if (res.error) throw res.error;
-        return this.mapEntity(res.data);
+        return this.mapToEntity(res.data);
       })
     );
   }

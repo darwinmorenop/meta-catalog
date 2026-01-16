@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatTreeModule, MatTree } from '@angular/material/tree';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
 import { rxResource, toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -26,7 +28,9 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatIconModule,
     MatCardModule,
     MatTreeModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatChipsModule,
+    MatDividerModule
   ],
   templateUrl: './user-detail.component.html',
   styleUrl: './user-detail.component.scss'

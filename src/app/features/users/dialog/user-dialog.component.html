@@ -2,6 +2,18 @@
 
 <mat-dialog-content>
   <form [formGroup]="form" class="user-form">
+    <div class="image-preview-container" *ngIf="form.get('image')?.value">
+      <img [src]="form.get('image')?.value" alt="User Preview" class="image-preview">
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Imagen URL</mat-label>
+        <input matInput formControlName="image">
+      </mat-form-field>
+      <mat-checkbox formControlName="isManual">Carga Manual</mat-checkbox>
+    </div>
+
     <div class="row">
       <mat-form-field appearance="outline">
         <mat-label>Nombre</mat-label>
@@ -12,6 +24,11 @@
         <input matInput formControlName="lastName">
       </mat-form-field>
     </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Identificador</mat-label>
+      <input matInput formControlName="identifier">
+    </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Email</mat-label>
@@ -47,13 +64,41 @@
       </div>
     </div>
 
-    <div class="row">
-      <mat-form-field appearance="outline">
-        <mat-label>Imagen URL</mat-label>
-        <input matInput formControlName="image">
-      </mat-form-field>
-      <mat-checkbox formControlName="isManual">Carga Manual</mat-checkbox>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Permisos</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Permisos del usuario">
+        <mat-chip-row *ngFor="let permission of form.get('permissions')?.value"
+                      (removed)="removePermission(permission)">
+          {{permission}}
+          <button matChipRemove [attr.aria-label]="'remove ' + permission">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        <input placeholder="Nuevo permiso..."
+               [matChipInputFor]="chipGrid"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="true"
+               (matChipInputTokenEnd)="addPermission($event)"/>
+      </mat-chip-grid>
+    </mat-form-field>
+
+    <div class="settings-section">
+      <h3>Configuración (Settings)</h3>
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tema preferido</mat-label>
+          <mat-select formControlName="theme">
+            <mat-option value="light">
+              <mat-icon>light_mode</mat-icon> Claro
+            </mat-option>
+            <mat-option value="dark">
+              <mat-icon>dark_mode</mat-icon> Oscuro
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
+
   </form>
 </mat-dialog-content>
 

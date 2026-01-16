@@ -10,7 +10,17 @@
       </div>
     </div>
     <div class="header-actions">
-      <button mat-icon-button (click)="stockResource.reload()" [disabled]="stockResource.isLoading()">
+      <mat-form-field appearance="outline" class="scope-selector">
+        <mat-label>Ámbito de Inventario</mat-label>
+        <mat-select [formControl]="scopeControl">
+          <mat-option value="Personal">Personal</mat-option>
+          <mat-option value="Grupal">Grupal (Red)</mat-option>
+          <mat-option value="Todos">Todos</mat-option>
+        </mat-select>
+        <mat-icon matPrefix>filter_alt</mat-icon>
+      </mat-form-field>
+
+      <button mat-icon-button (click)="stockResource.reload()" [disabled]="stockResource.isLoading()" class="reload-btn">
         <mat-icon [class.spinning]="stockResource.isLoading()">refresh</mat-icon>
       </button>
     </div>

@@ -11,6 +11,8 @@ import { ProductInventoryStockEntryEntity } from 'src/app/shared/entity/product.
 import { ProductInventoryStockEntryDashboardEntity, UserInventoryStockEntryDashboardEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.dashboard.entity';
 import { ProductInventoryStockEntryDetailedEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.detailed.entity';
 
+export type StockScopeType = 'Todos' | 'Grupal' | 'Personal';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -55,19 +57,19 @@ export class ProductInventoryStockEntryDaoSupabaseService {
     );
   }
 
-  getAllDashboardData(): Observable<ProductInventoryStockEntryDashboardEntity[]> {
+  getAllDashboardData(userIds: number[] = []): Observable<ProductInventoryStockEntryDashboardEntity[]> {
     const context = 'getAllDashboardData';
-    const promise = this.supabase
-      .from(this.VIEW_DASHBOARD_NAME)
-      .select('*')
+    const query = this.supabase.rpc('get_product_dashboard_by_users', {
+      p_user_ids: userIds.length > 0 ? userIds : null
+    });
 
-    return from(promise).pipe(
+    return from(query).pipe(
       tap(response => {
         if (response.error) throw response.error;
       }),
-      map(response => (response.data?.map(item => this.mapDashboardEntity(item)) ?? []) || []),
+      map(response => (response.data || []).map((item: any) => this.mapDashboardEntity(item))),
       catchError(error => {
-        this.logger.error('Error fetching all media:', error, this.CLASS_NAME, context);
+        this.logger.error('Error in Dashboard RPC:', error, this.CLASS_NAME, context);
         return of([]);
       })
     );

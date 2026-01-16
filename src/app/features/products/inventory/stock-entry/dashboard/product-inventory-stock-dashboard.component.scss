@@ -19,18 +19,45 @@
     margin: 0;
     font-size: 2rem;
     font-weight: 800;
-    color: #1e293b;
+    color: var(--stat-value);
+    letter-spacing: -0.025em;
   }
   .subtitle {
     margin: 0;
-    color: #64748b;
+    color: var(--stat-label);
+    font-size: 1.1rem;
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  .scope-selector {
+    min-width: 250px;
+  }
+
+  .reload-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    
+    &:hover:not([disabled]) {
+      background: var(--bg-color);
+      transform: translateY(-2px);
+    }
+    
+    transition: all 0.2s ease;
   }
 }
 
 .table-card {
   border-radius: 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
 
 .spinning {

@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule, MatChipInputEvent } from '@angular/material/chips';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { SponsorSelectorDialogComponent } from 'src/app/features/users/dialog/sponsor-selector/sponsor-selector-dialog.component';
 import { UserRankEnum, UserDashboardModel } from 'src/app/core/models/users/user.model';
 import { UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
@@ -25,7 +27,8 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatButtonModule,
     MatIconModule,
     MatCheckboxModule,
-    MatSelectModule
+    MatSelectModule,
+    MatChipsModule
   ],
   templateUrl: './user-dialog.component.html',
   styleUrls: ['./user-dialog.component.scss']
@@ -46,6 +49,8 @@ export class UserDialogComponent implements OnInit {
     label: value
   }));
 
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: UserDashboardModel | null }) {
     const context = 'constructor';
     this.isEditMode = !!data.user;
@@ -53,6 +58,7 @@ export class UserDialogComponent implements OnInit {
     
     this.form = this.fb.group({
       id: [data.user?.id],
+      identifier: [data.user?.identifier || '', Validators.required],
       email: [data.user?.email || '', [Validators.required, Validators.email]],
       phone: [data.user?.phone || ''],
       isManual: [data.user?.isManual ?? true],
@@ -60,7 +66,9 @@ export class UserDialogComponent implements OnInit {
       lastName: [data.user?.lastName || ''],
       rank: [data.user?.rank || UserRankEnum.clienta, Validators.required],
       sponsorId: [data.user?.sponsor?.id || null],
-      image: [data.user?.image || '']
+      image: [data.user?.image || ''],
+      permissions: [data.user?.permissions || []],
+      theme: [data.user?.settings?.theme || 'light']
     });
 
     if (data.user?.sponsor) {
@@ -88,8 +96,34 @@ export class UserDialogComponent implements OnInit {
 
   save() {
     if (this.form.valid) {
-      this.dialogRef.close(this.form.value);
+      const formValue = this.form.value;
+      const result = {
+        ...formValue,
+        settings: {
+          theme: formValue.theme
+        }
+      };
+      delete result.theme;
+      this.dialogRef.close(result);
     }
+  }
+
+  addPermission(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      const currentPermissions = this.form.get('permissions')?.value || [];
+      this.form.patchValue({
+        permissions: [...currentPermissions, value]
+      });
+    }
+    event.chipInput!.clear();
+  }
+
+  removePermission(permission: string): void {
+    const currentPermissions = this.form.get('permissions')?.value || [];
+    this.form.patchValue({
+      permissions: currentPermissions.filter((p: string) => p !== permission)
+    });
   }
 
   close() {

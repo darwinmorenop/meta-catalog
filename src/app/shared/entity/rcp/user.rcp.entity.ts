@@ -1,4 +1,5 @@
 import { UserRankEnum } from "src/app/core/models/users/user.model";
+import { UserSettingsEntity } from "src/app/shared/entity/user.entity";
 
 export interface UserSponsorEntity {
   id: number;
@@ -15,6 +16,7 @@ export interface UserNode extends UserNetworkDetail {
 
 export interface UserNetworkDetail {
   id: number;
+  identifier: string;
   firstName: string;
   lastName: string;
   fullName: string;
@@ -25,6 +27,8 @@ export interface UserNetworkDetail {
   isManual: boolean;
   pathStr: string;
   relativeLevel: number;
+  permissions: string[];
+  settings: UserSettingsEntity;
 
   // Detalles del Sponsor desglosados
   sponsorId: number | null;
@@ -35,4 +39,5 @@ export interface UserNetworkDetail {
   sponsorPhone: string | null;
   sponsorRank: UserRankEnum | null;
   sponsorImage: string | null;
+  sponsorIdentifier: string | null;
 }

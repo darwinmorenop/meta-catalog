@@ -46,8 +46,15 @@
           <div class="info-row">
             <mat-icon>account_tree</mat-icon>
             <div class="label-value">
-              <span class="label">ID de Usuario</span>
+              <span class="label">ID de Sistema</span>
               <span class="value">{{ u.id }}</span>
+            </div>
+          </div>
+          <div class="info-row">
+            <mat-icon>fingerprint</mat-icon>
+            <div class="label-value">
+              <span class="label">Identificador</span>
+              <span class="value">{{ u.identifier || 'N/A' }}</span>
             </div>
           </div>
         </mat-card-content>
@@ -58,19 +65,65 @@
           <mat-card-title>Sponsor Directo</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="sponsor-brief" *ngIf="u.sponsorId; else noSponsor" (click)="viewUser(u.sponsorId)">
+          <div class="sponsor-brief" *ngIf="u.sponsorId; else noSponsor">
             <div class="avatar-sm">
               <img [src]="u.sponsorImage || 'assets/images/default-avatar.png'" alt="Sponsor">
             </div>
             <div class="sponsor-text">
-              <span class="name">{{ u.sponsorFullName }}</span>
               <span class="rank">{{ getRankLabel(u.sponsorRank!) }}</span>
+              <span class="name">{{ u.sponsorFullName }}</span>
+              <span class="sponsor-id" *ngIf="u.sponsorIdentifier">ID: {{ u.sponsorIdentifier }}</span>
+              <div class="sponsor-extra-info">
+                <span class="extra-item" *ngIf="u.sponsorEmail">
+                  <mat-icon>email</mat-icon>{{ u.sponsorEmail }}
+                </span>
+                <span class="extra-item" *ngIf="u.sponsorPhone">
+                  <mat-icon>phone</mat-icon>{{ u.sponsorPhone }}
+                </span>
+              </div>
             </div>
-            <mat-icon>chevron_right</mat-icon>
+            <div class="sponsor-action">
+              <button mat-icon-button (click)="viewUser(u.sponsorId)" matTooltip="Ver detalles del sponsor">
+                <mat-icon>person_search</mat-icon>
+              </button>
+            </div>
           </div>
           <ng-template #noSponsor>
             <p class="empty-msg">Este usuario no tiene sponsor (Raíz).</p>
           </ng-template>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Permissions & Settings Card -->
+      <mat-card class="detail-card">
+        <mat-card-header>
+          <mat-card-title>Configuración y Permisos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="settings-section">
+            <div class="section-subtitle">Ajustes de Usuario</div>
+            <div class="info-row">
+              <mat-icon>palette</mat-icon>
+              <div class="label-value">
+                <span class="label">Tema Preferido</span>
+                <span class="value">{{ u.settings.theme === 'dark' ? 'Oscuro' : 'Claro' }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <mat-divider class="my-3"></mat-divider>
+
+          <div class="permissions-section">
+            <div class="section-subtitle">Permisos Asignados</div>
+            <div class="permissions-chips" *ngIf="u.permissions && u.permissions.length > 0; else noPermissions">
+              <mat-chip-set>
+                <mat-chip *ngFor="let p of u.permissions">{{ p }}</mat-chip>
+              </mat-chip-set>
+            </div>
+            <ng-template #noPermissions>
+              <p class="empty-msg-inline">Sin permisos específicos asignados.</p>
+            </ng-template>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>

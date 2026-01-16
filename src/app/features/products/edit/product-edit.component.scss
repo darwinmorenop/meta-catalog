@@ -1,18 +1,18 @@
 .product-edit-container {
-    min-height: 100vh;
-    background-color: #f1f5f9;
+    min-height: calc(100vh - 64px);
+    background-color: transparent;
     display: flex;
     flex-direction: column;
 }
 
 .product-header.edit-mode {
-    background: white;
-    border-bottom: 1px solid #e2e8f0;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
     padding: 1.5rem 2rem 0 2rem;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
     .header-main {
         display: flex;
@@ -22,7 +22,7 @@
     }
 
     .back-button {
-        color: #64748b;
+        color: var(--stat-label);
     }
 
     .edit-label {
@@ -39,7 +39,8 @@
         height: 64px;
         border-radius: 12px;
         overflow: hidden;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--border-color);
+        background: var(--bg-color);
 
         img {
             width: 100%;
@@ -55,14 +56,14 @@
             margin: 0;
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1e293b;
+            color: var(--stat-value);
         }
 
         .meta-row {
             display: flex;
             align-items: center;
             gap: 1rem;
-            color: #64748b;
+            color: var(--stat-label);
             font-size: 0.85rem;
 
             mat-divider {
@@ -104,7 +105,7 @@
 .loading-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(255,255,255,0.7);
+    background: rgba(0,0,0,0.5);
     display: flex;
     align-items: center;
     justify-content: center;

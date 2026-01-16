@@ -19,21 +19,23 @@
   width: 100%;
 }
 
-.sponsor-section {
-  background: #f8fafc;
+.sponsor-section, .settings-section {
+  background: rgba(128, 128, 128, 0.05);
   padding: 1rem;
   border-radius: 8px;
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed var(--border-color);
   margin: 0.5rem 0;
 
   h3 {
     margin: 0 0 1rem 0;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #475569;
+    color: var(--stat-label);
     text-transform: uppercase;
   }
+}
 
+.sponsor-section {
   .sponsor-row {
     display: flex;
     justify-content: space-between;
@@ -44,11 +46,35 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #1e293b;
+    color: var(--text-color);
     font-weight: 500;
 
     mat-icon {
-      color: #64748b;
+      color: var(--stat-label);
     }
   }
+}
+
+.image-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+
+  .image-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    background: var(--bg-color);
+  }
+}
+
+:host ::ng-deep {
+    .mat-mdc-dialog-title {
+        color: var(--stat-value) !important;
+        font-weight: 700 !important;
+    }
 }

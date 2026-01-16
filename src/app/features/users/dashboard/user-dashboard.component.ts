@@ -65,12 +65,13 @@ export class UserDashboardComponent {
   readonly tableConfig: TableConfig = {
     columns: [
       { key: 'image', header: 'Foto', type: 'image' },
-      { key: 'fullName', header: 'Nombre Completo', filterable: true },
-      { key: 'email', header: 'Email', filterable: true },
+      { key: 'fullName', header: 'Nombre Completo', filterable: false },
+      { key: 'email', header: 'Email', filterable: false },
       { key: 'rankName', header: 'Rango', filterable: true },
       { key: 'sponsorName', header: 'Sponsor', filterable: true },
+      { key: 'identifier', header: 'Identificador', filterable: false },
     ],
-    searchableFields: ['firstName', 'lastName', 'email', 'rank', 'sponsorName'],
+    searchableFields: ['firstName', 'lastName', 'email', 'rank'],
     actions: {
       show: true,
       edit: true,
