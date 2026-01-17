@@ -8,12 +8,13 @@ import { ScrapsDashboardComponent } from './features/scraps/dashboard/scraps-das
 import { ScrapDetailComponent } from './features/scraps/detail/scrap-detail.component';
 import { SyncProposalComponent } from './features/scraps/sync-proposal/sync-proposal.component';
 import { ProductScrapDetailComponent } from './features/scraps/product-detail/product-scrap-detail.component';
-import { InventoryInboundRegisterComponent } from './features/products/inventory/inbound/register/inventory-inbound-register.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent, pathMatch: 'full' },
-    { path: 'inventory/inbound/register', component: InventoryInboundRegisterComponent },
-    { path: 'inventory/inbound/:id', loadComponent: () => import('./features/products/inventory/inbound/detail/inventory-inbound-detail.component').then(m => m.InventoryInboundDetailComponent) },
+    { path: 'inventory/inbound', loadComponent: () => import('./features/inventory/inbound/dashboard/inventory-inbound-dashboard.component').then(m => m.InventoryInboundDashboardComponent) },
+    { path: 'inventory/inbound/register', loadComponent: () => import('./features/inventory/inbound/register/inventory-inbound-register.component').then(m => m.InventoryInboundRegisterComponent) },
+    { path: 'inventory/inbound/:id/edit', loadComponent: () => import('./features/inventory/inbound/edit/inventory-inbound-edit.component').then(m => m.InventoryInboundEditComponent) },
+    { path: 'inventory/inbound/:id', loadComponent: () => import('./features/inventory/inbound/detail/inventory-inbound-detail.component').then(m => m.InventoryInboundDetailComponent) },
     { path: 'categories', component: CategoriesDashboardComponent },
     { path: 'products/:id', 
       loadComponent: () => import('./features/products/detail/product-detail.component').then(m => m.ProductDetailComponent),

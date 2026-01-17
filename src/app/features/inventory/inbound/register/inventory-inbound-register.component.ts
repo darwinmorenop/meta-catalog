@@ -17,12 +17,12 @@ import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { UserService } from 'src/app/core/services/users/user.service';
 import { InventoryInboundService } from 'src/app/core/services/inventory/inventory-inbound.service';
-import { InventoryInboundStatusEnum } from 'src/app/shared/entity/view/inventory.inbound.entity';
-import { InventoryInboundProductDialogComponent } from './dialog/inventory-inbound-product-dialog.component';
+import { InventoryInboundStatusEnum, InventoryInboundStatusLabels } from 'src/app/shared/entity/inventory.inbound.entity';
 import { InventoryInboundInsertRcpEntity } from 'src/app/shared/entity/rcp/inventory.inbound.rcp.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
-import { UserActiveSelectorDialogComponent } from 'src/app/features/users/dialog/active-selector/user-active-selector-dialog.component';
+import { UserSimpleSelectorDialogComponent, UserSimpleSelectorData } from 'src/app/features/users/dialog/simple-selector/user-simple-selector-dialog.component';
 import { UserDashboardModel } from 'src/app/core/models/users/user.model';
+import { StockEntryCreateEditWithoutProductDialogComponent, StockEntryCreateEditWithoutProductDialogData } from './stock-entry-create-edit-witouth-product/stock-entry-create-edit-without-product-dialog.component';
 
 @Component({
   selector: 'app-inventory-inbound-register',
@@ -55,8 +55,10 @@ export class InventoryInboundRegisterComponent {
   private readonly CLASS_NAME = InventoryInboundRegisterComponent.name;
 
   form: FormGroup;
-  statusOptions = Object.entries(InventoryInboundStatusEnum).map(([key, value]) => ({ key, value }));
-  
+  statusOptions = Object.values(InventoryInboundStatusEnum)
+    .filter(status => status !== InventoryInboundStatusEnum.deleted)
+    .map(status => ({ key: status, value: InventoryInboundStatusLabels[status] }));
+
   // Track selected user objects for UI display
   selectedSourceUser = signal<UserDashboardModel | null>(null);
   selectedTargetUser = signal<UserDashboardModel | null>(null);
@@ -95,14 +97,15 @@ export class InventoryInboundRegisterComponent {
       user_target_id: [currentUser?.id || '', Validators.required],
       received_at: [new Date(), Validators.required],
       reference_number: ['', Validators.required],
-      status: ['pending', Validators.required]
+      status: [InventoryInboundStatusEnum.pending, Validators.required],
+      description: ['', Validators.required]
     });
   }
 
   selectSourceUser() {
-    const dialogRef = this.dialog.open(UserActiveSelectorDialogComponent, {
+    const dialogRef = this.dialog.open(UserSimpleSelectorDialogComponent, {
       width: '600px',
-      data: { selectOnly: true }
+      data: { initialSelectedId: this.selectedSourceUser()?.id } as UserSimpleSelectorData
     });
 
     dialogRef.afterClosed().subscribe(user => {
@@ -114,9 +117,9 @@ export class InventoryInboundRegisterComponent {
   }
 
   selectTargetUser() {
-    const dialogRef = this.dialog.open(UserActiveSelectorDialogComponent, {
+    const dialogRef = this.dialog.open(UserSimpleSelectorDialogComponent, {
       width: '600px',
-      data: { selectOnly: true }
+      data: { initialSelectedId: this.selectedTargetUser()?.id } as UserSimpleSelectorData
     });
 
     dialogRef.afterClosed().subscribe(user => {
@@ -128,11 +131,12 @@ export class InventoryInboundRegisterComponent {
   }
 
   addProduct() {
-    const dialogRef = this.dialog.open(InventoryInboundProductDialogComponent, {
+    const dataInput: StockEntryCreateEditWithoutProductDialogData = { isEdit: false };
+    const dialogRef = this.dialog.open(StockEntryCreateEditWithoutProductDialogComponent, {
       width: '1000px',
       maxWidth: '95vw',
       maxHeight: '95vh',
-      data: { isEdit: false }
+      data: dataInput
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -143,11 +147,12 @@ export class InventoryInboundRegisterComponent {
   }
 
   onEditProduct(product: any) {
+    const dataInput: StockEntryCreateEditWithoutProductDialogData = { product, isEdit: true };
     const index = this.productsList().indexOf(product);
-    const dialogRef = this.dialog.open(InventoryInboundProductDialogComponent, {
+    const dialogRef = this.dialog.open(StockEntryCreateEditWithoutProductDialogComponent, {
       width: '1000px',
       maxWidth: '95vw',
-      data: { product, isEdit: true }
+      data: dataInput
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -196,7 +201,7 @@ export class InventoryInboundRegisterComponent {
     this.inboundService.registerInbound(payload).subscribe({
       next: (res) => {
         this.logger.log('Inbound registered successfully', res, this.CLASS_NAME);
-        this.router.navigate(['/inventory/stock-entry']);
+        this.router.navigate(['/inventory/inbound']);
       },
       error: (err) => {
         this.logger.error('Error registering inbound', err, this.CLASS_NAME);
@@ -205,6 +210,6 @@ export class InventoryInboundRegisterComponent {
   }
 
   cancel() {
-    this.router.navigate(['/inventory/stock-entry']);
+    this.router.navigate(['/inventory/inbound']);
   }
 }

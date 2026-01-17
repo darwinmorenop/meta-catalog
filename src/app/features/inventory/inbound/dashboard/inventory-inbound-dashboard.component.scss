@@ -1,0 +1,87 @@
+.dashboard-container {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+
+  .header-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    button[mat-icon-button] {
+       background: var(--surface-card);
+       border: 1px solid var(--border-color);
+       color: var(--text-color);
+       
+       &:hover {
+         background: var(--surface-hover);
+       }
+    }
+  }
+
+  .header-content {
+    h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-color);
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 4px 0 0 0;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .reload-btn {
+       background: var(--surface-card);
+       border: 1px solid var(--border-color);
+       
+       &:hover {
+         background: var(--surface-hover);
+       }
+    }
+  }
+}
+
+.table-card {
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--surface-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+
+  mat-card-content {
+    padding: 0 !important;
+  }
+}
+
+.spinning {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

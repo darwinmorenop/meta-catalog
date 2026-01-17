@@ -45,6 +45,10 @@
 
     <!-- Submenu Entrada -->
     <mat-menu #entryMenu="matMenu">
+      <button mat-menu-item (click)="navigateTo('/inventory/inbound')">
+        <mat-icon>inventory</mat-icon>
+        <span>Documentos de entrada</span>
+      </button>
       <button mat-menu-item (click)="navigateTo('/inventory/stock-entry')">
         <mat-icon>inventory_2</mat-icon>
         <span>Stock físico</span>

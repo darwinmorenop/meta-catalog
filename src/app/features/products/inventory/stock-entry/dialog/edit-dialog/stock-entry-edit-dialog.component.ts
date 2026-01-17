@@ -6,7 +6,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
+
+export interface StockEntryEditDialogData {
+  quantity: number;
+  unit_cost: number;
+  batch_number: string;
+  expiry_date: Date;
+  description: string;
+}
 
 @Component({
   selector: 'app-stock-entry-edit-dialog',
@@ -25,18 +33,20 @@ import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service
 })
 export class StockEntryEditDialogComponent {
   private fb = inject(FormBuilder);
-  private dateUtils = inject(DateUtilsService);
+  private logger = inject(LoggerService);
+  private readonly CLASS_NAME = StockEntryEditDialogComponent.name;
   dialogRef = inject(MatDialogRef<StockEntryEditDialogComponent>);
-  data = inject<any>(MAT_DIALOG_DATA);
+  data = inject<StockEntryEditDialogData>(MAT_DIALOG_DATA);
   form: FormGroup;
 
   constructor() {
+    this.logger.debug(`Unit form with data:${JSON.stringify(this.data)}`, this.CLASS_NAME);
     this.form = this.fb.group({
-      id: [this.data.entry.id],
-      quantity: [this.data.entry.quantity, [Validators.required, Validators.min(0)]],
-      unit_cost: [this.data.entry.unit_cost, [Validators.required, Validators.min(0)]],
-      batch_number: [this.data.entry.batch_number],
-      expiry_date: [this.data.entry.expiry_date ? new Date(this.data.entry.expiry_date).toISOString().substring(0, 10) : '']
+      quantity: [this.data.quantity, [Validators.required]],
+      unit_cost: [this.data.unit_cost, [Validators.required]],
+      batch_number: [this.data.batch_number],
+      expiry_date: [this.data.expiry_date ? new Date(this.data.expiry_date).toISOString().substring(0, 10) : ''],
+      description: [this.data.description]
     });
   }
 

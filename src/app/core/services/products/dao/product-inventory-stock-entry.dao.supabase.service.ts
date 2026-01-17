@@ -30,14 +30,14 @@ export class ProductInventoryStockEntryDaoSupabaseService {
     );
   }
 
-  getByProductIdAndUserId(productId: string, userId: string): Observable<ProductInventoryStockEntryDetailedEntity[]> {
+  getByProductIdAndUserId(productId: number, userId: number): Observable<ProductInventoryStockEntryDetailedEntity[]> {
     const context = 'getByProductIdAndUserId';
     let query = this.supabase
       .from(this.VIEW_DETAILED_NAME)
       .select('*')
       .eq('product_id', productId)
 
-    if (userId) {
+    if (userId > 0) {
       query = query.eq('user_owner_id', userId);
     }
     const promise = query
@@ -171,6 +171,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
       updated_at: this.dateUtils.parseDbDate(entity.updated_at),
       user_owner_id: entity.user_owner_id,
       inbound_id: entity.inbound_id,
+      description: entity.description,
     };
   }
 
@@ -188,7 +189,8 @@ export class ProductInventoryStockEntryDaoSupabaseService {
       inbound_id: entity.inbound_id,
       user_owner_first_name: entity.user_owner_first_name,
       user_owner_last_name: entity.user_owner_last_name,
-      inbound_description: entity.inbound_description,
+      inbound_reference_number: entity.inbound_reference_number,
+      description: entity.description,
     };
   }
 

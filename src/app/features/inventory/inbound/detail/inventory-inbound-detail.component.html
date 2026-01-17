@@ -1,18 +1,19 @@
-<div class="detail-container" *ngIf="inboundResource.value() as inbound">
+@if (headerInfo(); as inbound) {
+<div class="detail-container">
   <header class="page-header">
     <div class="title-wrapper">
       <button mat-icon-button (click)="goBack()" matTooltip="Volver">
         <mat-icon>arrow_back</mat-icon>
       </button>
       <div class="header-text">
-        <h1>Entrada #{{ inbound.id }}</h1>
+        <h1>Entrada #{{ inbound.inbound_id }}</h1>
         <p class="subtitle">{{ inbound.reference_number }}</p>
       </div>
     </div>
     <div class="actions">
       <mat-chip-listbox>
         <mat-chip-option [selectable]="false" color="primary" selected>
-          {{ getStatusLabel(inbound.status) }}
+          {{ getStatusLabel(inbound.inbound_status) }}
         </mat-chip-option>
       </mat-chip-listbox>
     </div>
@@ -27,23 +28,29 @@
       <mat-card-content>
         <div class="details-list">
           <div class="detail-item">
-            <span class="label">Origen (Source)</span>
-            <div class="user-badge" *ngIf="inbound.user_source">
-              <img [src]="inbound.user_source.image || 'assets/images/default-avatar.png'" [alt]="inbound.user_source.firstName">
+            <span class="label">Remitente (Origen)</span>
+            <div class="user-badge">
+              <mat-icon class="avatar-icon">account_circle</mat-icon>
               <div class="user-info">
-                <span class="name">{{ inbound.user_source.firstName }} {{ inbound.user_source.lastName }}</span>
-                <span class="id">{{ inbound.user_source.identifier }}</span>
+                <span class="name">{{ inbound.source_user_full_name }}</span>
+                <span class="id">{{ inbound.source_user_email }}</span>
+                @if (inbound.source_user_rank) {
+                <span class="rank">{{ inbound.source_user_rank }}</span>
+                }
               </div>
             </div>
           </div>
 
           <div class="detail-item">
-            <span class="label">Destino (Target)</span>
-            <div class="user-badge" *ngIf="inbound.user_target">
-              <img [src]="inbound.user_target.image || 'assets/images/default-avatar.png'" [alt]="inbound.user_target.firstName">
+            <span class="label">Destinatario (Destino)</span>
+            <div class="user-badge">
+              <mat-icon class="avatar-icon">account_circle</mat-icon>
               <div class="user-info">
-                <span class="name">{{ inbound.user_target.firstName }} {{ inbound.user_target.lastName }}</span>
-                <span class="id">{{ inbound.user_target.identifier }}</span>
+                <span class="name">{{ inbound.target_user_full_name }}</span>
+                <span class="id">{{ inbound.target_user_email }}</span>
+                @if (inbound.target_user_rank) {
+                <span class="rank">{{ inbound.target_user_rank }}</span>
+                }
               </div>
             </div>
           </div>
@@ -51,14 +58,25 @@
           <mat-divider></mat-divider>
 
           <div class="detail-item">
+            <span class="label">Descripción</span>
+            <span class="value">{{ inbound.inbound_description || 'N/A' }}</span>
+          </div>
+
+          <div class="detail-item">
             <span class="label">Fecha Recibido</span>
-            <span class="value">{{ inbound.received_at | date:'dd/MM/yyyy' }}</span>
+            <span class="value">{{ inbound.received_at | date:'dd/MM/yyyy HH:mm' }}</span>
           </div>
 
           <div class="detail-item">
             <span class="label">Fecha Creación</span>
-            <span class="value">{{ inbound.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="value">{{ inbound.inbound_created_at | date:'dd/MM/yyyy HH:mm' }}</span>
           </div>
+
+          <div class="detail-item">
+            <span class="label">Fecha Actualización</span>
+            <span class="value">{{ inbound.inbound_updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          
         </div>
       </mat-card-content>
     </mat-card>
@@ -72,14 +90,18 @@
         <app-smart-table
           [data]="tableData()"
           [config]="tableConfig"
-          [isLoading]="inboundResource.isLoading()">
+          [isLoading]="inboundResource.isLoading()"
+          (view)="onViewDetail($event)">
         </app-smart-table>
       </mat-card-content>
     </mat-card>
   </div>
 </div>
+}
 
-<div class="loading-state" *ngIf="inboundResource.isLoading()">
+@if (inboundResource.isLoading()) {
+<div class="loading-state">
   <mat-spinner diameter="40"></mat-spinner>
   <p>Cargando detalles de la entrada...</p>
 </div>
+}

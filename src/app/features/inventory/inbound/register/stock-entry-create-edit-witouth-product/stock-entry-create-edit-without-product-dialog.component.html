@@ -57,6 +57,12 @@
         <mat-datepicker #picker></mat-datepicker>
         <mat-icon matPrefix>event_busy</mat-icon>
       </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="description" placeholder="Opcional"></textarea>
+        <mat-icon matPrefix>description</mat-icon>
+      </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>

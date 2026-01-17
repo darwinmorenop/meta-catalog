@@ -6,9 +6,11 @@
       </button>
       <div class="header-content">
         <h1>Entradas de Stock</h1>
-        <p class="subtitle" *ngIf="productInfo()">
-          {{ productInfo().product_name }} - {{ productInfo().user_name }}
-        </p>
+        @if(productInfo()){
+          <p class="subtitle">
+            Producto: {{ productInfo()!.product_name  }} - Usuario(ID): {{ userId() > 0 ? userId() : 'Todos' }}
+          </p>
+        }
       </div>
     </div>
     <div class="header-actions">

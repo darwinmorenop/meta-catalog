@@ -8,5 +8,6 @@ export interface ProductInventoryStockEntryEntity {
     created_at: Date;
     updated_at: Date;
     user_owner_id: number;
-    inbound_id: number; 
+    inbound_id: number;
+    description: string;
 }

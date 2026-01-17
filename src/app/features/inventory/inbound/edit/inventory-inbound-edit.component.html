@@ -1,0 +1,127 @@
+@if (headerInfo(); as inbound) {
+<div class="edit-container">
+  <header class="page-header">
+    <div class="title-wrapper">
+      <button mat-icon-button (click)="goBack()" matTooltip="Volver">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-text">
+        <h1>Editar Entrada #{{ inbound.inbound_id }}</h1>
+        <p class="subtitle">Documento: {{ inbound.reference_number }}</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid || form.pristine">
+        <mat-icon>save</mat-icon>
+        Guardar Cambios
+      </button>
+    </div>
+  </header>
+
+  <div class="content-grid">
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>edit</mat-icon>
+        <mat-card-title>Configuración de Cabecera</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" class="edit-form">
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Referencia</mat-label>
+              <input matInput formControlName="reference_number" placeholder="Ej: REF-2023-001">
+              @if (form.get('reference_number')?.hasError('required')) {
+                <mat-error>Requerido</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="status">
+                @for (opt of statusOptions(); track opt.value) {
+                  <mat-option [value]="opt.value">
+                    {{ opt.label }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha Recepción</mat-label>
+              <input matInput type="datetime-local" formControlName="received_at">
+            </mat-form-field>
+          </div>
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Descripción</mat-label>
+              <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="user-selectors">
+            <div class="selector-item">
+              <span class="label">Remitente (Origen)</span>
+              <div class="user-display" (click)="selectSourceUser()">
+                <mat-icon>account_circle</mat-icon>
+                @if (selectedSourceUser(); as user) {
+                  <div class="user-meta">
+                    <span class="name">{{ user.firstName }}</span>
+                    <span class="email">{{ user.email }}</span>
+                  </div>
+                } @else {
+                  <span class="placeholder">Seleccionar origen...</span>
+                }
+                <mat-icon class="arrow">chevron_right</mat-icon>
+              </div>
+            </div>
+
+            <div class="selector-item">
+              <span class="label">Destinatario (Destino)</span>
+              <div class="user-display" (click)="selectTargetUser()">
+                <mat-icon>account_circle</mat-icon>
+                @if (selectedTargetUser(); as user) {
+                  <div class="user-meta">
+                    <span class="name">{{ user.firstName }}</span>
+                    <span class="email">{{ user.email }}</span>
+                  </div>
+                } @else {
+                  <span class="placeholder">Seleccionar destino...</span>
+                }
+                <mat-icon class="arrow">chevron_right</mat-icon>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="products-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>inventory_2</mat-icon>
+        <mat-card-title>Detalle de Productos (Líneas)</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-smart-table
+          [data]="tableData()"
+          [config]="tableConfig"
+          [isLoading]="inboundResource.isLoading()"
+          (view)="onViewDetail($event)"
+          (edit)="onEditDetail($event)"
+          (delete)="onDeleteDetail($event)">
+        </app-smart-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+}
+
+@if (inboundResource.isLoading() && !headerInfo()) {
+<div class="loading-state">
+  <mat-spinner diameter="40"></mat-spinner>
+  <p>Cargando información para editar...</p>
+</div>
+}

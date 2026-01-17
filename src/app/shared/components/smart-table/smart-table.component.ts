@@ -175,6 +175,19 @@ export class SmartTableComponent implements AfterViewInit {
         }
     }
 
+    get searchablePlaceholder(): string {
+        if (!this.config?.searchableFields?.length) return 'Buscar...';
+        
+        const headers = this.config.searchableFields
+            .map(field => {
+                const col = this.config.columns.find(c => c.key === field);
+                return col ? col.header : field;
+            })
+            .join(', ');
+        
+        return `Buscar por: ${headers}...`;
+    }
+
     selectRow(row: any) {
         const context = 'selectRow'
         if (this.selectedRow === row) {

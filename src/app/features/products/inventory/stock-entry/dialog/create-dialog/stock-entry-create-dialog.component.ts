@@ -9,11 +9,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { InboundSelectorDialogComponent } from '../../../inbound/dialog/inbound-selector/inbound-selector-dialog.component';
-import { InventoryInboundEntity } from 'src/app/shared/entity/view/inventory.inbound.entity';
+import { InventoryInboundEntity } from 'src/app/shared/entity/inventory.inbound.entity';
+import { InboundSelectorDialogComponent, InboundSelectorDialogData } from 'src/app/features/inventory/inbound/dialog/inbound-selector/inbound-selector-dialog.component';
 
-export interface LinkStockToInboundData {
-  entry: any;
+export interface StockEntryCreateDialogData {
+  product_id: number;
+  user_owner_id: number;
+  product_name: string;
+  product_sku: string;
+  quantity: number;
+  unit_cost: number;
 }
 
 @Component({
@@ -31,32 +36,34 @@ export interface LinkStockToInboundData {
     MatNativeDateModule,
     ReactiveFormsModule
   ],
-  templateUrl: './link-stock-to-inbound-dialog.component.html',
-  styleUrl: './link-stock-to-inbound-dialog.component.scss',
+  templateUrl: './stock-entry-create-dialog.component.html',
+  styleUrl: './stock-entry-create-dialog.component.scss',
   encapsulation: ViewEncapsulation.None // To ensure our container resets work correctly
 })
-export class LinkStockToInboundDialogComponent implements OnInit {
+export class StockEntryCreateDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   private dialog = inject(MatDialog);
-  dialogRef = inject(MatDialogRef<LinkStockToInboundDialogComponent>);
-  data = inject<LinkStockToInboundData>(MAT_DIALOG_DATA);
+  dialogRef = inject(MatDialogRef<StockEntryCreateDialogComponent>);
+  data = inject<StockEntryCreateDialogData>(MAT_DIALOG_DATA);
 
   form!: FormGroup;
   selectedInbound = signal<InventoryInboundEntity | null>(null);
 
   ngOnInit() {
     this.form = this.fb.group({
-      quantity: [this.data.entry?.quantity || 1, [Validators.required, Validators.min(1)]],
-      unit_cost: [this.data.entry?.unit_cost || 0, [Validators.required, Validators.min(0)]],
-      batch_number: [this.data.entry?.batch_number || ''],
-      expiry_date: [this.data.entry?.expiry_date ? new Date(this.data.entry.expiry_date) : null]
+      quantity: [this.data.quantity || 1, [Validators.required, Validators.min(1)]],
+      unit_cost: [this.data.unit_cost || 0, [Validators.required, Validators.min(0)]],
+      batch_number: [''],
+      expiry_date: [new Date()]
     });
   }
 
   openSelector() {
+    const dataInput: InboundSelectorDialogData = { statusFiltered: true }
     const dialogRef = this.dialog.open(InboundSelectorDialogComponent, {
       width: '850px',
-      panelClass: 'inbound-selector-panel'
+      panelClass: 'inbound-selector-panel',
+      data: dataInput
     });
 
     dialogRef.afterClosed().subscribe(res => {

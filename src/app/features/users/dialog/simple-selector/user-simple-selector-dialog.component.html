@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Seleccionar Usuario</h2>
+<mat-dialog-content>
+  <app-user-selector 
+    [users]="filteredUsers()" 
+    [initialSelectedId]="data?.initialSelectedId"
+    (onSelected)="onUserSelected($event)">
+  </app-user-selector>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+</mat-dialog-actions>

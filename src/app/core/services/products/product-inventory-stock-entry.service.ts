@@ -14,13 +14,13 @@ export class ProductInventoryStockEntryService {
   private loggerService = inject(LoggerService);
   private readonly CLASS_NAME = ProductInventoryStockEntryService.name;
 
-  private currentDashboardRow = signal<any>(null);
+  private currentDashboardRow = signal<ProductInventoryStockEntryDashboardEntity | null>(null);
 
-  setCurrentDashboardRow(row: any) {
+  setCurrentDashboardRow(row: ProductInventoryStockEntryDashboardEntity) {
     this.currentDashboardRow.set(row);
   }
 
-  getCurrentDashboardRow(): any {
+  getCurrentDashboardRow(): ProductInventoryStockEntryDashboardEntity | null {
     return this.currentDashboardRow();
   }
 
@@ -30,7 +30,7 @@ export class ProductInventoryStockEntryService {
     return this.dao.getAllDashboardData(userIds);
   }
 
-  getByProductIdAndUserId(productId: string, userId: string): Observable<ProductInventoryStockEntryDetailedEntity[]> {
+  getByProductIdAndUserId(productId: number, userId: number): Observable<ProductInventoryStockEntryDetailedEntity[]> {
     return this.dao.getByProductIdAndUserId(productId, userId);
   }
 
@@ -58,6 +58,7 @@ export class ProductInventoryStockEntryService {
       expiry_date: data.expiry_date,
       batch_number: data.batch_number,
       unit_cost: data.unit_cost,
+      description: data.description,
     };
     return entity;
   }
@@ -70,7 +71,8 @@ export class ProductInventoryStockEntryService {
       unit_cost: data.unit_cost,
       product_id: data.product_id,
       user_owner_id: data.user_owner_id,
-      inbound_id: data.inbound_id
+      inbound_id: data.inbound_id,
+      description: data.description,
     };
     return entity;
   }

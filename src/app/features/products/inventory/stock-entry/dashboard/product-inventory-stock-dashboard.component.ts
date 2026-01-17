@@ -1,4 +1,4 @@
-import { Component, inject, computed, OnInit } from '@angular/core';
+import { Component, inject, computed, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,7 +8,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { UserSimpleSelectorDialogComponent, UserSimpleSelectorData } from 'src/app/features/users/dialog/simple-selector/user-simple-selector-dialog.component';
 
 // Services & Models
 import { ProductInventoryStockEntryService } from 'src/app/core/services/products/product-inventory-stock-entry.service';
@@ -33,7 +35,8 @@ import { ProductInventoryStockEntryDashboardEntity } from 'src/app/shared/entity
     MatFormFieldModule,
     ReactiveFormsModule,
     SmartTableComponent,
-    RouterModule
+    RouterModule,
+    MatDialogModule
   ],
   templateUrl: './product-inventory-stock-dashboard.component.html',
   styleUrl: './product-inventory-stock-dashboard.component.scss'
@@ -43,10 +46,11 @@ export class ProductInventoryStockDashboardComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly loggerService = inject(LoggerService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
   private readonly CLASS_NAME = ProductInventoryStockDashboardComponent.name;
 
   scopeControl = new FormControl<StockScopeType>('Personal', { nonNullable: true });
-  
+
   // Track form control changes as a signal for reactive queries
   scope = toSignal(this.scopeControl.valueChanges, { initialValue: this.scopeControl.value });
 
@@ -73,6 +77,14 @@ export class ProductInventoryStockDashboardComponent implements OnInit {
   stockResource = rxResource({
     stream: () => this.stockService.getAllDashboardData(this.filteredUserIds())
   });
+
+  constructor() {
+    effect(() => {
+      // Trigger reload whenever the scope changes
+      this.scope();
+      this.stockResource.reload();
+    });
+  }
 
   tableData = computed(() => {
     const rawData = this.stockResource.value() as ProductInventoryStockEntryDashboardEntity[] ?? [];
@@ -103,9 +115,32 @@ export class ProductInventoryStockDashboardComponent implements OnInit {
     }
   };
 
-  onViewDetail(row: any): void {
+  onViewDetail(row: ProductInventoryStockEntryDashboardEntity): void {
     this.stockService.setCurrentDashboardRow(row);
-    this.router.navigate(['/inventory/stock-entry', row.product_id, 'all']);
+    const usersCount = row.users_details?.length ?? 0;
+
+    if (usersCount === 1) {
+      // Un solo usuario: Navegación directa
+      this.router.navigate(['/inventory/stock-entry', row.product_id, row.users_details[0].user_id]);
+    } else if (usersCount > 1) {
+      // Múltiples usuarios: Decisión según el ámbito
+      if (this.scope() === 'Grupal') {
+        const dialogRef = this.dialog.open(UserSimpleSelectorDialogComponent, {
+          width: '600px',
+          // UX: Solo mostramos los usuarios que realmente tienen stock en esta fila
+          data: { userIds: row.users_details.map(u => u.user_id) } as UserSimpleSelectorData
+        });
+
+        dialogRef.afterClosed().subscribe(user => {
+          if (user) {
+            this.router.navigate(['/inventory/stock-entry', row.product_id, user.id]);
+          }
+        });
+      } else {
+        // En ámbitos como "Todos", vamos a la vista global (0)
+        this.router.navigate(['/inventory/stock-entry', row.product_id, 0]);
+      }
+    }
   }
 
   goBack(): void {

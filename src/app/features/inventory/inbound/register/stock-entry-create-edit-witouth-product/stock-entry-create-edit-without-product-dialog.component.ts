@@ -12,9 +12,8 @@ import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { ProductService } from 'src/app/core/services/products/product.service';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { InventoryInboundProductInsertRcpEntity } from 'src/app/shared/entity/rcp/inventory.inbound.rcp.entity';
 
-export interface InboundProductDialogData {
+export interface StockEntryCreateEditWithoutProductDialogData {
   product?: any; 
   isEdit: boolean;
 }
@@ -34,14 +33,14 @@ export interface InboundProductDialogData {
     ReactiveFormsModule,
     SmartTableComponent
   ],
-  templateUrl: './inventory-inbound-product-dialog.component.html',
-  styleUrl: './inventory-inbound-product-dialog.component.scss'
+  templateUrl: './stock-entry-create-edit-without-product-dialog.component.html',
+  styleUrl: './stock-entry-create-edit-without-product-dialog.component.scss'
 })
-export class InventoryInboundProductDialogComponent implements OnInit {
+export class StockEntryCreateEditWithoutProductDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
-  dialogRef = inject(MatDialogRef<InventoryInboundProductDialogComponent>);
-  data = inject<InboundProductDialogData>(MAT_DIALOG_DATA);
+  dialogRef = inject(MatDialogRef<StockEntryCreateEditWithoutProductDialogComponent>);
+  data = inject<StockEntryCreateEditWithoutProductDialogData>(MAT_DIALOG_DATA);
 
   form!: FormGroup;
   selectedProduct = signal<any>(null);
@@ -81,7 +80,8 @@ export class InventoryInboundProductDialogComponent implements OnInit {
       quantity: [this.data.product?.quantity || '', [Validators.required, Validators.min(1)]],
       unit_cost: [this.data.product?.unit_cost || '', [Validators.required, Validators.min(0)]],
       batch_number: [this.data.product?.batch_number || ''],
-      expiry_date: [this.data.product?.expiry_date ? new Date(this.data.product.expiry_date) : null]
+      expiry_date: [this.data.product?.expiry_date ? new Date(this.data.product.expiry_date) : null],
+      description: [this.data.product?.description || '']
     });
 
     if (this.data.isEdit) {
@@ -103,7 +103,8 @@ export class InventoryInboundProductDialogComponent implements OnInit {
         product_name: this.selectedProduct().name || this.selectedProduct().product_name,
         product_sku: this.selectedProduct().sku || this.selectedProduct().product_sku,
         product_image: this.selectedProduct().img_main || this.selectedProduct().product_image,
-        expiry_date: val.expiry_date ? val.expiry_date.toISOString().split('T')[0] : null
+        expiry_date: val.expiry_date ? val.expiry_date.toISOString().split('T')[0] : null,
+        description: val.description
       };
       this.dialogRef.close(result);
     }

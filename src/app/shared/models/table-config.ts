@@ -1,7 +1,7 @@
 export interface TableColumn {
     key: string;       // Property name (e.g., 'price')
     header: string;    // Display name (e.g., 'Precio')
-    type?: 'text' | 'currency' | 'badge' | 'date' | 'config' | 'image' | 'boolean'; // For formatting
+    type?: 'text' | 'currency' | 'badge' | 'date' | 'datetime' | 'config' | 'image' | 'boolean'; // For formatting
     filterable?: boolean; // Show column filter?
 }
 

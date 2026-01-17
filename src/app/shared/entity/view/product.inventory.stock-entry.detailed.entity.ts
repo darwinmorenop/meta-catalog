@@ -11,5 +11,6 @@ export interface ProductInventoryStockEntryDetailedEntity {
     user_owner_first_name: string;
     user_owner_last_name: string;
     inbound_id: number; 
-    inbound_description: string;
+    inbound_reference_number: string;
+    description: string;
 }

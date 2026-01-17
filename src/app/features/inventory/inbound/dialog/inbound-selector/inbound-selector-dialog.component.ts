@@ -1,12 +1,17 @@
 import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { InventoryInboundService } from 'src/app/core/services/inventory/inventory-inbound.service';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { InventoryInboundStatusEnum } from 'src/app/shared/entity/inventory.inbound.entity';
+
+export interface InboundSelectorDialogData {
+  statusFiltered?: boolean;
+}
 
 @Component({
   selector: 'app-inbound-selector-dialog',
@@ -23,13 +28,20 @@ import { rxResource } from '@angular/core/rxjs-interop';
 })
 export class InboundSelectorDialogComponent {
   private inboundService = inject(InventoryInboundService);
-  dialogRef = inject(MatDialogRef<InboundSelectorDialogComponent>);
+  public dialogRef = inject(MatDialogRef<InboundSelectorDialogComponent>);
+  private data = inject<InboundSelectorDialogData>(MAT_DIALOG_DATA, { optional: true });
 
   inboundResource = rxResource({
     stream: () => this.inboundService.getAll()
   });
 
-  tableData = computed(() => this.inboundResource.value() ?? []);
+  tableData = computed(() => {
+    const raw = this.inboundResource.value() ?? [];
+    if (this.data?.statusFiltered) {
+      return raw.filter(item => item.status !== InventoryInboundStatusEnum.deleted);
+    }
+    return raw;
+  });
 
   tableConfig: TableConfig = {
     columns: [

@@ -25,8 +25,8 @@ export class StockEntryViewDialogComponent {
   private dialogRef = inject(MatDialogRef<StockEntryViewDialogComponent>);
 
   goToInbound() {
-    if (this.data.entry.inbound_id) {
-      this.router.navigate(['/inventory/inbound', this.data.entry.inbound_id]);
+    if (this.data.inbound_id) {
+      this.router.navigate(['/inventory/inbound', this.data.inbound_id]);
       this.dialogRef.close();
     }
   }
