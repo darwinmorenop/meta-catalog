@@ -1,0 +1,106 @@
+<div class="register-container">
+  <header class="page-header">
+    <div class="title-wrapper">
+      <button mat-icon-button (click)="cancel()" matTooltip="Cancelar">
+        <mat-icon>close</mat-icon>
+      </button>
+      <div class="header-text">
+        <h1>{{ isEdit ? 'Editar Venta #' + saleId : 'Nueva Venta' }}</h1>
+        <p class="subtitle">Completa la información de la transacción</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button color="warn" (click)="cancel()">Cancelar</button>
+      <button mat-flat-button color="primary" [disabled]="form.invalid || itemsList().length === 0" (click)="save()">
+        <mat-icon>save</mat-icon>
+        {{ isEdit ? 'Actualizar Venta' : 'Registrar Venta' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="content-grid">
+    <div class="main-column">
+      <mat-card class="products-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>shopping_cart</mat-icon>
+          <mat-card-title>Productos de la Venta</mat-card-title>
+          <div class="header-spacer"></div>
+          <button mat-stroked-button color="primary" (click)="addItem()">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Añadir Producto
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          <app-smart-table
+            [data]="itemsList()"
+            [config]="tableConfig"
+            (edit)="onEditItem($event)"
+            (delete)="onDeleteItem($event)">
+          </app-smart-table>
+          
+          <div class="totals-section" *ngIf="itemsList().length > 0">
+            <div class="total-row grand-total">
+              <span class="label">Total a Pagar</span>
+              <span class="value">{{ grandTotal() | currency:'EUR' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <aside class="sidebar">
+      <mat-card class="settings-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>settings</mat-icon>
+          <mat-card-title>Ajustes de Venta</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="form" class="settings-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Método de Pago</mat-label>
+              <mat-select formControlName="payment_method">
+                <mat-option *ngFor="let opt of paymentOptions" [value]="opt.key">
+                  {{ opt.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Estado de la Venta</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let opt of statusOptions" [value]="opt.key">
+                  {{ opt.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Descripción</mat-label>
+              <input matInput formControlName="description" placeholder="Observaciones de la venta...">
+            </mat-form-field>
+          </form>
+
+          <mat-divider></mat-divider>
+
+          <div class="user-selectors">
+            <div class="user-selector" (click)="selectUser('seller')">
+              <span class="selector-label">Vendedor</span>
+              <div class="user-chip" [class.selected]="selectedSeller()">
+                <mat-icon>person</mat-icon>
+                <span>{{ selectedSeller()?.firstName || 'Seleccionar Vendedor' }}</span>
+              </div>
+            </div>
+
+            <div class="user-selector" (click)="selectUser('buyer')">
+              <span class="selector-label">Cliente / Comprador</span>
+              <div class="user-chip" [class.selected]="selectedBuyer()">
+                <mat-icon>shopping_bag</mat-icon>
+                <span>{{ selectedBuyer()?.firstName || 'Seleccionar Cliente' }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </aside>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+<div class="dialog-header">
+  <h2 mat-dialog-title>Detalle de Captura (Scrap #{{ data.scrap_id }})</h2>
+  <button mat-icon-button (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="dialog-content">
+  <div class="info-section">
+    <h3>Información de Origen</h3>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="label">Campaña:</span>
+        <span class="value">{{ data.campaign_name }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Fecha Captura:</span>
+        <span class="value">{{ data.scraped_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Código Origen:</span>
+        <span class="value code">{{ data.code }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Estado Captura:</span>
+        <span class="value chip" [ngClass]="data.status">{{ data.status }}</span>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="info-section">
+    <h3>Métricas Económicas</h3>
+    <div class="info-grid half">
+      <div class="info-item highlight">
+        <span class="label">Precio Original:</span>
+        <span class="value">{{ data.original_price | currency: 'EUR' }}</span>
+      </div>
+      <div class="info-item highlight accent">
+        <span class="label">Precio Oferta:</span>
+        <span class="value">{{ data.sale_price | currency: 'EUR' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Descuento:</span>
+        <span class="value" *ngIf="data.original_price > 0">
+          {{ ((data.original_price - data.sale_price) / data.original_price) | percent: '1.0-0' }}
+        </span>
+      </div>
+      <div class="info-item">
+        <span class="label">Stock Status:</span>
+        <span class="value">{{ data.stock_status === 1 ? 'Disponible' : 'Sin Stock' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="info-section" *ngIf="data.scrap_config">
+    <h3>Configuración de Sincronización</h3>
+    <div class="config-badges">
+      <div class="config-badge" [class.active]="data.scrap_config.syncPrices">
+        <mat-icon>{{ data.scrap_config.syncPrices ? 'check_circle' : 'cancel' }}</mat-icon>
+        Sinc. Precios
+      </div>
+      <div class="config-badge" [class.active]="data.scrap_config.syncStock">
+        <mat-icon>{{ data.scrap_config.syncStock ? 'check_circle' : 'cancel' }}</mat-icon>
+        Sinc. Stock
+      </div>
+      <div class="config-badge" [class.active]="data.scrap_config.syncStatus">
+        <mat-icon>{{ data.scrap_config.syncStatus ? 'check_circle' : 'cancel' }}</mat-icon>
+        Sinc. Estado
+      </div>
+      <div class="config-badge" [class.active]="data.scrap_config.syncProperties">
+        <mat-icon>{{ data.scrap_config.syncProperties ? 'check_circle' : 'cancel' }}</mat-icon>
+        Sinc. Propiedades
+      </div>
+    </div>
+  </div>
+
+  <div class="url-section" *ngIf="data.url_source">
+    <button mat-stroked-button color="primary" class="full-width" (click)="openUrl()">
+      <mat-icon>open_in_new</mat-icon>
+      Abrir enlace original
+    </button>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" (click)="close()">Entendido</button>
+</mat-dialog-actions>

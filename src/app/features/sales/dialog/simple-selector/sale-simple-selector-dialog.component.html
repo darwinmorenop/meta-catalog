@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>{{ data?.title || 'Seleccionar Venta' }}</h2>
+
+<mat-dialog-content>
+  <app-smart-table
+    [data]="tableData()"
+    [config]="tableConfig"
+    [isLoading]="salesResource.isLoading()"
+    (selectionChange)="onSelect($event)">
+  </app-smart-table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+</mat-dialog-actions>

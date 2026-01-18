@@ -1,0 +1,86 @@
+<h2 mat-dialog-title class="dialog-title">
+  <div class="title-content">
+    <mat-icon>receipt</mat-icon>
+    <span>Detalle del Item de Venta</span>
+  </div>
+  <button mat-icon-button (click)="close()" class="close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <div class="product-header">
+    <img [src]="data.product_image || 'assets/images/placeholder.png'" alt="Product" class="product-img">
+    <div class="product-info">
+      <h3>{{ data.product_name }}</h3>
+      <span class="sku">SKU: {{ data.product_sku }}</span>
+      <span class="status-badge" [attr.data-status]="data.item_status">{{ statusLabel }}</span>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="info-grid">
+    <div class="info-section">
+      <h4 class="section-title">Valores de Venta</h4>
+      <div class="info-row">
+        <span class="label">Cantidad</span>
+        <span class="value">{{ data.quantity }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Precio Unitario</span>
+        <span class="value">{{ data.unit_price | currency:'EUR' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Descuento aplicado</span>
+        <span class="value">{{ data.discount_amount | currency:'EUR' }}</span>
+      </div>
+      <div class="info-row highlight">
+        <span class="label">Ingreso Neto (Línea)</span>
+        <span class="value">{{ data.line_revenue | currency:'EUR' }}</span>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h4 class="section-title">Análisis de Negocio</h4>
+      <div class="info-row">
+        <span class="label">Costo Total</span>
+        <span class="value">{{ data.line_total_cost | currency:'EUR' }}</span>
+      </div>
+      <div class="info-row profit-row" [class.negative]="data.line_profit < 0">
+        <span class="label">Ganancia Real</span>
+        <div class="profit-value">
+          <mat-icon>{{ data.line_profit >= 0 ? 'trending_up' : 'trending_down' }}</mat-icon>
+          <span class="value">{{ data.line_profit | currency:'EUR' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section full-width" *ngIf="data.item_description">
+      <h4 class="section-title">Descripción / Observaciones</h4>
+      <p class="description-text">{{ data.item_description }}</p>
+    </div>
+
+    <div class="info-section full-width">
+      <h4 class="section-title">Historial del Item</h4>
+      <div class="dates-row">
+        <div class="date-item">
+          <mat-icon>add_circle_outline</mat-icon>
+          <span>Creado: {{ data.item_created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="date-item">
+          <mat-icon>history</mat-icon>
+          <span>Actualizado: {{ data.item_updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cerrar</button>
+  <button mat-flat-button color="primary" (click)="goToProduct()">
+    <mat-icon>visibility</mat-icon>
+    Ver Producto
+  </button>
+</mat-dialog-actions>

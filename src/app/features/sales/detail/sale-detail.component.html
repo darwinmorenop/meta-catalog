@@ -1,0 +1,108 @@
+@if (headerInfo(); as sale) {
+<div class="detail-container">
+  <header class="page-header">
+    <div class="title-wrapper">
+      <button mat-icon-button (click)="goBack()" matTooltip="Volver">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-text">
+        <h1>Venta #{{ sale.sale_id }}</h1>
+        <p class="subtitle">Detalles de la transacción y productos</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button color="primary" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Editar Venta
+      </button>
+    </div>
+  </header>
+
+  <div class="content-grid">
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>info</mat-icon>
+        <mat-card-title>Participantes y Fechas</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-list">
+          <div class="info-item user-info">
+            <span class="label">Vendedor</span>
+            <div class="user-detail">
+              <img [src]="sale.source_user_image || 'assets/images/default-avatar.png'" class="avatar">
+              <div class="text">
+                <span class="value">{{ sale.source_user_name }}</span>
+                <span class="sub-text">{{ sale.source_user_email }}</span>
+                <span class="rank-badge">{{ sale.source_user_rank }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="info-item user-info">
+            <span class="label">Comprador</span>
+            <div class="user-detail">
+              <img [src]="sale.target_user_image || 'assets/images/default-avatar.png'" class="avatar">
+              <div class="text">
+                <span class="value">{{ sale.target_user_name }}</span>
+                <span class="sub-text">{{ sale.target_user_email }}</span>
+                <span class="rank-badge">{{ sale.target_user_rank }}</span>
+              </div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info-item">
+            <span class="label">Descripción</span>
+            <span class="sub-text">{{ sale.sale_description }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Fecha de creación</span>
+            <span class="value">{{ sale.sale_created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Fecha de actualización</span>
+            <span class="value">{{ sale.sale_updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="products-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>shopping_basket</mat-icon>
+        <mat-card-title>Resumen y Productos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="summary-row">
+          <div class="summary-item">
+            <span class="label">Estado</span>
+            <span class="value badge" [attr.data-status]="sale.sale_status">
+              {{ sale.status_label }}
+            </span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Método de Pago</span>
+            <span class="value">{{ sale.payment_method_label }}</span>
+          </div>
+          <div class="summary-item total-item">
+            <span class="label">Total Venta</span>
+            <span class="value currency">{{ sale.sale_header_total | currency:'EUR' }}</span>
+          </div>
+        </div>
+
+        <app-smart-table
+          [data]="tableData()"
+          [config]="tableConfig"
+          (view)="onViewSaleItem($event)"
+          [isLoading]="saleResource.isLoading()">
+        </app-smart-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+}
+
+@if (saleResource.isLoading() && !headerInfo()) {
+<div class="loading-state">
+  <mat-spinner diameter="40"></mat-spinner>
+  <p>Cargando detalles de la venta...</p>
+</div>
+}

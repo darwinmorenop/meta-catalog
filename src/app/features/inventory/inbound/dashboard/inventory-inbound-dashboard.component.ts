@@ -1,17 +1,23 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+
 import { InventoryInboundService } from 'src/app/core/services/inventory/inventory-inbound.service';
+import { UserService } from 'src/app/core/services/users/user.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { InventoryInboundDashboardEntity, InventoryInboundDashboardDetailedEntity } from 'src/app/shared/entity/view/inventory.dashboard.inbound.entity';
 import { InventoryInboundStatusEnum } from 'src/app/shared/entity/inventory.inbound.entity';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserNetworkDetail } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { forkJoin, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ProductInventoryStockEntryService } from 'src/app/core/services/products/product-inventory-stock-entry.service';
@@ -25,6 +31,9 @@ import { ProductInventoryStockEntryService } from 'src/app/core/services/product
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
     RouterModule,
     SmartTableComponent
   ],
@@ -36,10 +45,40 @@ export class InventoryInboundDashboardComponent {
   private snackBar = inject(MatSnackBar);
   private inboundService = inject(InventoryInboundService);
   private stockService = inject(ProductInventoryStockEntryService);
+  private userService = inject(UserService);
+
+  scopeControl = new FormControl<'Personal' | 'Grupal' | 'Todos'>('Personal', { nonNullable: true });
+  scope = toSignal(this.scopeControl.valueChanges, { initialValue: this.scopeControl.value });
+
+  filteredUserIds = computed(() => {
+    const scope = this.scope();
+    const currentUser = this.userService.currentUser();
+    const network = this.userService.currentUserNetwork() || [];
+
+    if (!currentUser) return [];
+
+    switch (scope) {
+      case 'Personal':
+        return [currentUser.id];
+      case 'Grupal':
+        return network.map((u: UserNetworkDetail) => u.id);
+      case 'Todos':
+        return [];
+      default:
+        return [];
+    }
+  });
 
   inboundsResource = rxResource({
-    stream: () => this.inboundService.getAllDashboardData()
+    stream: () => this.inboundService.getAllDashboardData(this.filteredUserIds())
   });
+
+  constructor() {
+    effect(() => {
+      this.scope();
+      this.inboundsResource.reload();
+    });
+  }
 
   tableData = computed(() => {
     const raw = this.inboundsResource.value() || [];

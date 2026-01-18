@@ -1,12 +1,12 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
     <div class="header-title-wrapper">
-      <button mat-icon-button (click)="goBack()" matTooltip="Volver a Stock">
+      <button mat-icon-button (click)="goBack()" matTooltip="Volver a Ventas">
         <mat-icon>arrow_back</mat-icon>
       </button>
       <div class="header-content">
-        <h1>Documentos de Entrada (Inbound)</h1>
-        <p class="subtitle">Gestión de documentos y movimientos de inventario</p>
+        <h1>Ventas por Producto</h1>
+        <p class="subtitle">Análisis de rendimiento y rotación de productos</p>
       </div>
     </div>
     <div class="header-actions">
@@ -25,12 +25,12 @@
         </mat-select>
       </mat-form-field>
 
-      <button mat-flat-button color="primary" (click)="onAddInbound()">
+      <button mat-flat-button color="primary" (click)="onAddSale()">
         <mat-icon>add</mat-icon>
-        Registrar Entrada
+        Nueva Venta
       </button>
-      <button mat-icon-button (click)="inboundsResource.reload()" [disabled]="inboundsResource.isLoading()" class="reload-btn">
-        <mat-icon [class.spinning]="inboundsResource.isLoading()">refresh</mat-icon>
+      <button mat-icon-button (click)="statsResource.reload()" [disabled]="statsResource.isLoading()" class="reload-btn">
+        <mat-icon [class.spinning]="statsResource.isLoading()">refresh</mat-icon>
       </button>
     </div>
   </header>
@@ -40,10 +40,8 @@
       <app-smart-table
         [data]="tableData()"
         [config]="tableConfig"
-        [isLoading]="inboundsResource.isLoading()"
-        (view)="onViewInbound($event)"
-        (delete)="onDeleteInbound($event)"
-        (edit)="onEditInbound($event)">
+        [isLoading]="statsResource.isLoading()"
+        (view)="onViewDetail($event)">
       </app-smart-table>
     </mat-card-content>
   </mat-card>

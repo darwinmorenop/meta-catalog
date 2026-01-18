@@ -27,7 +27,8 @@ export class AppComponent {
   navItems = [
     { label: 'Campañas', icon: 'campaign', route: '/campaigns' },
     { label: 'Categorías', icon: 'category', route: '/categories' },
-    { label: 'Usuarios', icon: 'group', route: '/users' }
+    { label: 'Usuarios', icon: 'group', route: '/users' },
+    { label: 'Scrap', icon: 'sync', route: '/scraps' },
   ];
 
   navigateTo(route: string) {

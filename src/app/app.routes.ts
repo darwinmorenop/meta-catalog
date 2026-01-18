@@ -38,6 +38,8 @@ export const routes: Routes = [
     { path: 'products', component: ProductDashboardComponent },
     { path: 'campaigns', component: CampaignDashboardComponent },
     { path: 'scraps', component: ScrapsDashboardComponent },
+    { path: 'scraps/products', loadComponent: () => import('./features/scraps/products/dashboard/scrap-product-dashboard.component').then(m => m.ScrapProductDashboardComponent) },
+    { path: 'scraps/products/:productId', loadComponent: () => import('./features/scraps/products/detail/scrap-product-detail.component').then(m => m.ScrapProductDetailComponent) },
     { path: 'scraps/sync', component: SyncProposalComponent },
     { path: 'scraps/:scrapId/products/:productId', component: ProductScrapDetailComponent },
     { path: 'scraps/:id', component: ScrapDetailComponent },
@@ -49,5 +51,11 @@ export const routes: Routes = [
     { path: 'users/:id', loadComponent: () => import('./features/users/detail/user-detail.component').then(m => m.UserDetailComponent) },
     { path: 'inventory/stock-entry', loadComponent: () => import('./features/products/inventory/stock-entry/dashboard/product-inventory-stock-dashboard.component').then(m => m.ProductInventoryStockDashboardComponent) },
     { path: 'inventory/stock-entry/:productId/:userId', loadComponent: () => import('./features/products/inventory/stock-entry/detail/product-inventory-stock-detail.component').then(m => m.ProductInventoryStockDetailComponent) },
+    { path: 'sales', loadComponent: () => import('./features/sales/dashboard/sale-dashboard.component').then(m => m.SaleDashboardComponent) },
+    { path: 'sales/inventory', loadComponent: () => import('./features/sales/inventory/dashboard/sale-inventory-dashboard.component').then(m => m.SaleInventoryDashboardComponent) },
+    { path: 'sales/inventory/:productId/:userId', loadComponent: () => import('./features/sales/inventory/detail/sale-inventory-detail.component').then(m => m.SaleInventoryDetailComponent) },
+    { path: 'sales/register', loadComponent: () => import('./features/sales/register/sale-register.component').then(m => m.SaleRegisterComponent) },
+    { path: 'sales/:id/edit', loadComponent: () => import('./features/sales/register/sale-register.component').then(m => m.SaleRegisterComponent) },
+    { path: 'sales/:id', loadComponent: () => import('./features/sales/detail/sale-detail.component').then(m => m.SaleDetailComponent) },
     { path: '**', component: HomeComponent }
 ];

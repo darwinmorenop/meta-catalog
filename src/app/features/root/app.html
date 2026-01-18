@@ -23,39 +23,63 @@
         <mat-icon>payments</mat-icon>
         <span>Precios</span>
       </button>
-      
+
       <button mat-menu-item [matMenuTriggerFor]="flowMenu">
-        <mat-icon>account_tree</mat-icon>
+        <mat-icon>sync_alt</mat-icon>
         <span>Flujo</span>
       </button>
-
-      <button mat-menu-item (click)="navigateTo('/scraps')">
-        <mat-icon>sync</mat-icon>
+      
+      <button mat-menu-item (click)="navigateTo('/scraps/products')">
+        <mat-icon>inventory_2</mat-icon>
         <span>Scrap</span>
       </button>
     </mat-menu>
 
-    <!-- Submenu Flujo -->
+    <!-- Submenu Flujo (Dentro de Productos) -->
     <mat-menu #flowMenu="matMenu">
-      <button mat-menu-item [matMenuTriggerFor]="entryMenu">
-        <mat-icon>login</mat-icon>
-        <span>Entrada</span>
+      <button mat-menu-item (click)="navigateTo('/inventory/stock-entry')">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Compras</span>
+      </button>
+      <button mat-menu-item (click)="navigateTo('/sales/inventory')">
+        <mat-icon>analytics</mat-icon>
+        <span>Ventas</span>
       </button>
     </mat-menu>
 
-    <!-- Submenu Entrada -->
-    <mat-menu #entryMenu="matMenu">
+    <!-- Menú Compras -->
+    <button mat-button [matMenuTriggerFor]="comprasMenu">
+      <mat-icon>shopping_bag</mat-icon>
+      <span class="btn-label">Compras</span>
+      <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #comprasMenu="matMenu">
       <button mat-menu-item (click)="navigateTo('/inventory/inbound')">
         <mat-icon>inventory</mat-icon>
-        <span>Documentos de entrada</span>
-      </button>
-      <button mat-menu-item (click)="navigateTo('/inventory/stock-entry')">
-        <mat-icon>inventory_2</mat-icon>
-        <span>Stock físico</span>
+        <span>Documentos</span>
       </button>
       <button mat-menu-item (click)="navigateTo('/inventory/inbound/register')">
         <mat-icon>add_circle</mat-icon>
-        <span>Registrar entrada</span>
+        <span>Registrar</span>
+      </button>
+    </mat-menu>
+
+    <!-- Menú Ventas -->
+    <button mat-button [matMenuTriggerFor]="ventasMenu">
+      <mat-icon>sell</mat-icon>
+      <span class="btn-label">Ventas</span>
+      <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #ventasMenu="matMenu">
+      <button mat-menu-item (click)="navigateTo('/sales')">
+        <mat-icon>receipt_long</mat-icon>
+        <span>Documentos</span>
+      </button>
+      <button mat-menu-item (click)="navigateTo('/sales/register')">
+        <mat-icon>add_shopping_cart</mat-icon>
+        <span>Registrar</span>
       </button>
     </mat-menu>
 

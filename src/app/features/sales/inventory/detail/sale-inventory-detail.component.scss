@@ -12,10 +12,10 @@
   align-items: center;
   margin-bottom: 8px;
 
-  .header-title-wrapper {
+  .product-info-wrapper {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
 
     button[mat-icon-button] {
        background: var(--surface-card);
@@ -26,53 +26,43 @@
          background: var(--surface-hover);
        }
     }
-  }
 
-  .header-content {
-    h1 {
-      margin: 0;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text-color);
-      letter-spacing: -0.02em;
-    }
+    .product-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
 
-    .subtitle {
-      margin: 4px 0 0 0;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
+      .product-thumb {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: white;
+      }
+
+      .text-info {
+        h1 {
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--text-color);
+          letter-spacing: -0.01em;
+        }
+
+        .subtitle {
+          margin: 2px 0 0 0;
+          color: var(--text-secondary);
+          font-size: 0.9rem;
+        }
+      }
     }
   }
 
   .header-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
-
-    .scope-select {
-      width: 180px;
-
-      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-        display: none;
-      }
-
-      mat-icon {
-        vertical-align: middle;
-        margin-right: 4px;
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-      }
-    }
-
-    .reload-btn {
-       background: var(--surface-card);
-       border: 1px solid var(--border-color);
-       
-       &:hover {
-         background: var(--surface-hover);
-       }
-    }
+    gap: 12px;
   }
 }
 

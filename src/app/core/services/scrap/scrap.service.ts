@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProductScrapEntity } from 'src/app/shared/entity/view/product.scrap.entity';
+import { ProductScrapEntity, ProductWithSourcesEntity } from 'src/app/shared/entity/view/product.scrap.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ScrapWriteDaoSupabaseService } from './dao/scrap.write.dao.supabase.service';
 import { ScrapEntity } from 'src/app/shared/entity/scrap.entity';
@@ -18,6 +18,7 @@ export class ScrapService {
     private loggerService: LoggerService = inject(LoggerService);
     private readonly CLASS_NAME = ScrapService.name;
     private currentProduct = signal<ProductScrapEntity | null>(null);
+    private currentProductWithSources = signal<ProductWithSourcesEntity | null>(null);
 
     setCurrentProduct(product: ProductScrapEntity | null) {
         const context = 'setCurrentProduct'
@@ -29,6 +30,14 @@ export class ScrapService {
         const product = this.currentProduct();
         this.currentProduct.set(null);
         return product;
+    }
+
+    setCurrentProductWithSources(product: ProductWithSourcesEntity | null) {
+        this.currentProductWithSources.set(product);
+    }
+
+    getCurrentProductWithSources(): ProductWithSourcesEntity | null {
+        return this.currentProductWithSources();
     }
 
     getAll(): Observable<ScrapEntity[]> {
@@ -69,6 +78,10 @@ export class ScrapService {
 
     getAllProductsScrap(): Observable<ProductScrapEntity[]> {
         return this.scrapReadDaoSupabaseService.getAllProductsScrap();
+    }
+
+    getProductsWithSources(productId?: number): Observable<ProductWithSourcesEntity[]> {
+        return this.scrapReadDaoSupabaseService.getProductsWithSources(productId);
     }
 
 }

@@ -47,11 +47,15 @@ export class InventoryInboundDaoSupabaseService {
     );
   }
 
-  getAllDashboardData(): Observable<InventoryInboundDashboardEntity[]> {
+  getAllDashboardData(userIds?: number[]): Observable<InventoryInboundDashboardEntity[]> {
     const context = 'getAllDashboardData';
-    const query = this.supabase
+    let query = this.supabase
       .from('v_inventory_inbound_dashboard')
       .select(`*`);
+
+    if (userIds && userIds.length > 0) {
+      query = query.or(`source_user_id.in.(${userIds.join(',')}),target_user_id.in.(${userIds.join(',')})`);
+    }
 
     return from(query).pipe(
       tap(response => {

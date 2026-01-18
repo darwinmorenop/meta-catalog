@@ -1,0 +1,33 @@
+<div class="dashboard-container">
+  <header class="dashboard-header" *ngIf="productInfo() as info">
+    <div class="product-info-wrapper">
+      <button mat-icon-button (click)="goBack()" matTooltip="Volver al Dashboard">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      
+      <div class="product-info">
+        <img [src]="info.product_main_image || 'assets/images/placeholder.png'" class="product-thumb">
+        <div class="text-info">
+          <h1>{{ info.product_name }}</h1>
+          <p class="subtitle">SKU: {{ info.product_sku }} • Referencia: {{ info.product_manufacturer_ref }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button mat-icon-button (click)="sourcesResource.reload()" [disabled]="sourcesResource.isLoading()">
+        <mat-icon [class.spinning]="sourcesResource.isLoading()">refresh</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <mat-card class="table-card">
+    <mat-card-content>
+      <app-smart-table
+        [data]="tableData()"
+        [config]="tableConfig"
+        [isLoading]="sourcesResource.isLoading()"
+        (view)="onViewSource($event)">
+      </app-smart-table>
+    </mat-card-content>
+  </mat-card>
+</div>

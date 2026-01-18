@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>Venta - {{ (!data.isEdit || data.product) ? 'Añadir Producto' : 'Editar Producto' }}</h2>
+
+<mat-dialog-content class="dialog-content">
+  <div class="selection-section" *ngIf="!data.isEdit">
+    <h3>Seleccionar Producto</h3>
+    <app-smart-table
+      [data]="tableData()"
+      [config]="tableConfig"
+      [isLoading]="productsResource.isLoading()"
+      (selectionChange)="onSelectionChange($event)">
+    </app-smart-table>
+  </div>
+
+  <div class="selected-info" *ngIf="selectedProduct()">
+    <div class="product-badge">
+      <img [src]="selectedProduct().product_image || selectedProduct().img_main || 'assets/images/placeholder.png'" alt="Product">
+      <div class="details">
+        <span class="name">{{ selectedProduct().product_name || selectedProduct().name }}</span>
+        <span class="sku">SKU: {{ selectedProduct().product_sku || selectedProduct().sku }}</span>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="form" class="product-form" *ngIf="selectedProduct()">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" formControlName="quantity">
+        <mat-error *ngIf="form.get('quantity')?.hasError('required')">Requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Precio Unitario</mat-label>
+        <input matInput type="number" formControlName="unit_price">
+        <mat-error *ngIf="form.get('unit_price')?.hasError('required')">Requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Descuento Total Línea</mat-label>
+        <input matInput type="number" formControlName="discount_amount">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Estado del Item</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let opt of statusOptions" [value]="opt.key">
+            {{ opt.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción / Observación</mat-label>
+        <input matInput formControlName="description" placeholder="Ej: Defecto de fábrica, Promo especial...">
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+  <button mat-flat-button color="primary" [disabled]="form.invalid || !selectedProduct()" (click)="save()">
+    {{ data.isEdit ? 'Actualizar' : 'Añadir' }}
+  </button>
+</mat-dialog-actions>

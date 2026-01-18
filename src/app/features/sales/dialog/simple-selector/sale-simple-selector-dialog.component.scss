@@ -1,0 +1,19 @@
+mat-dialog-content {
+  min-width: 900px;
+  min-height: 500px;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  app-smart-table {
+    flex: 1;
+    overflow: auto;
+  }
+}
+
+::ng-deep .mat-mdc-dialog-container {
+  .mat-mdc-dialog-surface {
+    border-radius: 12px;
+  }
+}

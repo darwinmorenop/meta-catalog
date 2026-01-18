@@ -5,7 +5,7 @@ import { catchError, map, tap, switchMap } from 'rxjs/operators';
 import { ProductScrapSyncOptions, ProductScrapSyncPendingChange } from 'src/app/core/models/products/scrap/product.scrap.sync.model';
 import { environment } from 'src/environments/environment';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
-import { ProductScrapEntity } from 'src/app/shared/entity/view/product.scrap.entity';
+import { ProductScrapEntity, ProductWithSourcesEntity } from 'src/app/shared/entity/view/product.scrap.entity';
 import { ScrapEntity } from 'src/app/shared/entity/scrap.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ScrapSummaryEntry } from 'src/app/shared/entity/view/scrap.entry';
@@ -145,6 +145,40 @@ export class ScrapReadDaoSupabaseService {
         .single()
     ).pipe(
       map(res => this.mapScrapSummary(res.data))
+    );
+  }
+
+  getProductsWithSources(productId?: number): Observable<ProductWithSourcesEntity[]> {
+    const context = 'getProductsWithSources';
+
+    let query = this.supabase
+      .from('v_product_sources_aggregated')
+      .select('*');
+
+    // Si quieres filtrar por un producto específico
+    if (productId) {
+      query = query.eq('product_id', productId);
+    }
+
+    return from(query).pipe(
+      map(response => {
+        if (response.error) throw response.error;
+        const data = (response.data as any[]) || [];
+
+        // Mapeo para formatear fechas dentro del array anidado
+        return data.map(product => ({
+          ...product,
+          sources: product.sources.map((src: any) => ({
+            ...src,
+            scraped_at: this.dateUtils.parseDbDate(src.scraped_at),
+            scrap_created_at: this.dateUtils.parseDbDate(src.scrap_created_at)
+          }))
+        })) as ProductWithSourcesEntity[];
+      }),
+      catchError(error => {
+        this.logger.error('Error fetching aggregated products/sources:', error, this.CLASS_NAME, context);
+        return of([]);
+      })
     );
   }
 

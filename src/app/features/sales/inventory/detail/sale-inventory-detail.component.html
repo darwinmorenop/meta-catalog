@@ -1,0 +1,40 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="product-info-wrapper">
+      <button mat-icon-button (click)="goBack()" matTooltip="Volver al Dashboard">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      
+      <div class="product-info" *ngIf="productInfo() as info">
+        <img [src]="info.image || 'assets/images/placeholder.png'" class="product-thumb">
+        <div class="text-info">
+          <h1>{{ info.name }}</h1>
+          <p class="subtitle">SKU: {{ info.sku }} • Historial de Ventas</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button mat-flat-button color="primary" (click)="onLinkToSale()">
+        <mat-icon>link</mat-icon>
+        Vincular a Venta
+      </button>
+      <button mat-icon-button (click)="salesHistoryResource.reload()" [disabled]="salesHistoryResource.isLoading()">
+        <mat-icon [class.spinning]="salesHistoryResource.isLoading()">refresh</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <mat-card class="table-card">
+    <mat-card-content>
+      <app-smart-table
+        [data]="tableData()"
+        [config]="tableConfig"
+        [isLoading]="salesHistoryResource.isLoading()"
+        (view)="onViewSale($event)"
+        (edit)="onEditItem($event)"
+        (delete)="onDeleteItem($event)">
+      </app-smart-table>
+    </mat-card-content>
+  </mat-card>
+</div>
