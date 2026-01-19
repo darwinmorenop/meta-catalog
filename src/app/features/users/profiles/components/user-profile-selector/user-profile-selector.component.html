@@ -1,0 +1,22 @@
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Filtrar perfiles</mat-label>
+  <input matInput [formControl]="searchControl" placeholder="Nombre o descripción...">
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+
+<mat-selection-list [multiple]="false" (selectionChange)="onSelectionChange($event)">
+  <mat-list-option *ngFor="let profile of filteredProfiles()" [value]="profile" [selected]="initialSelectedId === profile.id">
+    <div class="profile-option">
+      <mat-icon matListIcon color="primary">security</mat-icon>
+      <div class="profile-details">
+        <strong>{{ profile.name }}</strong>
+        <span *ngIf="profile.description">{{ profile.description }}</span>
+      </div>
+    </div>
+  </mat-list-option>
+</mat-selection-list>
+
+<div *ngIf="filteredProfiles().length === 0" class="empty-state">
+  <mat-icon>info</mat-icon>
+  <p>No se encontraron perfiles.</p>
+</div>

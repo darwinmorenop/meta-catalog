@@ -34,7 +34,7 @@ export class UserDaoSupabaseService {
       path: item.path,
       identifier: item.identifier,
       image: item.image,
-      permissions: item.permissions,
+      user_profile_id: item.user_profile_id,
       settings: item.settings
     };
   }
@@ -62,7 +62,8 @@ export class UserDaoSupabaseService {
       sponsorPhone: item.sponsor_phone,
       sponsorRank: item.sponsor_rank as UserRankEnum,
       sponsorImage: item.sponsor_image,
-      permissions: item.permissions,
+      user_profile_id: item.profile_id,
+      user_profile_name: item.profile_name,
       settings: item.settings
     };
   }
@@ -79,7 +80,7 @@ export class UserDaoSupabaseService {
       identifier: user.identifier,
       image: user.image,
       external_auth_id: user.externalAuthId,
-      permissions: user.permissions
+      user_profile_id: user.user_profile_id
     };
   }
 

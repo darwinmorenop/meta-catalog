@@ -1,0 +1,25 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  gap: 16px;
+  color: var(--stat-label);
+
+  .spinning {
+    animation: rotate 1s linear infinite;
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+mat-dialog-content {
+  min-width: 400px;
+}

@@ -15,7 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // Services & Models
 import { UserService } from 'src/app/core/services/users/user.service';
 import { UserNetworkDetail, UserNode } from 'src/app/shared/entity/rcp/user.rcp.entity';
-import { UserRankEnum } from 'src/app/core/models/users/user.model';
+import { UserRankEnum, UserRankLabel } from 'src/app/core/models/users/user.model';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 
 @Component({
@@ -143,6 +143,6 @@ export class UserDetailComponent implements OnInit {
   }
 
   getRankLabel(rank: UserRankEnum): string {
-    return UserRankEnum[rank as unknown as keyof typeof UserRankEnum] || rank;
+    return UserRankLabel[rank] || rank;
   }
 }

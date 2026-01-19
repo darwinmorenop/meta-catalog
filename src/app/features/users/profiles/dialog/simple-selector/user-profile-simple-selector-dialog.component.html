@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Seleccionar Perfil</h2>
+<mat-dialog-content>
+  <div *ngIf="isLoading()" class="loading-container">
+    <mat-icon class="spinning">refresh</mat-icon>
+    <span>Cargando perfiles...</span>
+  </div>
+  
+  <app-user-profile-selector 
+    *ngIf="!isLoading()"
+    [profiles]="profiles()" 
+    [initialSelectedId]="data?.initialSelectedId"
+    (onSelected)="onProfileSelected($event)">
+  </app-user-profile-selector>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+</mat-dialog-actions>

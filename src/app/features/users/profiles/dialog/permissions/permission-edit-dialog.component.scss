@@ -1,0 +1,56 @@
+.permission-edit-container {
+  padding: 16px;
+}
+
+.dialog-header {
+  margin-bottom: 24px;
+  
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+  }
+
+  .subtitle {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: var(--stat-label);
+  }
+}
+
+.actions-manage-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .current-actions {
+    label {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .action-chips {
+      border: 1px solid var(--border-color);
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--bg-color);
+      min-height: 50px;
+    }
+
+    .no-actions {
+      font-size: 0.85rem;
+      color: var(--stat-label);
+      font-style: italic;
+    }
+  }
+
+  .add-section {
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}

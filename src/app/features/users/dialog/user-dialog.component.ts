@@ -11,8 +11,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule, MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { SponsorSelectorDialogComponent } from 'src/app/features/users/dialog/sponsor-selector/sponsor-selector-dialog.component';
-import { UserRankEnum, UserDashboardModel } from 'src/app/core/models/users/user.model';
+import { UserSimpleSelectorDialogComponent } from 'src/app/features/users/dialog/simple-selector/user-simple-selector-dialog.component';
+import { UserProfileSimpleSelectorDialogComponent } from 'src/app/features/users/profiles/dialog/simple-selector/user-profile-simple-selector-dialog.component';
+import { UserRankEnum, UserDashboardModel, UserRankLabel } from 'src/app/core/models/users/user.model';
 import { UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
+import { UserProfile } from 'src/app/shared/entity/user.profile.entity';
+import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 
 @Component({
@@ -36,6 +40,7 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
 export class UserDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   private dialog = inject(MatDialog);
+  private profileService = inject(UserProfileService);
   private loggerService = inject(LoggerService);
   private readonly CLASS_NAME = UserDialogComponent.name;
   dialogRef = inject(MatDialogRef<UserDialogComponent>);
@@ -43,10 +48,11 @@ export class UserDialogComponent implements OnInit {
   form: FormGroup;
   isEditMode: boolean;
   selectedSponsorName = signal<string>('Sin Sponsor');
+  selectedProfileName = signal<string>('Sin Perfil');
   
-  readonly rankOptions = Object.entries(UserRankEnum).map(([key, value]) => ({
-    key,
-    label: value
+  readonly rankOptions = Object.values(UserRankEnum).map(rank => ({
+    key: rank,
+    label: UserRankLabel[rank] || rank
   }));
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -67,18 +73,37 @@ export class UserDialogComponent implements OnInit {
       rank: [data.user?.rank || UserRankEnum.clienta, Validators.required],
       sponsorId: [data.user?.sponsor?.id || null],
       image: [data.user?.image || ''],
-      permissions: [data.user?.permissions || []],
+      user_profile_id: [data.user?.user_profile_id || '', Validators.required],
       theme: [data.user?.settings?.theme || 'light']
     });
 
     if (data.user?.sponsor) {
-      this.selectedSponsorName.set(`${data.user.sponsor.firstName} ${data.user.sponsor.lastName || ''}`);
+      this.selectedSponsorName.set(`${data.user.firstName} ${data.user.lastName || ''}`);
     }
+
+    if (data.user?.user_profile_id) {
+      this.loadProfileName(data.user.user_profile_id);
+    }
+  }
+
+  loadProfileName(profileId: string) {
+    this.profileService.getAll().subscribe(profiles => {
+      const profile = profiles.find(p => p.id === profileId);
+      if (profile) this.selectedProfileName.set(profile.name);
+    });
   }
 
   ngOnInit() {}
 
   openSponsorSelector() {
+    if (this.isEditMode) {
+      this.openComplexSponsorSelector();
+    } else {
+      this.openSimpleSponsorSelector();
+    }
+  }
+
+  private openComplexSponsorSelector() {
     const dialogRef = this.dialog.open(SponsorSelectorDialogComponent, {
       width: '800px',
       data: { editingUserId: this.form.get('id')?.value }
@@ -86,10 +111,41 @@ export class UserDialogComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((sponsor: UserSponsorEntity) => {
       if (sponsor) {
+        this.updateSponsor(sponsor.id, sponsor.fullName);
+      }
+    });
+  }
+
+  private openSimpleSponsorSelector() {
+    const dialogRef = this.dialog.open(UserSimpleSelectorDialogComponent, {
+      width: '500px',
+      data: { initialSelectedId: this.form.get('sponsorId')?.value }
+    });
+
+    dialogRef.afterClosed().subscribe((user: UserDashboardModel) => {
+      if (user) {
+        this.updateSponsor(user.id, `${user.firstName} ${user.lastName || ''}`);
+      }
+    });
+  }
+
+  private updateSponsor(id: number, name: string) {
+    this.form.patchValue({ sponsorId: id });
+    this.selectedSponsorName.set(name);
+  }
+
+  openProfileSelector() {
+    const dialogRef = this.dialog.open(UserProfileSimpleSelectorDialogComponent, {
+      width: '500px',
+      data: { initialSelectedId: this.form.get('user_profile_id')?.value }
+    });
+
+    dialogRef.afterClosed().subscribe((profile: UserProfile) => {
+      if (profile) {
         this.form.patchValue({
-          sponsorId: sponsor.id
+          user_profile_id: profile.id
         });
-        this.selectedSponsorName.set(sponsor.fullName);
+        this.selectedProfileName.set(profile.name);
       }
     });
   }
@@ -106,24 +162,6 @@ export class UserDialogComponent implements OnInit {
       delete result.theme;
       this.dialogRef.close(result);
     }
-  }
-
-  addPermission(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-    if (value) {
-      const currentPermissions = this.form.get('permissions')?.value || [];
-      this.form.patchValue({
-        permissions: [...currentPermissions, value]
-      });
-    }
-    event.chipInput!.clear();
-  }
-
-  removePermission(permission: string): void {
-    const currentPermissions = this.form.get('permissions')?.value || [];
-    this.form.patchValue({
-      permissions: currentPermissions.filter((p: string) => p !== permission)
-    });
   }
 
   close() {

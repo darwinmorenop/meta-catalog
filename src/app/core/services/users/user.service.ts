@@ -81,7 +81,7 @@ export class UserService {
         rank: user.rank as UserRankEnum,
         sponsor: user.sponsorId ? this.convertToUserDashboardModel(users.find((u: UserEntity) => u.id === user.sponsorId)) : null,
         image: user.image,
-        permissions: user.permissions,
+        user_profile_id: user.user_profile_id,
         settings: user.settings
       })))
     );
@@ -104,7 +104,7 @@ export class UserService {
       rank: user.rank as UserRankEnum,
       sponsor: null, // To avoid infinite loop
       image: user.image,
-      permissions: user.permissions,
+      user_profile_id: user.user_profile_id,
       settings: user.settings
     };
   }

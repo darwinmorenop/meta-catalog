@@ -114,14 +114,13 @@
           <mat-divider class="my-3"></mat-divider>
 
           <div class="permissions-section">
-            <div class="section-subtitle">Permisos Asignados</div>
-            <div class="permissions-chips" *ngIf="u.permissions && u.permissions.length > 0; else noPermissions">
-              <mat-chip-set>
-                <mat-chip *ngFor="let p of u.permissions">{{ p }}</mat-chip>
-              </mat-chip-set>
+            <div class="section-subtitle">Perfil de Acceso</div>
+            <div class="profile-info-row" *ngIf="u.user_profile_name; else noProfile">
+              <mat-icon color="primary">security</mat-icon>
+              <span class="profile-name-value">{{ u.user_profile_name }}</span>
             </div>
-            <ng-template #noPermissions>
-              <p class="empty-msg-inline">Sin permisos específicos asignados.</p>
+            <ng-template #noProfile>
+              <p class="empty-msg-inline">Sin perfil asignado.</p>
             </ng-template>
           </div>
         </mat-card-content>

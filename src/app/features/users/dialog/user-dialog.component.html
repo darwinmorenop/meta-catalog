@@ -64,23 +64,24 @@
       </div>
     </div>
 
-    <mat-form-field class="full-width" appearance="outline">
-      <mat-label>Permisos</mat-label>
-      <mat-chip-grid #chipGrid aria-label="Permisos del usuario">
-        <mat-chip-row *ngFor="let permission of form.get('permissions')?.value"
-                      (removed)="removePermission(permission)">
-          {{permission}}
-          <button matChipRemove [attr.aria-label]="'remove ' + permission">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-row>
-        <input placeholder="Nuevo permiso..."
-               [matChipInputFor]="chipGrid"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-               [matChipInputAddOnBlur]="true"
-               (matChipInputTokenEnd)="addPermission($event)"/>
-      </mat-chip-grid>
-    </mat-form-field>
+    <div class="profile-security-section">
+      <h3>Perfil y Seguridad</h3>
+      <div class="profile-row">
+        <div class="profile-info">
+          <mat-icon [color]="form.get('user_profile_id')?.valid ? 'primary' : 'warn'">security</mat-icon>
+          <div class="profile-text">
+            <span class="profile-name">{{ selectedProfileName() }}</span>
+            <mat-error *ngIf="form.get('user_profile_id')?.touched && form.get('user_profile_id')?.hasError('required')">
+              Debe seleccionar un perfil
+            </mat-error>
+          </div>
+        </div>
+        <button type="button" mat-stroked-button color="primary" (click)="openProfileSelector()">
+          <mat-icon>admin_panel_settings</mat-icon>
+          Seleccionar Perfil
+        </button>
+      </div>
+    </div>
 
     <div class="settings-section">
       <h3>Configuración (Settings)</h3>

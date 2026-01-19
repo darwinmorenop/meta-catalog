@@ -13,7 +13,7 @@ export interface UserEntity {
   sponsorId: number | null; 
   path: string;
   image: string;
-  permissions: string[];
+  user_profile_id: string;
   settings: UserSettingsEntity;
 }
 

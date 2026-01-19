@@ -19,7 +19,7 @@
   width: 100%;
 }
 
-.sponsor-section, .settings-section {
+.sponsor-section, .settings-section, .profile-security-section {
   background: rgba(128, 128, 128, 0.05);
   padding: 1rem;
   border-radius: 8px;
@@ -35,22 +35,34 @@
   }
 }
 
-.sponsor-section {
-  .sponsor-row {
+.sponsor-section, .profile-security-section {
+  .sponsor-row, .profile-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .sponsor-info {
+  .sponsor-info, .profile-info {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     color: var(--text-color);
     font-weight: 500;
 
+    .profile-text {
+      display: flex;
+      flex-direction: column;
+      
+      mat-error {
+        font-size: 0.75rem;
+        margin-top: 2px;
+      }
+    }
+
     mat-icon {
       color: var(--stat-label);
+      &.mat-primary { color: var(--mdc-theme-primary); }
+      &.mat-warn { color: var(--mdc-theme-error); }
     }
   }
 }

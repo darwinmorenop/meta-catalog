@@ -1,20 +1,35 @@
 import { UserSettingsEntity } from "src/app/shared/entity/user.entity";
 
 export enum UserRankEnum {
-  unknown = 'Desconocido',
-  clienta = 'Clienta',
-  style_advisor = 'Style Advisor',
-  emprendedora = 'Emprendedora',
-  emprendedora_senior = 'Emprendedora Senior',
-  directora_aspirante = 'Directora Aspirante',
-  directora_junior = 'Directora Junior',
-  directora_senior = 'Directora Senior',
-  directora_senior_super = 'Directora Senior Super',
-  directora_regional = 'Directora Regional',
-  directora_regional_estella = 'Directora Regional Estella',
-  directora_master = 'Directora Master',
-  admin = 'Administrador'
+  unknown = 'unknown',
+  clienta = 'clienta',
+  style_advisor = 'style_advisor',
+  emprendedora = 'emprendedora',
+  emprendedora_senior = 'emprendedora_senior',
+  directora_aspirante = 'directora_aspirante',
+  directora_junior = 'directora_junior',
+  directora_senior = 'directora_senior',
+  directora_senior_super = 'directora_senior_super',
+  directora_regional = 'directora_regional',
+  directora_regional_estella = 'directora_regional_estella',
+  directora_master = 'directora_master',
+  admin = 'admin'
+}
 
+export const UserRankLabel: Record<UserRankEnum, string> = {
+  [UserRankEnum.unknown]: 'Desconocido',
+  [UserRankEnum.clienta]: 'Clienta',
+  [UserRankEnum.style_advisor]: 'Style Advisor',
+  [UserRankEnum.emprendedora]: 'Emprendedora',
+  [UserRankEnum.emprendedora_senior]: 'Emprendedora Senior',
+  [UserRankEnum.directora_aspirante]: 'Directora Aspirante',
+  [UserRankEnum.directora_junior]: 'Directora Junior',
+  [UserRankEnum.directora_senior]: 'Directora Senior',
+  [UserRankEnum.directora_senior_super]: 'Directora Senior Super',
+  [UserRankEnum.directora_regional]: 'Directora Regional',
+  [UserRankEnum.directora_regional_estella]: 'Directora Regional Estella',
+  [UserRankEnum.directora_master]: 'Directora Master',
+  [UserRankEnum.admin]: 'Administrador'
 }
 
 export interface UserDashboardModel {
@@ -28,7 +43,7 @@ export interface UserDashboardModel {
   rank: UserRankEnum;
   sponsor: UserDashboardModel | null;
   image: string | null;
-  permissions: string[];
+  user_profile_id: string;
   settings: UserSettingsEntity;
 }
 
@@ -42,7 +57,7 @@ export interface UserCreateModel {
   rank: UserRankEnum;
   sponsorId: number | null;
   image: string | null;
-  permissions: string[];
+  user_profile_id: string;
   settings: UserSettingsEntity;
 }
 

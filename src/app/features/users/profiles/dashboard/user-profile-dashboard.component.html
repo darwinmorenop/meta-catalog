@@ -1,0 +1,41 @@
+<div class="dashboard-container">
+  <mat-card class="header-card">
+    <div class="header-content-wrapper">
+      <div class="title-section">
+        <button mat-icon-button routerLink="/" class="back-button">
+          <mat-icon>home</mat-icon>
+        </button>
+        <div class="title-info">
+          <h1>Perfiles de Usuario</h1>
+          <p class="subtitle">Gestiona los roles y permisos de acceso al sistema</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button mat-flat-button color="primary" (click)="addProfile()">
+          <mat-icon>add</mat-icon>
+          <span>Nuevo Perfil</span>
+        </button>
+        <button mat-icon-button (click)="loadProfiles()" [disabled]="isLoading()" class="refresh-button">
+          <mat-icon [class.spinning]="isLoading()">refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Listado de Perfiles</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-smart-table
+        [data]="profiles()"
+        [config]="tableConfig"
+        [isLoading]="isLoading()"
+        (view)="viewProfile($event)"
+        (edit)="editProfile($event)"
+        (delete)="deleteProfile($event)">
+      </app-smart-table>
+    </mat-card-content>
+  </mat-card>
+</div>

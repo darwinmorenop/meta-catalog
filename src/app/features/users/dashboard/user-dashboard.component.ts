@@ -10,7 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Services & Models
 import { UserService } from 'src/app/core/services/users/user.service';
-import { UserDashboardModel, UserRankEnum } from 'src/app/core/models/users/user.model';
+import { UserDashboardModel, UserRankLabel } from 'src/app/core/models/users/user.model';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
@@ -56,9 +56,10 @@ export class UserDashboardComponent {
     const users = this.usersResource.value() ?? [];
     return users.map(u => ({
       ...u,
-      rankName: UserRankEnum[u.rank as unknown as keyof typeof UserRankEnum] || u.rank,
+      rankName: UserRankLabel[u.rank] || u.rank,
       fullName: `${u.firstName} ${u.lastName || ''}`,
-      sponsorName: u.sponsor ? `${u.sponsor?.firstName} ${u.sponsor?.lastName || ''} (${UserRankEnum[u.sponsor.rank as unknown as keyof typeof UserRankEnum] || u.sponsor.rank})` : 'N/A'
+      Responsable: u.sponsor ? `${u.sponsor?.firstName} ${u.sponsor?.lastName || ''}` : 'N/A',
+      sponsorName: u.sponsor ? `${u.sponsor?.firstName} ${u.sponsor?.lastName || ''} (${UserRankLabel[u.sponsor.rank] || u.sponsor.rank})` : 'N/A'
     }));
   });
 
@@ -68,10 +69,9 @@ export class UserDashboardComponent {
       { key: 'fullName', header: 'Nombre Completo', filterable: false },
       { key: 'email', header: 'Email', filterable: false },
       { key: 'rankName', header: 'Rango', filterable: true },
-      { key: 'sponsorName', header: 'Sponsor', filterable: true },
-      { key: 'identifier', header: 'Identificador', filterable: false },
+      { key: 'sponsorName', header: 'Responsable', filterable: true },
     ],
-    searchableFields: ['firstName', 'lastName', 'email', 'rank'],
+    searchableFields: ['fullName', 'Responsable', 'email', 'rankName'],
     actions: {
       show: true,
       edit: true,

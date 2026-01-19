@@ -197,12 +197,17 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     get searchablePlaceholder(): string {
+        const context = 'searchablePlaceholder';
         if (!this.config?.searchableFields?.length) return 'Buscar...';
         
         const headers = this.config.searchableFields
             .map(field => {
                 const col = this.config.columns.find(c => c.key === field);
-                return col ? col.header : field;
+                if(col){
+                    return col.header;
+                }
+                this.loggerService.warn(`Column ${field} not found in config`, this.CLASS_NAME, context);
+                return field;
             });
 
         let joinedHeaders = '';

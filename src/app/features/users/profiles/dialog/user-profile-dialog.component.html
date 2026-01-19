@@ -1,0 +1,124 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <div class="title-row">
+      <mat-icon color="primary">{{ isViewMode ? 'visibility' : 'edit' }}</mat-icon>
+      <h2>
+        @if (isViewMode) { Ver Perfil }
+        @else if (isEditMode) { Editar Perfil }
+        @else { Crear Perfil }
+      </h2>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="form" class="profile-form">
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre del Perfil</mat-label>
+          <input matInput formControlName="name" placeholder="Ej: Administrador, Solo Lectura...">
+          <mat-error *ngIf="form.get('name')?.hasError('required')">El nombre es obligatorio</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput formControlName="description" rows="2" placeholder="Describe brevemente el propósito de este perfil..."></textarea>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <div class="permissions-section">
+      <div class="section-header">
+        <h3>Permisos por Recurso</h3>
+        @if (!isViewMode) {
+          <div class="add-resource-row">
+            <mat-form-field appearance="outline" class="resource-selector">
+              <mat-label>Añadir Recurso</mat-label>
+              <mat-select #resourceSelect (selectionChange)="addResource($event.value); resourceSelect.value = null">
+                @for (res of unusedResources; track res) {
+                  <mat-option [value]="res">{{ getResourceLabel(res) }}</mat-option>
+                }
+                @if (unusedResources.length === 0) {
+                  <mat-option disabled>Todos los recursos añadidos</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        }
+      </div>
+
+      <div class="permissions-table-container">
+        <table mat-table [dataSource]="permissions" class="permissions-table">
+          <!-- Resource Column -->
+          <ng-container matColumnDef="resource">
+            <th mat-header-cell *matHeaderCellDef>Recurso</th>
+            <td mat-cell *matCellDef="let item" class="resource-cell">
+              <div class="resource-info">
+                <span class="resource-name">{{ getResourceLabel(item.resource) }}</span>
+                <span class="resource-key">{{ item.resource }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let item">
+              @if (item.actions.length > 0) {
+                <mat-chip-set class="actions-chips">
+                  @for (action of item.actions; track action) {
+                    <mat-chip highlighted color="accent">{{ getActionLabel(action) }}</mat-chip>
+                  }
+                </mat-chip-set>
+              } @else {
+                <span class="no-actions">Sin acciones definidas</span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- Row Actions Column -->
+          <ng-container matColumnDef="rowActions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let item" class="row-actions-cell">
+              <div class="button-group">
+                <button mat-icon-button (click)="viewResourceActions(item)" matTooltip="Ver detalles">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                @if (!isViewMode) {
+                  <button mat-icon-button color="primary" (click)="editResourceActions(item)" matTooltip="Editar acciones">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="removeResource(item.resource)" matTooltip="Eliminar recurso">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="['resource', 'actions', 'rowActions']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['resource', 'actions', 'rowActions'];"></tr>
+        </table>
+        
+        @if (permissions.length === 0) {
+          <div class="empty-permissions">
+            <mat-icon>security</mat-icon>
+            <p>No se han definido permisos para este perfil.</p>
+          </div>
+        }
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="dialogRef.close()">{{ isViewMode ? 'Cerrar' : 'Cancelar' }}</button>
+    @if (!isViewMode) {
+      <button mat-flat-button color="primary" (click)="save()" [disabled]="form.invalid">
+        <mat-icon>save</mat-icon>
+        Guardar Perfil
+      </button>
+    }
+  </mat-dialog-actions>
+</div>

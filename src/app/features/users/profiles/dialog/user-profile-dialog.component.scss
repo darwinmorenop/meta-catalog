@@ -1,0 +1,149 @@
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-color);
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+  }
+}
+
+.dialog-content {
+  padding: 24px !important;
+  
+  .profile-form {
+    margin-bottom: 32px;
+    
+    .form-grid {
+      display: grid;
+      gap: 16px;
+    }
+  }
+
+  .permissions-section {
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 16px;
+
+      h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-color);
+      }
+
+      .resource-selector {
+        min-width: 250px;
+        margin-bottom: -1.25em;
+      }
+    }
+
+    .permissions-table-container {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--card-bg);
+
+      .permissions-table {
+        width: 100%;
+        background: transparent;
+
+        th {
+          background: rgba(var(--primary-rgb, 103, 58, 183), 0.04);
+          font-weight: 600;
+          color: var(--text-color);
+        }
+
+        .resource-cell {
+          .resource-info {
+            display: flex;
+            flex-direction: column;
+            
+            .resource-name {
+              font-weight: 600;
+              color: var(--text-color);
+            }
+            .resource-key {
+              font-size: 0.75rem;
+              color: var(--stat-label);
+              font-family: monospace;
+            }
+          }
+        }
+
+        .actions-chips {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          margin: 8px 0;
+          
+          ::ng-deep .mat-mdc-chip {
+            min-height: 24px;
+            --mdc-chip-label-text-size: 0.75rem;
+          }
+        }
+
+        .no-actions {
+          font-size: 0.85rem;
+          color: var(--stat-label);
+          font-style: italic;
+        }
+
+        .row-actions-cell {
+          .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 4px;
+          }
+        }
+      }
+
+      .empty-permissions {
+        padding: 48px;
+        text-align: center;
+        color: var(--stat-label);
+
+        mat-icon {
+          font-size: 48px;
+          width: 48px;
+          height: 48px;
+          margin-bottom: 16px;
+          opacity: 0.5;
+        }
+
+        p {
+          margin: 0;
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
+}
+
+.dialog-actions {
+  padding: 16px 24px !important;
+  border-top: 1px solid var(--border-color);
+  background: var(--surface-card);
+}

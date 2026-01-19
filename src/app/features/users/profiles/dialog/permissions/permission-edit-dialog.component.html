@@ -1,0 +1,52 @@
+<div class="permission-edit-container">
+  <div class="dialog-header">
+    <h3>{{ getResourceLabel(data.resource) }}</h3>
+    <p class="subtitle">Gestionar acciones para el recurso</p>
+  </div>
+
+  <mat-dialog-content>
+    <div class="actions-manage-section">
+      <div class="current-actions">
+        <label>Acciones Asignadas</label>
+        <mat-chip-set class="action-chips">
+          @for (action of selectedActions; track action) {
+            <mat-chip 
+              [removable]="!isViewMode" 
+              (removed)="removeAction(action)"
+              highlighted
+              color="accent">
+              {{ getActionLabel(action) }}
+              <mat-icon matChipRemove *ngIf="!isViewMode">cancel</mat-icon>
+            </mat-chip>
+          }
+          @if (selectedActions.length === 0) {
+            <span class="no-actions">Ninguna acción asignada</span>
+          }
+        </mat-chip-set>
+      </div>
+
+      @if (!isViewMode) {
+        <div class="add-section">
+          <mat-form-field appearance="outline">
+            <mat-label>Añadir Acción</mat-label>
+            <mat-select #actionSelect (selectionChange)="addAction($event.value); actionSelect.value = null">
+              @for (action of availableActions; track action) {
+                <mat-option [value]="action">{{ getActionLabel(action) }}</mat-option>
+              }
+              @if (availableActions.length === 0) {
+                <mat-option disabled>Todas las acciones añadidas</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="dialogRef.close()">{{ isViewMode ? 'Cerrar' : 'Cancelar' }}</button>
+    @if (!isViewMode) {
+      <button mat-flat-button color="primary" (click)="save()">Aceptar</button>
+    }
+  </mat-dialog-actions>
+</div>

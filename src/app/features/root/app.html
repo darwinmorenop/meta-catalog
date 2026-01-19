@@ -87,6 +87,24 @@
       </button>
     </mat-menu>
 
+    <!-- Menú Usuarios -->
+    <button mat-button [matMenuTriggerFor]="usuariosMenu">
+      <mat-icon>group</mat-icon>
+      <span class="btn-label">Usuarios</span>
+      <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #usuariosMenu="matMenu">
+      <button mat-menu-item (click)="navigateTo('/users')">
+        <mat-icon>list</mat-icon>
+        <span>Listado</span>
+      </button>
+      <button mat-menu-item (click)="navigateTo('/users/profiles')">
+        <mat-icon>security</mat-icon>
+        <span>Perfiles</span>
+      </button>
+    </mat-menu>
+
     <!-- Otras secciones -->
     <button mat-button *ngFor="let item of navItems" (click)="navigateTo(item.route)">
       <mat-icon>{{item.icon}}</mat-icon>

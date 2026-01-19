@@ -42,14 +42,12 @@ export class SponsorSelectorDialogComponent {
 
   readonly tableConfig: TableConfig = {
     columns: [
-      { key: 'image', header: 'Foto', type: 'image' },
       { key: 'fullName', header: 'Nombre', filterable: true },
       { key: 'rank', header: 'Rango', filterable: true },
       { key: 'isEligible', header: 'Elegible', type: 'boolean', filterable: true },
       { key: 'reason', header: 'Motivo / Nota', filterable: true },
-      { key: 'id', header: 'ID', filterable: true }
     ],
-    searchableFields: ['fullName', 'email', 'rank', 'reason'],
+    searchableFields: ['fullName', 'rank'],
     actions: {
       show: false,
       edit: false,

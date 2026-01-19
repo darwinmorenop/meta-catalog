@@ -48,6 +48,7 @@ export const routes: Routes = [
     { path: 'products-price-dashboard', loadComponent: () => import('src/app/features/products/price/dashboard/product-price-dashboard.component').then(m => m.ProductPriceDashboardComponent) },
     { path: 'products-price/:productId', loadComponent: () => import('src/app/features/products/price/history/product-price-history.component').then(m => m.ProductPriceHistoryComponent) },
     { path: 'users', loadComponent: () => import('src/app/features/users/dashboard/user-dashboard.component').then(m => m.UserDashboardComponent) },
+    { path: 'users/profiles', loadComponent: () => import('src/app/features/users/profiles/dashboard/user-profile-dashboard.component').then(m => m.UserProfileDashboardComponent) },
     { path: 'users/:id', loadComponent: () => import('src/app/features/users/detail/user-detail.component').then(m => m.UserDetailComponent) },
     { path: 'inventory/stock-entry', loadComponent: () => import('src/app/features/products/inventory/stock-entry/dashboard/product-inventory-stock-dashboard.component').then(m => m.ProductInventoryStockDashboardComponent) },
     { path: 'inventory/stock-entry/:productId/:userId', loadComponent: () => import('src/app/features/products/inventory/stock-entry/detail/product-inventory-stock-detail.component').then(m => m.ProductInventoryStockDetailComponent) },

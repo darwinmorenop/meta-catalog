@@ -27,7 +27,8 @@ export interface UserNetworkDetail {
   isManual: boolean;
   pathStr: string;
   relativeLevel: number;
-  permissions: string[];
+  user_profile_id: string;
+  user_profile_name: string;
   settings: UserSettingsEntity;
 
   // Detalles del Sponsor desglosados
