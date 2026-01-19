@@ -20,28 +20,95 @@
 }
 
 .filter-section {
-
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    margin-bottom: 1rem;
-    align-items: center;
+    margin-bottom: 1.5rem;
+    align-items: flex-start; // Changed to flex-start to align with the top of the form field
 
     .global-search {
         flex: 1 1 300px;
-    }
-
-    .column-filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        flex: 2 1 600px;
-        justify-content: flex-start;
-
-        .col-filter {
-            min-width: 150px;
+        
+        ::ng-deep {
+            .mat-mdc-form-field-subscript-wrapper {
+                display: none; // Remove extra space at the bottom of the field
+            }
         }
     }
+
+    .filter-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 56px; // Match standard outline field height
+
+        .filter-button {
+            height: 100%;
+            border-radius: 8px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+
+            &:hover {
+                background: var(--surface-hover);
+                border-color: var(--primary-color);
+            }
+
+            &.active-filters {
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+                background: rgba(var(--primary-rgb, 103, 58, 183), 0.05);
+            }
+
+            .filter-badge {
+                background: var(--primary-color);
+                color: white;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.75rem;
+                font-weight: 700;
+                margin-left: 4px;
+            }
+        }
+    }
+}
+
+.active-filters-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+  flex-wrap: wrap;
+
+  .active-filters-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .active-chips {
+    .chip-col-header {
+      font-weight: 700;
+      margin-right: 4px;
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+    
+    .chip-val {
+      font-size: 0.85rem;
+    }
+  }
 }
 
 .table-container {
@@ -105,46 +172,16 @@
     }
 }
 
-.stock-ok {
-    color: #81c784;
-    font-weight: bold;
-    padding: 0.25rem 0.5rem;
-    background: rgba(129, 199, 132, 0.1);
+.smart-table-badge {
+    padding: 0.25rem 0.6rem;
     border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-block;
+    border: 1px solid transparent;
 }
 
-.stock-out {
-    color: #e57373;
-    font-weight: bold;
-    padding: 0.25rem 0.5rem;
-    background: rgba(229, 115, 115, 0.1);
-    border-radius: 4px;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 4rem;
-    color: var(--stat-label);
-    background: var(--card-bg);
-    border-radius: 8px;
-    border: 2px dashed var(--border-color);
-}
-
-.state-new {
-    color: #4ade80;
-    font-weight: bold;
-    padding: 0.25rem 0.5rem;
-    background: rgba(74, 222, 128, 0.15);
-    border-radius: 4px;
-}
-
-.state-changed {
-    color: #fb923c;
-    font-weight: bold;
-    padding: 0.25rem 0.5rem;
-    background: rgba(251, 146, 60, 0.15);
-    border-radius: 4px;
-}
 
 .config-icons {
     display: flex;

@@ -36,8 +36,8 @@ export interface StockEntryCreateDialogData {
     MatNativeDateModule,
     ReactiveFormsModule
   ],
-  templateUrl: './stock-entry-create-dialog.component.html',
-  styleUrl: './stock-entry-create-dialog.component.scss',
+  templateUrl: 'stock-entry-create-dialog.component.html',
+  styleUrl: 'stock-entry-create-dialog.component.scss',
   encapsulation: ViewEncapsulation.None // To ensure our container resets work correctly
 })
 export class StockEntryCreateDialogComponent implements OnInit {

@@ -1,13 +1,13 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ProductMediaDaoSupabaseService } from './dao/product-media.dao.supabase.service';
-import { ProductMedia, ProductMediaType } from '../../models/products/media/product.media.model';
+import { ProductMediaDaoSupabaseService } from 'src/app/core/services/products/dao/product-media.dao.supabase.service';
 import { ProductMediaEntity } from 'src/app/shared/entity/product.media.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { ProductDashboardMediaEntity } from 'src/app/shared/entity/view/product.media.dashboard.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { MediaRcpOrderItemEntity, MediaRcpOrderRequestEntity, MediaRcpOrderResponseEntity } from 'src/app/shared/entity/rcp/media.rcp.entity';
+import { ProductMedia, ProductMediaType } from 'src/app/core/models/products/media/product.media.model';
 
 @Injectable({
   providedIn: 'root'

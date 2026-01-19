@@ -25,8 +25,8 @@ import { DateTimeRangeComponent } from 'src/app/shared/components/date-time-rang
     MatNativeDateModule,
     DateTimeRangeComponent
   ],
-  templateUrl: './campaign.dialog.component.html',
-  styleUrls: ['./campaign.dialog.component.scss']
+  templateUrl: 'campaign.dialog.component.html',
+  styleUrls: ['campaign.dialog.component.scss']
 })
 export class CampaignDialogComponent implements OnInit {
   private fb = inject(FormBuilder);

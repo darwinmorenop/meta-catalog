@@ -45,8 +45,8 @@ import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service
     MatDialogModule,
     SmartTableComponent
   ],
-  templateUrl: './inventory-inbound-edit.component.html',
-  styleUrl: './inventory-inbound-edit.component.scss'
+  templateUrl: 'inventory-inbound-edit.component.html',
+  styleUrl: 'inventory-inbound-edit.component.scss'
 })
 export class InventoryInboundEditComponent {
   private route = inject(ActivatedRoute);

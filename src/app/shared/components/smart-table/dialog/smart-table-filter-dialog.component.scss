@@ -1,0 +1,53 @@
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 16px;
+
+  mat-icon {
+    color: var(--primary-color);
+  }
+}
+
+.dialog-content {
+  min-width: 450px;
+  max-width: 600px;
+  padding-top: 10px !important;
+}
+
+.filters-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-item {
+  width: 100%;
+
+  .full-width {
+    width: 100%;
+  }
+}
+
+.mat-mdc-chip-set {
+  margin-top: 4px;
+}
+
+.dialog-actions {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-color);
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+}
+
+::ng-deep {
+    .mat-mdc-select-trigger {
+        height: auto !important;
+        min-height: 24px;
+        padding: 4px 0;
+    }
+}

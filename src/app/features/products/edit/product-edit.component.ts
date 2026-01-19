@@ -26,8 +26,8 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatProgressSpinnerModule,
     MatTooltipModule
   ],
-  templateUrl: './product-edit.component.html',
-  styleUrl: './product-edit.component.scss'
+  templateUrl: 'product-edit.component.html',
+  styleUrl: 'product-edit.component.scss'
 })
 export class ProductEditComponent implements OnInit {
   private readonly productService = inject(ProductService);

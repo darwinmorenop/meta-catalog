@@ -1,0 +1,56 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>filter_list</mat-icon>
+  Filtros Avanzados
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <div class="filters-grid">
+    @for (col of filterableColumns; track col.key) {
+      <div class="filter-item">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ col.header }}</mat-label>
+          <mat-select
+            [(ngModel)]="filters[col.key]"
+            multiple
+            placeholder="Seleccionar opciones"
+          >
+            <mat-select-trigger>
+                <mat-chip-set>
+                    @for (val of filters[col.key]; track val) {
+                      <mat-chip-row [removable]="true" (removed)="onRemoveChip(col.key, val)">
+                        {{ getLabel(col, val) }}
+                        <button matChipRemove>
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip-row>
+                    }
+                </mat-chip-set>
+            </mat-select-trigger>
+
+            @for (option of data.filterOptions[col.key]; track option) {
+              <mat-option [value]="option">
+                {{ getLabel(col, option) }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (filters[col.key].length > 0) {
+            <button mat-icon-button matSuffix (click)="onClearColumn(col.key); $event.stopPropagation()" matTooltip="Limpiar filtro">
+              <mat-icon>clear</mat-icon>
+            </button>
+          }
+        </mat-form-field>
+      </div>
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button (click)="onClearAll()" color="warn">
+    Limpiar todos
+  </button>
+  <span class="spacer"></span>
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onApply()">
+    Aplicar Filtros
+  </button>
+</mat-dialog-actions>

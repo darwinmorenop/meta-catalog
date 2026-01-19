@@ -43,8 +43,8 @@ import { SaleDetailedEntity } from 'src/app/shared/entity/view/sale.dashboard.en
     ReactiveFormsModule,
     SmartTableComponent
   ],
-  templateUrl: './sale-register.component.html',
-  styleUrl: './sale-register.component.scss'
+  templateUrl: 'sale-register.component.html',
+  styleUrl: 'sale-register.component.scss'
 })
 export class SaleRegisterComponent implements OnInit {
   private fb = inject(FormBuilder);

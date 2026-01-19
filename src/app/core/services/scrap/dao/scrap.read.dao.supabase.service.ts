@@ -9,26 +9,23 @@ import { ProductScrapEntity, ProductWithSourcesEntity } from 'src/app/shared/ent
 import { ScrapEntity } from 'src/app/shared/entity/scrap.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ScrapSummaryEntry } from 'src/app/shared/entity/view/scrap.entry';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScrapReadDaoSupabaseService {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
   private dateUtils = inject(DateUtilsService);
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = ScrapReadDaoSupabaseService.name;
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   getAllProductsScrap(): Observable<ProductScrapEntity[]> {
     const context = 'getAllProductsScrap';
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from('v_product_scrap_report')
       .select('*')
       .or('source_is_active.eq.true,source_is_active.is.null')
@@ -53,7 +50,7 @@ export class ScrapReadDaoSupabaseService {
 
   getProductsScrapById(scrapId: number): Observable<ProductScrapEntity[]> {
     const context = 'getProductsScrapById';
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from('v_product_scrap_report')
       .select('*')
       .eq('source_scrap_id', scrapId)
@@ -78,7 +75,7 @@ export class ScrapReadDaoSupabaseService {
 
   getProductScrapDetail(scrapId: number, productId: number): Observable<ProductScrapEntity | null> {
     const context = 'getProductScrapDetail';
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from('v_product_scrap_report')
       .select('*')
       .eq('source_scrap_id', scrapId)
@@ -104,7 +101,7 @@ export class ScrapReadDaoSupabaseService {
 
   getAll(): Observable<ScrapEntity[]> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('scrap')
         .select('*')
         .order('created_at', { ascending: false })
@@ -115,7 +112,7 @@ export class ScrapReadDaoSupabaseService {
 
   getById(id: number): Observable<ScrapEntity> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('scrap')
         .select('*')
         .eq('id', id)
@@ -127,7 +124,7 @@ export class ScrapReadDaoSupabaseService {
 
   getAllSummary(): Observable<ScrapSummaryEntry[]> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('v_scrap_summary')
         .select('*')
         .order('created_at', { ascending: false })
@@ -138,7 +135,7 @@ export class ScrapReadDaoSupabaseService {
 
   getSummaryById(id: number): Observable<ScrapSummaryEntry> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('v_scrap_summary')
         .select('*')
         .eq('scrap_id', id)
@@ -151,7 +148,7 @@ export class ScrapReadDaoSupabaseService {
   getProductsWithSources(productId?: number): Observable<ProductWithSourcesEntity[]> {
     const context = 'getProductsWithSources';
 
-    let query = this.supabase
+    let query = this.supabaseService.getSupabaseClient()
       .from('v_product_sources_aggregated')
       .select('*');
 

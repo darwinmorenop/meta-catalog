@@ -28,8 +28,8 @@ export interface StockEntryEditDialogData {
     MatButtonModule,
     MatIconModule
   ],
-  templateUrl: './stock-entry-edit-dialog.component.html',
-  styleUrl: './stock-entry-edit-dialog.component.scss'
+  templateUrl: 'stock-entry-edit-dialog.component.html',
+  styleUrl: 'stock-entry-edit-dialog.component.scss'
 })
 export class StockEntryEditDialogComponent {
   private fb = inject(FormBuilder);

@@ -37,8 +37,8 @@ import { ProductInventoryStockEntryService } from 'src/app/core/services/product
     RouterModule,
     SmartTableComponent
   ],
-  templateUrl: './inventory-inbound-dashboard.component.html',
-  styleUrl: './inventory-inbound-dashboard.component.scss'
+  templateUrl: 'inventory-inbound-dashboard.component.html',
+  styleUrl: 'inventory-inbound-dashboard.component.scss'
 })
 export class InventoryInboundDashboardComponent {
   private router = inject(Router);

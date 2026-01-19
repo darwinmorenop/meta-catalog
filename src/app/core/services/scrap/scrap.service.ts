@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductScrapEntity, ProductWithSourcesEntity } from 'src/app/shared/entity/view/product.scrap.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
-import { ScrapWriteDaoSupabaseService } from './dao/scrap.write.dao.supabase.service';
+import { ScrapWriteDaoSupabaseService } from 'src/app/core/services/scrap/dao/scrap.write.dao.supabase.service';
 import { ScrapEntity } from 'src/app/shared/entity/scrap.entity';
 import { ScrapSummaryEntry } from 'src/app/shared/entity/view/scrap.entry';
 import { ScrapRcpResponseEntity } from 'src/app/shared/entity/rcp/scrap.rcp.entity';

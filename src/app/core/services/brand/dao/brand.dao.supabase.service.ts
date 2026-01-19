@@ -1,23 +1,18 @@
 import { Injectable, inject } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { BrandEntity } from 'src/app/shared/entity/brand.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BrandDaoSupabaseService {
-  private supabase: SupabaseClient;
   private dateUtils = inject(DateUtilsService);
+  private supabaseService = inject(SupabaseService);
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   private mapBrand(item: any): any {
@@ -30,7 +25,7 @@ export class BrandDaoSupabaseService {
 
   getAll(): Observable<BrandEntity[]> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('brand')
         .select('*')
         .order('name')

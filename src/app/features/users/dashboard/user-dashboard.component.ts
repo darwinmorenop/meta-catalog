@@ -14,7 +14,7 @@ import { UserDashboardModel, UserRankEnum } from 'src/app/core/models/users/user
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
-import { UserDialogComponent } from '../dialog/user-dialog.component';
+import { UserDialogComponent } from 'src/app/features/users/dialog/user-dialog.component';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -29,8 +29,8 @@ import { UserDialogComponent } from '../dialog/user-dialog.component';
     RouterModule,
     MatTooltipModule
   ],
-  templateUrl: './user-dashboard.component.html',
-  styleUrl: './user-dashboard.component.scss'
+  templateUrl: 'user-dashboard.component.html',
+  styleUrl: 'user-dashboard.component.scss'
 })
 export class UserDashboardComponent {
   private readonly userService = inject(UserService);

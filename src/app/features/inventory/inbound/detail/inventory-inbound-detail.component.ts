@@ -32,8 +32,8 @@ import { InventoryInboundDashboardDetailedEntity } from 'src/app/shared/entity/v
     MatSnackBarModule,
     SmartTableComponent
   ],
-  templateUrl: './inventory-inbound-detail.component.html',
-  styleUrl: './inventory-inbound-detail.component.scss'
+  templateUrl: 'inventory-inbound-detail.component.html',
+  styleUrl: 'inventory-inbound-detail.component.scss'
 })
 export class InventoryInboundDetailComponent {
   private route = inject(ActivatedRoute);

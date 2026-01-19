@@ -7,26 +7,23 @@ import { ProductCompleteEntity } from 'src/app/shared/entity/view/product.comple
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { ProductEntity } from 'src/app/shared/entity/product.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductDaoSupabaseService {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
   private dateUtils = inject(DateUtilsService);
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = ProductDaoSupabaseService.name;
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   getProductsComplete(): Observable<ProductCompleteEntity[]> {
     const context = 'getProductsComplete'
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from('v_product_complete')
       .select('*');
 
@@ -51,7 +48,7 @@ export class ProductDaoSupabaseService {
 
   getProducts(): Observable<ProductEntity[]> {
     const context = 'getProducts'
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from('product')
       .select('*');
 
@@ -76,7 +73,7 @@ export class ProductDaoSupabaseService {
 
   getProductCompleteById(id: number): Observable<ProductCompleteEntity | null> {
     const context = 'getProductCompleteById'
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from('v_product_complete')
       .select('*')
       .eq('product_id', id)

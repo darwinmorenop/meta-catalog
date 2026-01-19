@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProductInventoryStockEntryDaoSupabaseService } from './dao/product-inventory-stock-entry.dao.supabase.service';
+import { ProductInventoryStockEntryDaoSupabaseService } from 'src/app/core/services/products/dao/product-inventory-stock-entry.dao.supabase.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
-import { ProductInventoryStockEntryDashboardEntity, UserInventoryStockEntryDashboardEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.dashboard.entity';
+import { ProductInventoryStockEntryDashboardEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.dashboard.entity';
 import { ProductInventoryStockEntryEntity } from 'src/app/shared/entity/product.inventory.stock-entry.entity';
 import { ProductInventoryStockEntryDetailedEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.detailed.entity';
 
@@ -38,7 +38,7 @@ export class ProductInventoryStockEntryService {
   update(data: any): Observable<boolean> {
     this.loggerService.debug(`Updating stock entry: ${JSON.stringify(data)}`, this.CLASS_NAME, 'update');
     const id = data.id;
-    const  entity: Partial<ProductInventoryStockEntryEntity> = this.mapToEntity(data);
+    const entity: Partial<ProductInventoryStockEntryEntity> = this.mapToEntity(data);
     return this.dao.update(id, entity);
   }
 
@@ -52,7 +52,7 @@ export class ProductInventoryStockEntryService {
     return this.dao.delete(id);
   }
 
-  private mapToEntity(data:any): Partial<ProductInventoryStockEntryEntity> {
+  private mapToEntity(data: any): Partial<ProductInventoryStockEntryEntity> {
     const entity: Partial<ProductInventoryStockEntryEntity> = {
       quantity: data.quantity,
       expiry_date: data.expiry_date,
@@ -63,7 +63,7 @@ export class ProductInventoryStockEntryService {
     return entity;
   }
 
-  private mapToInsertEntity(data:any): Partial<ProductInventoryStockEntryEntity> {
+  private mapToInsertEntity(data: any): Partial<ProductInventoryStockEntryEntity> {
     const entity: Partial<ProductInventoryStockEntryEntity> = {
       quantity: data.quantity,
       expiry_date: data.expiry_date,

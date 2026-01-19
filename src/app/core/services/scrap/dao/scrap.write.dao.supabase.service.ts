@@ -1,25 +1,20 @@
 import { Injectable, inject } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { ProductScrapSyncOptions, ProductScrapSyncPendingChange } from 'src/app/core/models/products/scrap/product.scrap.sync.model';
-import { environment } from 'src/environments/environment';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ScrapRcpArchivedRequestEntity, ScrapRcpInsertEntity, ScrapRcpInsertRequestEntity, ScrapRcpResponseEntity, ScrapRcpUpdateEntity, ScrapRcpUpdateRequestEntity } from 'src/app/shared/entity/rcp/scrap.rcp.entity';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScrapWriteDaoSupabaseService {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = ScrapWriteDaoSupabaseService.name;
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
 
@@ -27,7 +22,7 @@ export class ScrapWriteDaoSupabaseService {
     const context = 'delete'
     this.logger.info(`Deleting with id:${id}`, this.CLASS_NAME, context)
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('scrap')
         .delete()
         .eq('id', id)
@@ -142,7 +137,7 @@ export class ScrapWriteDaoSupabaseService {
       p_config: options
     };
     this.logger.info(`Sending data to Supabase: ${JSON.stringify(dataToSend)}`, this.CLASS_NAME, context);
-    return from(this.supabase.rpc('complex_scrapInsert', dataToSend)).pipe(
+    return from(this.supabaseService.getSupabaseClient().rpc('complex_scrapInsert', dataToSend)).pipe(
       tap((res: any) => { if (res.error) throw res.error; }),
       map((res: any) => {
         if (!res.data) throw new Error(`RPC 'complex_scrapInsert' returned no data`);
@@ -160,7 +155,7 @@ export class ScrapWriteDaoSupabaseService {
       p_config: options
     };
     this.logger.info(`Sending data to Supabase: ${JSON.stringify(dataToSend)}`, this.CLASS_NAME, context);
-    return from(this.supabase.rpc('complex_scrapArchive', dataToSend)).pipe(
+    return from(this.supabaseService.getSupabaseClient().rpc('complex_scrapArchive', dataToSend)).pipe(
       tap((res: any) => { if (res.error) throw res.error; }),
       map((res: any) => {
         if (!res.data) throw new Error(`RPC 'complex_scrapArchive' returned no data`);
@@ -194,7 +189,7 @@ export class ScrapWriteDaoSupabaseService {
       p_config: options
     };
     this.logger.info(`Sending data to Supabase: ${JSON.stringify(dataToSend)}`, this.CLASS_NAME, context);
-    return from(this.supabase.rpc('complex_scrapUpdate', dataToSend)).pipe(
+    return from(this.supabaseService.getSupabaseClient().rpc('complex_scrapUpdate', dataToSend)).pipe(
       tap((res: any) => { if (res.error) throw res.error; }),
       map((res: any) => {
         if (!res.data) throw new Error(`RPC 'complex_scrapUpdate' returned no data`);

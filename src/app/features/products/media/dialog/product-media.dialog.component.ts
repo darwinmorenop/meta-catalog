@@ -20,8 +20,8 @@ import { ProductMedia, ProductMediaType } from 'src/app/core/models/products/med
     MatSelectModule,
     ReactiveFormsModule
   ],
-  templateUrl: './product-media.dialog.component.html',
-  styleUrl: './product-media.dialog.component.scss'
+  templateUrl: 'product-media.dialog.component.html',
+  styleUrl: 'product-media.dialog.component.scss'
 })
 export class ProductMediaDialogComponent {
   mediaForm: FormGroup;

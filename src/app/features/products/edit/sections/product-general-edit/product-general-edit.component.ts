@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ProductEditComponent } from '../../product-edit.component';
+import { ProductEditComponent } from 'src/app/features/products/edit/product-edit.component';
 import { ProductStatusEnum } from 'src/app/core/models/products/product.status.enum';
 import { CategoryService } from 'src/app/core/services/categories/category.service';
 import { CategoryHierarchyEntity } from 'src/app/shared/entity/view/category.hierarchy.entity';
@@ -31,8 +31,8 @@ import { map } from 'rxjs';
     MatButtonModule,
     MatIconModule
   ],
-  templateUrl: './product-general-edit.component.html',
-  styleUrl: './product-general-edit.component.scss'
+  templateUrl: 'product-general-edit.component.html',
+  styleUrl: 'product-general-edit.component.scss'
 })
 export class ProductGeneralEditComponent implements OnInit {
   private parent = inject(ProductEditComponent);

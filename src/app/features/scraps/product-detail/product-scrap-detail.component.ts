@@ -24,8 +24,8 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatChipsModule,
     RouterModule
   ],
-  templateUrl: './product-scrap-detail.component.html',
-  styleUrls: ['./product-scrap-detail.component.scss']
+  templateUrl: 'product-scrap-detail.component.html',
+  styleUrls: ['product-scrap-detail.component.scss']
 })
 export class ProductScrapDetailComponent implements OnInit {
   private scrapService = inject(ScrapService);

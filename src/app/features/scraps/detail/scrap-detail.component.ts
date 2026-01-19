@@ -24,8 +24,8 @@ import { ScrapSummaryEntry } from 'src/app/shared/entity/view/scrap.entry';
     MatCardModule,
     RouterModule
   ],
-  templateUrl: './scrap-detail.component.html',
-  styleUrls: ['./scrap-detail.component.scss']
+  templateUrl: 'scrap-detail.component.html',
+  styleUrls: ['scrap-detail.component.scss']
 })
 export class ScrapDetailComponent implements OnInit {
   private scrapService = inject(ScrapService);

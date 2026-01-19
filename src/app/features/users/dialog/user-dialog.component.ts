@@ -30,8 +30,8 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatSelectModule,
     MatChipsModule
   ],
-  templateUrl: './user-dialog.component.html',
-  styleUrls: ['./user-dialog.component.scss']
+  templateUrl: 'user-dialog.component.html',
+  styleUrls: ['user-dialog.component.scss']
 })
 export class UserDialogComponent implements OnInit {
   private fb = inject(FormBuilder);

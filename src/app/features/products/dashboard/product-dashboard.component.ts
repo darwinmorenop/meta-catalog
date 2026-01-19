@@ -24,8 +24,8 @@ import { TableConfig } from 'src/app/shared/models/table-config';
     SmartTableComponent,
     RouterModule
   ],
-  templateUrl: './product-dashboard.component.html',
-  styleUrl: './product-dashboard.component.scss'
+  templateUrl: 'product-dashboard.component.html',
+  styleUrl: 'product-dashboard.component.scss'
 })
 export class ProductDashboardComponent {
   private readonly productService = inject(ProductService);

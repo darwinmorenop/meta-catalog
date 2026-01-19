@@ -33,8 +33,8 @@ import { PriceHistoryEntity } from 'src/app/shared/entity/price.history.entity';
     RouterModule,
     MatDialogModule
   ],
-  templateUrl: './product-price-history.component.html',
-  styleUrl: './product-price-history.component.scss'
+  templateUrl: 'product-price-history.component.html',
+  styleUrl: 'product-price-history.component.scss'
 })
 export class ProductPriceHistoryComponent implements OnInit {
   // If true, hide header and back button (used when embedded in product edit tabs)

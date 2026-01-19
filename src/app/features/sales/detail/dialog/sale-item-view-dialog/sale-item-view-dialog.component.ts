@@ -18,8 +18,8 @@ import { SaleStatusLabels } from 'src/app/shared/entity/sale.entity';
     MatIconModule,
     MatDividerModule
   ],
-  templateUrl: './sale-item-view-dialog.component.html',
-  styleUrl: './sale-item-view-dialog.component.scss'
+  templateUrl: 'sale-item-view-dialog.component.html',
+  styleUrl: 'sale-item-view-dialog.component.scss'
 })
 export class SaleItemViewDialogComponent {
   private router = inject(Router);

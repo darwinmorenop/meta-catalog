@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ProductPriceDaoSupabaseService } from './dao/product-price.dao.supabase.service';
+import { ProductPriceDaoSupabaseService } from 'src/app/core/services/products/dao/product-price.dao.supabase.service';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { ProductDashboardPriceEntity } from 'src/app/shared/entity/view/product.price.dashboard.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';

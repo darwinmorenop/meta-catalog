@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ProductEditComponent } from '../edit/product-edit.component';
+import { ProductEditComponent } from 'src/app/features/products/edit/product-edit.component';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
@@ -25,8 +25,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatTabsModule,
     MatSelectModule
   ],
-  templateUrl: './product-stock-edit.component.html',
-  styleUrl: './product-stock-edit.component.scss'
+  templateUrl: 'product-stock-edit.component.html',
+  styleUrl: 'product-stock-edit.component.scss'
 })
 export class ProductStockEditComponent implements OnInit {
   private parent = inject(ProductEditComponent);

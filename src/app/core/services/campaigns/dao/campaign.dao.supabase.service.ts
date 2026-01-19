@@ -1,23 +1,18 @@
 import { Injectable, inject } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { from, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CampaignEntity } from 'src/app/shared/entity/view/campaign.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CampaignDaoSupabaseService {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
   private dateUtils = inject(DateUtilsService);
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   private mapCampaign(item: any): CampaignEntity {
@@ -35,7 +30,7 @@ export class CampaignDaoSupabaseService {
    */
   getCurrent(): Observable<CampaignEntity[]> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('v_campaign_current')
         .select('*')
     ).pipe(
@@ -48,7 +43,7 @@ export class CampaignDaoSupabaseService {
    */
   getAll(): Observable<CampaignEntity[]> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('campaign')
         .select('*')
         .order('name')
@@ -63,7 +58,7 @@ export class CampaignDaoSupabaseService {
   create(campaign: Partial<CampaignEntity>): Observable<CampaignEntity | null> {
     const { id, ...dataToInsert } = campaign;
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('campaign')
         .insert([dataToInsert])
         .select()
@@ -79,7 +74,7 @@ export class CampaignDaoSupabaseService {
   update(id: number, updates: Partial<CampaignEntity>): Observable<CampaignEntity | null> {
     const { id: _, ...dataToUpdate } = updates as any;
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('campaign')
         .update(dataToUpdate)
         .eq('id', id)
@@ -95,7 +90,7 @@ export class CampaignDaoSupabaseService {
    */
   delete(id: number): Observable<any> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('campaign')
         .delete()
         .eq('id', id)

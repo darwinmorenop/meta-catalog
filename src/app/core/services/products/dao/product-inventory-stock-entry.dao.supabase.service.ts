@@ -1,13 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ProductInventoryStockEntryDetailedEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.detailed.entity';
 import { ProductInventoryStockEntryDashboardEntity, UserInventoryStockEntryDashboardEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.dashboard.entity';
 import { ProductInventoryStockEntryEntity } from 'src/app/shared/entity/product.inventory.stock-entry.entity';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 export type StockScopeType = 'Todos' | 'Grupal' | 'Personal';
 
@@ -15,7 +14,7 @@ export type StockScopeType = 'Todos' | 'Grupal' | 'Personal';
   providedIn: 'root'
 })
 export class ProductInventoryStockEntryDaoSupabaseService {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
   private dateUtils = inject(DateUtilsService);
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = ProductInventoryStockEntryDaoSupabaseService.name;
@@ -24,15 +23,11 @@ export class ProductInventoryStockEntryDaoSupabaseService {
   private readonly VIEW_DETAILED_NAME = 'v_product_inventory_stock_entry_detailed';
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   getByProductIdAndUserId(productId: number, userId: number): Observable<ProductInventoryStockEntryDetailedEntity[]> {
     const context = 'getByProductIdAndUserId';
-    let query = this.supabase
+    let query = this.supabaseService.getSupabaseClient()
       .from(this.VIEW_DETAILED_NAME)
       .select('*')
       .eq('product_id', productId)
@@ -57,9 +52,10 @@ export class ProductInventoryStockEntryDaoSupabaseService {
 
   getAllDashboardData(userIds: number[] = []): Observable<ProductInventoryStockEntryDashboardEntity[]> {
     const context = 'getAllDashboardData';
-    const query = this.supabase.rpc(this.RPC_DASHBOARD_NAME, {
-      p_user_ids: userIds.length > 0 ? userIds : null
-    });
+    const query = this.supabaseService.getSupabaseClient()
+      .rpc(this.RPC_DASHBOARD_NAME, {
+        p_user_ids: userIds.length > 0 ? userIds : null
+      });
 
     return from(query).pipe(
       tap(response => {
@@ -77,7 +73,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
   update(id: number, stockEntry: Partial<ProductInventoryStockEntryEntity>): Observable<boolean> {
     const context = 'update';
     this.logger.debug(`Updating stock entry for product ${id} with data:${JSON.stringify(stockEntry)}`, this.CLASS_NAME, context);
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from(this.TABLE_NAME)
       .update(stockEntry)
       .eq('id', id);
@@ -97,7 +93,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
   insert(stockEntry: Partial<ProductInventoryStockEntryEntity>): Observable<boolean> {
     const context = 'insert';
     this.logger.debug(`Inserting stock entry for product ${stockEntry.product_id} with data:${JSON.stringify(stockEntry)}`, this.CLASS_NAME, context);
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from(this.TABLE_NAME)
       .insert(stockEntry);
 
@@ -115,7 +111,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
 
   delete(id: number): Observable<boolean> {
     const context = 'delete';
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from(this.TABLE_NAME)
       .delete()
       .eq('id', id);

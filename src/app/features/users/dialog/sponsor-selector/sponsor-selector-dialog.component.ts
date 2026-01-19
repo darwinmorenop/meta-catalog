@@ -26,8 +26,8 @@ import { UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
     MatIconModule,
     SmartTableComponent
   ],
-  templateUrl: './sponsor-selector-dialog.component.html',
-  styleUrls: ['./sponsor-selector-dialog.component.scss']
+  templateUrl: 'sponsor-selector-dialog.component.html',
+  styleUrls: ['sponsor-selector-dialog.component.scss']
 })
 export class SponsorSelectorDialogComponent {
   private readonly userService = inject(UserService);

@@ -42,8 +42,8 @@ import { StockEntryCreateEditWithoutProductDialogComponent, StockEntryCreateEdit
     ReactiveFormsModule,
     SmartTableComponent
   ],
-  templateUrl: './inventory-inbound-register.component.html',
-  styleUrl: './inventory-inbound-register.component.scss'
+  templateUrl: 'inventory-inbound-register.component.html',
+  styleUrl: 'inventory-inbound-register.component.scss'
 })
 export class InventoryInboundRegisterComponent {
   private fb = inject(FormBuilder);

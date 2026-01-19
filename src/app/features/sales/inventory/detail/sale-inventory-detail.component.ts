@@ -35,8 +35,8 @@ import { SaleDashboardEntity } from 'src/app/shared/entity/view/sale.dashboard.e
     SmartTableComponent,
     RouterModule
   ],
-  templateUrl: './sale-inventory-detail.component.html',
-  styleUrl: './sale-inventory-detail.component.scss'
+  templateUrl: 'sale-inventory-detail.component.html',
+  styleUrl: 'sale-inventory-detail.component.scss'
 })
 export class SaleInventoryDetailComponent implements OnInit {
   private readonly saleService = inject(SaleService);

@@ -1,9 +1,9 @@
-import { ProductPricing } from "./product.pricing.model";
-import { ProductAttributes } from "./product.attributes.model";
-import { ProductStockInfo } from "./product.stock.info.model";
-import { ProductMedia } from "./media/product.media.model";
-import { ProductStatusEnum } from "./product.status.enum";
-import { ProductCategory } from "./product.category.model";
+import { ProductPricing } from "src/app/core/models/products/product.pricing.model";
+import { ProductAttributes } from "src/app/core/models/products/product.attributes.model";
+import { ProductStockInfo } from "src/app/core/models/products/product.stock.info.model";
+import { ProductMedia } from "src/app/core/models/products/media/product.media.model";
+import { ProductStatusEnum } from "src/app/core/models/products/product.status.enum";
+import { ProductCategory } from "src/app/core/models/products/product.category.model";
 
 export interface Product {
   id: number;

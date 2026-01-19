@@ -1,26 +1,21 @@
 import { inject, Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { UserEntity } from 'src/app/shared/entity/user.entity';
 import { UserNetworkDetail, UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { UserRankEnum } from 'src/app/core/models/users/user.model';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserDaoSupabaseService {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
   private loggerService: LoggerService = inject(LoggerService);
   private readonly CLASS_NAME = UserDaoSupabaseService.name;
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   private mapToEntity(item: any): UserEntity {
@@ -101,7 +96,7 @@ export class UserDaoSupabaseService {
 
   getAll(): Observable<UserEntity[]> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('user')
         .select('*')
         .order('first_name')
@@ -112,7 +107,7 @@ export class UserDaoSupabaseService {
 
   getAvailableSponsorsRpc(editingUserId: number): Observable<UserSponsorEntity[]> {
     return from(
-      this.supabase.rpc('get_available_sponsors', { p_edit_user_id: editingUserId })
+      this.supabaseService.getSupabaseClient().rpc('get_available_sponsors', { p_edit_user_id: editingUserId })
     ).pipe(
       map(res => (res.data || []).map((item: any) => this.mapToSponsor(item)))
     );
@@ -122,7 +117,7 @@ export class UserDaoSupabaseService {
     const context = 'getUserDetailWithNetwork';
     this.loggerService.debug(`Recovering data for user ${userId}`, this.CLASS_NAME, context);
     return from(
-      this.supabase.rpc('get_user_network_details', { p_user_id: userId })
+      this.supabaseService.getSupabaseClient().rpc('get_user_network_details', { p_user_id: userId })
     ).pipe(
       tap(res => this.loggerService.debug(`Recovered data for user ${userId} with data ${JSON.stringify(res.data)}`, this.CLASS_NAME, context)),
       map(res => (res.data || []).map((item: any) => this.mapToDetailedEntity(item)))
@@ -132,7 +127,7 @@ export class UserDaoSupabaseService {
   insert(user: UserEntity): Observable<UserEntity> {
     const dbData = this.mapToDb(user);
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('user')
         .insert(dbData)
         .select()
@@ -148,7 +143,7 @@ export class UserDaoSupabaseService {
   update(user: UserEntity): Observable<UserEntity> {
     const dbData = this.mapToDb(user);
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('user')
         .update(dbData)
         .eq('id', user.id)
@@ -164,7 +159,7 @@ export class UserDaoSupabaseService {
 
   delete(id: number): Observable<boolean> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('user')
         .delete()
         .eq('id', id)

@@ -23,8 +23,8 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatCardModule,
     RouterModule
   ],
-  templateUrl: './scraps-dashboard.component.html',
-  styleUrls: ['./scraps-dashboard.component.scss']
+  templateUrl: 'scraps-dashboard.component.html',
+  styleUrls: ['scraps-dashboard.component.scss']
 })
 export class ScrapsDashboardComponent implements OnInit {
   private scrapService = inject(ScrapService);

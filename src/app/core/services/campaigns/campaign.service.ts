@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CampaignDaoSupabaseService } from './dao/campaign.dao.supabase.service';
+import { CampaignDaoSupabaseService } from 'src/app/core/services/campaigns/dao/campaign.dao.supabase.service';
 import { CampaignEntity } from 'src/app/shared/entity/view/campaign.entity';
 
 @Injectable({

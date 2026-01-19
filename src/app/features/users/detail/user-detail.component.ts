@@ -32,8 +32,8 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatChipsModule,
     MatDividerModule
   ],
-  templateUrl: './user-detail.component.html',
-  styleUrl: './user-detail.component.scss'
+  templateUrl: 'user-detail.component.html',
+  styleUrl: 'user-detail.component.scss'
 })
 export class UserDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);

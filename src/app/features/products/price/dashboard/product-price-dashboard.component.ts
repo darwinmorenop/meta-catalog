@@ -24,8 +24,8 @@ import { ProductDashboardPriceEntity } from 'src/app/shared/entity/view/product.
     SmartTableComponent,
     RouterModule
   ],
-  templateUrl: './product-price-dashboard.component.html',
-  styleUrl: './product-price-dashboard.component.scss'
+  templateUrl: 'product-price-dashboard.component.html',
+  styleUrl: 'product-price-dashboard.component.scss'
 })
 export class ProductPriceDashboardComponent implements OnInit {
   private readonly priceService = inject(ProductPriceService);

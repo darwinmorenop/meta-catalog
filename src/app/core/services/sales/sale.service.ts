@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SaleDaoSupabaseService } from './dao/sale.dao.supabase.service';
+import { SaleDaoSupabaseService } from 'src/app/core/services/sales/dao/sale.dao.supabase.service';
 import { SaleDashboardEntity, SaleDetailedEntity } from 'src/app/shared/entity/view/sale.dashboard.entity';
 import { ProductSalesStats, SaleInsertRcpEntity, UpsertSaleResponse } from 'src/app/shared/entity/rcp/sale.rcp.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';

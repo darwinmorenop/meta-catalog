@@ -1,33 +1,28 @@
 import { Injectable, inject } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SaleDashboardEntity, SaleDetailedEntity } from 'src/app/shared/entity/view/sale.dashboard.entity';
 import { ProductSalesStats, SaleInsertRcpEntity, UpsertSaleRequest, UpsertSaleResponse } from 'src/app/shared/entity/rcp/sale.rcp.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { SaleStatusLabels } from 'src/app/shared/entity/sale.entity';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SaleDaoSupabaseService {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
   private dateUtils = inject(DateUtilsService);
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = SaleDaoSupabaseService.name;
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   getAllDashboardData(userIds?: number[]): Observable<SaleDashboardEntity[]> {
     const context = 'getAllDashboardData';
-    let query = this.supabase
+    let query = this.supabaseService.getSupabaseClient()
       .from('v_sales_summary_detailed')
       .select('*');
 
@@ -56,7 +51,8 @@ export class SaleDaoSupabaseService {
       p_sale_data: sale
     }
     this.logger.debug(`Saving sale with data: ${JSON.stringify(sale)}`, this.CLASS_NAME, context);
-    const promise = this.supabase.rpc('upsert_sale_with_items', saleToSend);
+    const promise = this.supabaseService.getSupabaseClient()
+    .rpc('upsert_sale_with_items', saleToSend);
 
     return from(promise).pipe(
       tap(response => {
@@ -75,7 +71,7 @@ export class SaleDaoSupabaseService {
 
   getSaleByIdDetailedData(id: number): Observable<SaleDetailedEntity[]> {
     const context = 'getSaleByIdDetailedData';
-    const query = this.supabase
+    const query = this.supabaseService.getSupabaseClient()
       .from('v_sale_full_details')
       .select('*')
       .eq('sale_id', id);
@@ -97,7 +93,8 @@ export class SaleDaoSupabaseService {
 
   getSalesStats(userIds?: number[]): Observable<ProductSalesStats[]> {
     const context = 'getSalesStats';
-    const promise = this.supabase.rpc('get_product_sales_stats', {
+    const promise = this.supabaseService.getSupabaseClient()
+    .rpc('get_product_sales_stats', {
       p_user_ids: userIds || null
     });
 
@@ -118,7 +115,7 @@ export class SaleDaoSupabaseService {
 
   getSalesByProductId(productId: number, userIds?: number[]): Observable<SaleDetailedEntity[]> {
     const context = 'getSalesByProductId';
-    let query = this.supabase
+    let query = this.supabaseService.getSupabaseClient()
       .from('v_sale_full_details')
       .select('*')
       .eq('product_id', productId);

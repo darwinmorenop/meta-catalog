@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { InventoryInboundDaoSupabaseService } from './dao/inventory-inbound.dao.supabase.service';
+import { InventoryInboundDaoSupabaseService } from 'src/app/core/services/inventory/dao/inventory-inbound.dao.supabase.service';
 import { InventoryInboundInsertRcpEntity } from 'src/app/shared/entity/rcp/inventory.inbound.rcp.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { InventoryInboundEntity } from 'src/app/shared/entity/inventory.inbound.entity';

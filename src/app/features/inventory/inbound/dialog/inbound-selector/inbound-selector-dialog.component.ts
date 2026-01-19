@@ -23,8 +23,8 @@ export interface InboundSelectorDialogData {
     MatIconModule,
     SmartTableComponent
   ],
-  templateUrl: './inbound-selector-dialog.component.html',
-  styleUrl: './inbound-selector-dialog.component.scss'
+  templateUrl: 'inbound-selector-dialog.component.html',
+  styleUrl: 'inbound-selector-dialog.component.scss'
 })
 export class InboundSelectorDialogComponent {
   private inboundService = inject(InventoryInboundService);

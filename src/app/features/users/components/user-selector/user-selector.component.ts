@@ -18,8 +18,8 @@ import { UserDashboardModel } from 'src/app/core/models/users/user.model';
     MatIconModule,
     ReactiveFormsModule
   ],
-  templateUrl: './user-selector.component.html',
-  styleUrl: './user-selector.component.scss'
+  templateUrl: 'user-selector.component.html',
+  styleUrl: 'user-selector.component.scss'
 })
 export class UserSelectorComponent {
   @Input() users: UserDashboardModel[] = [];

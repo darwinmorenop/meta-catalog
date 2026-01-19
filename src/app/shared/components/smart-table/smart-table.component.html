@@ -12,35 +12,35 @@
             <input matInput [(ngModel)]="globalFilter" (keyup)="applyFilters()" [placeholder]="searchablePlaceholder">
         </mat-form-field>
 
-        <div class="column-filters">
-            @for (col of config.columns; track col.key) {
-                @if (col.filterable) {
-                <mat-form-field appearance="outline" class="col-filter">
-                    <mat-label>Filtrar {{col.header}}</mat-label>
-                    <mat-select [(ngModel)]="columnFilters[col.key]" (selectionChange)="applyFilters()">
-                        <div class="search-select-container">
-                            <input matInput (keyup)="filterOptionsList(col.key, $event)"
-                                (keydown)="$event.stopPropagation()" placeholder="Buscar..." class="search-select-input">
-                        </div>
-                        <mat-option value="">Todos</mat-option>
-                        @for (val of filteredFilterOptions[col.key]; track val) {
-                        <mat-option [value]="val">
-                            @switch (col.type) {
-                                @case ('boolean') {
-                                    {{ val === 'true' ? 'SI' : 'NO' }}
-                                }
-                                @default {
-                                    {{ val }}
-                                }
-                            }
-                        </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+        <div class="filter-actions">
+            <button mat-stroked-button (click)="openFilterDialog()" class="filter-button" [class.active-filters]="hasActiveFilters()">
+                <mat-icon>filter_list</mat-icon>
+                <span>Filtros</span>
+                @if (getActiveFilterCount() > 0) {
+                    <span class="filter-badge">{{ getActiveFilterCount() }}</span>
                 }
-            }
+            </button>
         </div>
     </div>
+
+    @if (hasActiveFilters()) {
+        <div class="active-filters-row">
+            <span class="active-filters-label">Filtros activos:</span>
+            <mat-chip-set class="active-chips">
+                @for (colKey of columnFilters | keyvalue; track colKey.key) {
+                    @for (val of $any(colKey.value); track val) {
+                        <mat-chip-row [removable]="true" (removed)="removeFilter(colKey.key, val)">
+                            <span class="chip-col-header">{{ getColumnHeader(colKey.key) }}:</span>
+                            <span class="chip-val">{{ getLabel(colKey.key, val) }}</span>
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                    }
+                }
+            </mat-chip-set>
+        </div>
+    }
 
     <div class="table-container mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
@@ -51,11 +51,12 @@
                 <td mat-cell *matCellDef="let element">
                     @switch (col.type) {
                         @case ('badge') {
-                        <span [class.stock-ok]="element[col.key] === 'in stock'"
-                            [class.stock-out]="element[col.key] === 'out of stock'"
-                            [class.state-new]="element[col.key] === 'new'"
-                            [class.state-changed]="element[col.key] === 'changed'">
-                            {{element[col.key]}}
+                        @let badge = getBadgeInfo(element[col.key]);
+                        <span class="smart-table-badge"
+                            [style.background-color]="badge.color ? badge.color + '1A' : 'var(--surface-hover)'"
+                            [style.color]="badge.color || 'var(--text-secondary)'"
+                            [style.border-color]="badge.color ? badge.color : 'var(--border-color)'">
+                            {{badge.label}}
                         </span>
                         }
 

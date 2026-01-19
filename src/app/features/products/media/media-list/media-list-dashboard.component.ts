@@ -13,9 +13,9 @@ import { ProductMedia } from 'src/app/core/models/products/media/product.media.m
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
-import { ProductMediaDialogComponent } from '../dialog/product-media.dialog.component';
+import { ProductMediaDialogComponent } from 'src/app/features/products/media/dialog/product-media.dialog.component';
 import { ProductDashboardMediaEntity } from 'src/app/shared/entity/view/product.media.dashboard.entity';
-import { MediaReorderDialogComponent } from '../reorder-dialog/media-reorder.dialog.component';
+import { MediaReorderDialogComponent } from 'src/app/features/products/media/reorder-dialog/media-reorder.dialog.component';
 
 @Component({
   selector: 'app-media-list-dashboard',
@@ -29,8 +29,8 @@ import { MediaReorderDialogComponent } from '../reorder-dialog/media-reorder.dia
     SmartTableComponent,
     RouterModule
   ],
-  templateUrl: './media-list-dashboard.component.html',
-  styleUrl: './media-list-dashboard.component.scss'
+  templateUrl: 'media-list-dashboard.component.html',
+  styleUrl: 'media-list-dashboard.component.scss'
 })
 export class MediaListDashboardComponent {
   private readonly mediaService = inject(ProductMediaService);

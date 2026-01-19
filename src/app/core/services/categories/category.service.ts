@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CategoryDaoSupabaseService } from './dao/category.dao.supabase.service';
+import { CategoryDaoSupabaseService } from 'src/app/core/services/categories/dao/category.dao.supabase.service';
 import { CategoryEntity } from 'src/app/shared/entity/category.entity';
 import { CategoryHierarchyEntity } from 'src/app/shared/entity/view/category.hierarchy.entity';
 

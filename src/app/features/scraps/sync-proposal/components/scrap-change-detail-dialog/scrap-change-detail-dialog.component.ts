@@ -16,8 +16,8 @@ import { ProductScrapSyncPendingChange } from 'src/app/core/models/products/scra
     MatIconModule,
     MatDividerModule
   ],
-  templateUrl: './scrap-change-detail-dialog.component.html',
-  styleUrls: ['./scrap-change-detail-dialog.component.scss']
+  templateUrl: 'scrap-change-detail-dialog.component.html',
+  styleUrls: ['scrap-change-detail-dialog.component.scss']
 })
 export class ScrapChangeDetailDialogComponent {
   constructor(

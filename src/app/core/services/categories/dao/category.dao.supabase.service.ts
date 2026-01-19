@@ -1,24 +1,19 @@
 import { Injectable, inject } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { from, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CategoryEntity } from 'src/app/shared/entity/category.entity';
 import { CategoryHierarchyEntity } from 'src/app/shared/entity/view/category.hierarchy.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryDaoSupabaseService {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
   private dateUtils = inject(DateUtilsService);
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   private mapCategory(item: any): any {
@@ -34,7 +29,7 @@ export class CategoryDaoSupabaseService {
    */
   getHierarchy(): Observable<CategoryHierarchyEntity[]> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('v_categories_hierarchy')
         .select('*')
     ).pipe(
@@ -47,7 +42,7 @@ export class CategoryDaoSupabaseService {
    */
   getAll(): Observable<CategoryEntity[]> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('category')
         .select('*')
         .order('name')
@@ -62,7 +57,7 @@ export class CategoryDaoSupabaseService {
   create(category: Partial<CategoryEntity>): Observable<CategoryEntity | null> {
     const { id, ...dataToInsert } = category;
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('category')
         .insert([dataToInsert])
         .select()
@@ -78,7 +73,7 @@ export class CategoryDaoSupabaseService {
   update(id: number, updates: Partial<CategoryEntity>): Observable<CategoryEntity | null> {
     const { id: _, ...dataToUpdate } = updates as any;
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('category')
         .update(dataToUpdate)
         .eq('id', id)
@@ -95,7 +90,7 @@ export class CategoryDaoSupabaseService {
    */
   delete(id: number): Observable<any> {
     return from(
-      this.supabase
+      this.supabaseService.getSupabaseClient()
         .from('category')
         .delete()
         .eq('id', id)

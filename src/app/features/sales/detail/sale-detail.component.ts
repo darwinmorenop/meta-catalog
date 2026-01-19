@@ -32,8 +32,8 @@ import { SaleItemViewDialogComponent } from './dialog/sale-item-view-dialog/sale
     RouterModule,
     SmartTableComponent
   ],
-  templateUrl: './sale-detail.component.html',
-  styleUrl: './sale-detail.component.scss'
+  templateUrl: 'sale-detail.component.html',
+  styleUrl: 'sale-detail.component.scss'
 })
 export class SaleDetailComponent {
   private route = inject(ActivatedRoute);

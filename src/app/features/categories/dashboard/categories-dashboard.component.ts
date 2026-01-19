@@ -27,8 +27,8 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatCardModule,
     RouterModule
   ],
-  templateUrl: './categories-dashboard.component.html',
-  styleUrls: ['./categories-dashboard.component.scss']
+  templateUrl: 'categories-dashboard.component.html',
+  styleUrls: ['categories-dashboard.component.scss']
 })
 export class CategoriesDashboardComponent implements OnInit {
   private categoryService = inject(CategoryService);

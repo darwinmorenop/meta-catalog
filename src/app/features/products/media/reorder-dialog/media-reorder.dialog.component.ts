@@ -20,8 +20,8 @@ import { C } from '@angular/cdk/keycodes';
     MatTooltipModule,
     DragDropModule
   ],
-  templateUrl: './media-reorder.dialog.component.html',
-  styleUrl: './media-reorder.dialog.component.scss'
+  templateUrl: 'media-reorder.dialog.component.html',
+  styleUrl: 'media-reorder.dialog.component.scss'
 })
 export class MediaReorderDialogComponent {
   mediaItems = signal<ProductMedia[]>([]);

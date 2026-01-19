@@ -24,8 +24,8 @@ import { ProductDashboardMediaEntity } from 'src/app/shared/entity/view/product.
     SmartTableComponent,
     RouterModule
   ],
-  templateUrl: './product-media-dashboard.component.html',
-  styleUrl: './product-media-dashboard.component.scss'
+  templateUrl: 'product-media-dashboard.component.html',
+  styleUrl: 'product-media-dashboard.component.scss'
 })
 export class ProductMediaDashboardComponent implements OnInit {
   private readonly mediaService = inject(ProductMediaService);

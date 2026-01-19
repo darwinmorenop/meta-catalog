@@ -35,8 +35,8 @@ import { ScrapRemoteService } from 'src/app/core/services/scrap/scrap.remote.ser
     MatDialogModule,
     RouterModule
   ],
-  templateUrl: './sync-proposal.component.html',
-  styleUrls: ['./sync-proposal.component.scss']
+  templateUrl: 'sync-proposal.component.html',
+  styleUrls: ['sync-proposal.component.scss']
 })
 export class SyncProposalComponent implements OnInit {
   private scrapService = inject(ScrapService);

@@ -24,8 +24,8 @@ import { ProductWithSourcesEntity } from 'src/app/shared/entity/view/product.scr
     SmartTableComponent,
     RouterModule
   ],
-  templateUrl: './scrap-product-dashboard.component.html',
-  styleUrl: './scrap-product-dashboard.component.scss'
+  templateUrl: 'scrap-product-dashboard.component.html',
+  styleUrl: 'scrap-product-dashboard.component.scss'
 })
 export class ScrapProductDashboardComponent {
   private readonly scrapService = inject(ScrapService);

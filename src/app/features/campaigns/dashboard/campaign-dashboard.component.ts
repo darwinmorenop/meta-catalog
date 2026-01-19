@@ -13,7 +13,7 @@ import { CampaignEntity } from 'src/app/shared/entity/view/campaign.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
-import { CampaignDialogComponent } from '../dialog/campaign.dialog.component';
+import { CampaignDialogComponent } from 'src/app/features/campaigns/dialog/campaign.dialog.component';
 
 @Component({
   selector: 'app-campaign-dashboard',
@@ -27,8 +27,8 @@ import { CampaignDialogComponent } from '../dialog/campaign.dialog.component';
     SmartTableComponent,
     RouterModule
   ],
-  templateUrl: './campaign-dashboard.component.html',
-  styleUrl: './campaign-dashboard.component.scss'
+  templateUrl: 'campaign-dashboard.component.html',
+  styleUrl: 'campaign-dashboard.component.scss'
 })
 export class CampaignDashboardComponent {
   private readonly campaignService = inject(CampaignService);

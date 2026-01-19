@@ -1,34 +1,30 @@
 import { Injectable, inject } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { from, Observable, of } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { InventoryInboundInsertRcpEntity } from 'src/app/shared/entity/rcp/inventory.inbound.rcp.entity';
 import { InventoryInboundStatusEnum, InventoryInboundEntity, InventoryInboundStatusLabels } from 'src/app/shared/entity/inventory.inbound.entity';
 import { InventoryInboundDashboardEntity, InventoryInboundDashboardDetailedEntity } from 'src/app/shared/entity/view/inventory.dashboard.inbound.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventoryInboundDaoSupabaseService {
-  private supabase: SupabaseClient;
-  private dateUtils = inject(DateUtilsService);
-  private logger = inject(LoggerService);
-  private readonly CLASS_NAME = InventoryInboundDaoSupabaseService.name;
+private supabaseService = inject(SupabaseService);  
+private dateUtils = inject(DateUtilsService);
+private logger = inject(LoggerService);
+private readonly CLASS_NAME = InventoryInboundDaoSupabaseService.name;
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   insertInboundRpc(inbound: InventoryInboundInsertRcpEntity): Observable<number> {
     const context = 'insertInboundRpc';
     this.logger.debug(`Calling to insert with: ${JSON.stringify(inbound)}`, this.CLASS_NAME, context);
-    const promise = this.supabase.rpc('create_inbound_with_stock', {
+    const promise = this.supabaseService.getSupabaseClient()
+    .rpc('create_inbound_with_stock', {
       p_data: inbound
     });
 
@@ -49,7 +45,7 @@ export class InventoryInboundDaoSupabaseService {
 
   getAllDashboardData(userIds?: number[]): Observable<InventoryInboundDashboardEntity[]> {
     const context = 'getAllDashboardData';
-    let query = this.supabase
+    let query = this.supabaseService.getSupabaseClient()
       .from('v_inventory_inbound_dashboard')
       .select(`*`);
 
@@ -74,7 +70,7 @@ export class InventoryInboundDaoSupabaseService {
 
   getInboundByIdDetailedDashboardData(id: number): Observable<InventoryInboundDashboardDetailedEntity[]> {
     const context = 'getInboundByIdDetailedDashboardData';
-    const query = this.supabase
+    const query = this.supabaseService.getSupabaseClient()
       .from('v_inventory_inbound_entries_detailed')
       .select(`*`)
       .eq('inbound_id', id);
@@ -96,7 +92,7 @@ export class InventoryInboundDaoSupabaseService {
 
   getAll(): Observable<InventoryInboundEntity[]> {
     const context = 'getAll';
-    const query = this.supabase
+    const query = this.supabaseService.getSupabaseClient()
       .from('inventory_inbound')
       .select(`*`);
 
@@ -151,7 +147,7 @@ export class InventoryInboundDaoSupabaseService {
 
   getInboundById(id: number): Observable<InventoryInboundEntity> {
     const context = 'getInboundById';
-    const query = this.supabase
+    const query = this.supabaseService.getSupabaseClient()
       .from('inventory_inbound')
       .select(`*`)
       .eq('id', id)
@@ -174,7 +170,7 @@ export class InventoryInboundDaoSupabaseService {
 
   update(id: number, data: Partial<InventoryInboundEntity>): Observable<boolean> {
     const context = 'update';
-    const query = this.supabase
+    const query = this.supabaseService.getSupabaseClient()
       .from('inventory_inbound')
       .update(data)
       .eq('id', id);

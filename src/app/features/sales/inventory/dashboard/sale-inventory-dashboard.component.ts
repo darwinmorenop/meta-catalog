@@ -38,8 +38,8 @@ export type SaleScopeType = 'Personal' | 'Grupal' | 'Todos';
     RouterModule,
     MatDialogModule
   ],
-  templateUrl: './sale-inventory-dashboard.component.html',
-  styleUrl: './sale-inventory-dashboard.component.scss'
+  templateUrl: 'sale-inventory-dashboard.component.html',
+  styleUrl: 'sale-inventory-dashboard.component.scss'
 })
 export class SaleInventoryDashboardComponent {
   private readonly saleService = inject(SaleService);

@@ -33,8 +33,8 @@ export interface StockEntryCreateEditWithoutProductDialogData {
     ReactiveFormsModule,
     SmartTableComponent
   ],
-  templateUrl: './stock-entry-create-edit-without-product-dialog.component.html',
-  styleUrl: './stock-entry-create-edit-without-product-dialog.component.scss'
+  templateUrl: 'stock-entry-create-edit-without-product-dialog.component.html',
+  styleUrl: 'stock-entry-create-edit-without-product-dialog.component.scss'
 })
 export class StockEntryCreateEditWithoutProductDialogComponent implements OnInit {
   private fb = inject(FormBuilder);

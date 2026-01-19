@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-date-time-range',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './date-time-range.component.html',
-  styleUrl: './date-time-range.component.scss'
+  templateUrl: 'date-time-range.component.html',
+  styleUrl: 'date-time-range.component.scss'
 })
 export class DateTimeRangeComponent {
   @Input({ required: true }) formGroup!: FormGroup;

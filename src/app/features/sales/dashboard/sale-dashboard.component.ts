@@ -35,8 +35,8 @@ export type SaleScopeType = 'Personal' | 'Grupal' | 'Todos';
     RouterModule,
     SmartTableComponent
   ],
-  templateUrl: './sale-dashboard.component.html',
-  styleUrl: './sale-dashboard.component.scss'
+  templateUrl: 'sale-dashboard.component.html',
+  styleUrl: 'sale-dashboard.component.scss'
 })
 export class SaleDashboardComponent {
   private router = inject(Router);

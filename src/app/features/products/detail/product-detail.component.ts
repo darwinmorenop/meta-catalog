@@ -26,8 +26,8 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatDividerModule,
     MatTooltipModule
   ],
-  templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.scss'
+  templateUrl: 'product-detail.component.html',
+  styleUrl: 'product-detail.component.scss'
 })
 export class ProductDetailComponent implements OnInit {
   private readonly productService = inject(ProductService);

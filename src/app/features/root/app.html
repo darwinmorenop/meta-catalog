@@ -37,6 +37,10 @@
 
     <!-- Submenu Flujo (Dentro de Productos) -->
     <mat-menu #flowMenu="matMenu">
+      <button mat-menu-item (click)="navigateTo('/inventory/movements')">
+        <mat-icon>history</mat-icon>
+        <span>Movimientos</span>
+      </button>
       <button mat-menu-item (click)="navigateTo('/inventory/stock-entry')">
         <mat-icon>inventory_2</mat-icon>
         <span>Compras</span>
@@ -44,7 +48,7 @@
       <button mat-menu-item (click)="navigateTo('/sales/inventory')">
         <mat-icon>analytics</mat-icon>
         <span>Ventas</span>
-      </button>
+      </button>      
     </mat-menu>
 
     <!-- Menú Compras -->

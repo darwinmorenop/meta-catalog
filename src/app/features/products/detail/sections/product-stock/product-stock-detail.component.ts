@@ -4,14 +4,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ProductDetailComponent } from '../../product-detail.component';
+import { ProductDetailComponent } from 'src/app/features/products/detail/product-detail.component';
 
 @Component({
   selector: 'app-product-stock-detail',
   standalone: true,
   imports: [CommonModule, MatCardModule, MatDividerModule, MatIconModule, MatProgressBarModule],
-  templateUrl: './product-stock-detail.component.html',
-  styleUrl: './product-stock-detail.component.scss'
+  templateUrl: 'product-stock-detail.component.html',
+  styleUrl: 'product-stock-detail.component.scss'
 })
 export class ProductStockDetailComponent {
   private parent = inject(ProductDetailComponent);

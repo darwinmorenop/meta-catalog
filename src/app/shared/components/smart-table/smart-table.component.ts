@@ -10,8 +10,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatChipsModule } from '@angular/material/chips';
 import { TableConfig, TableColumn } from 'src/app/shared/models/table-config';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
+import { SmartTableFilterDialogComponent, SmartTableFilterData } from './dialog/smart-table-filter-dialog.component';
 
 @Component({
     selector: 'app-smart-table',
@@ -27,10 +30,12 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
         MatProgressSpinnerModule,
         MatIconModule,
         MatButtonModule,
-        FormsModule
+        FormsModule,
+        MatDialogModule,
+        MatChipsModule
     ],
-    templateUrl: './smart-table.component.html',
-    styleUrls: ['./smart-table.component.scss']
+    templateUrl: 'smart-table.component.html',
+    styleUrls: ['smart-table.component.scss']
 })
 export class SmartTableComponent implements AfterViewInit {
     @Input() data: any[] = [];
@@ -42,6 +47,7 @@ export class SmartTableComponent implements AfterViewInit {
     @Output() view = new EventEmitter<any>();
 
     private loggerService = inject(LoggerService)
+    private dialog = inject(MatDialog);
     private readonly CLASS_NAME = SmartTableComponent.name
 
     dataSource = new MatTableDataSource<any>([]);
@@ -52,7 +58,7 @@ export class SmartTableComponent implements AfterViewInit {
 
     // Filter Logic
     globalFilter = '';
-    columnFilters: { [key: string]: string } = {};
+    columnFilters: { [key: string]: string[] } = {};
 
     // Filter Options
     filterOptions: { [key: string]: string[] } = {};
@@ -108,7 +114,7 @@ export class SmartTableComponent implements AfterViewInit {
     initFilters() {
         this.columnFilters = {};
         this.config.columns.filter(c => c.filterable).forEach(c => {
-            this.columnFilters[c.key] = '';
+            this.columnFilters[c.key] = [];
         });
     }
 
@@ -121,9 +127,15 @@ export class SmartTableComponent implements AfterViewInit {
                 // Para booleanos aseguramos siempre SI (true) y NO (false)
                 values = new Set(['true', 'false']);
             } else {
-                values = new Set(this.data.map(p => String(p[col.key] ?? '')));
+                values = new Set(this.data.map(p => {
+                    const rawValue = p[col.key];
+                    if (rawValue && typeof rawValue === 'object' && 'value' in rawValue) {
+                        return String(rawValue.value ?? '');
+                    }
+                    return String(rawValue ?? '');
+                }));
             }
-            const sortedValues = Array.from(values).sort((a, b) => b.localeCompare(a)); // true before false roughly
+            const sortedValues = Array.from(values).sort((a, b) => b.localeCompare(a));
             this.filterOptions[col.key] = sortedValues;
             this.filteredFilterOptions[col.key] = sortedValues;
         });
@@ -148,12 +160,21 @@ export class SmartTableComponent implements AfterViewInit {
 
             if (!globalMatch) return false;
 
-            // 2. Column Filters
+            // 2. Column Filters (Multi-select support)
             for (const colKey in searchTerms.columns) {
-                const filterValue = searchTerms.columns[colKey];
-                if (filterValue) {
-                    const dataValue = String(data[colKey] ?? '').toLowerCase();
-                    if (dataValue !== filterValue.toLowerCase()) {
+                const filterValues = searchTerms.columns[colKey] as string[];
+                if (filterValues && filterValues.length > 0) {
+                    const rawValue = data[colKey];
+                    let dataValue = '';
+                    if (rawValue && typeof rawValue === 'object' && 'value' in rawValue) {
+                        dataValue = String(rawValue.value ?? '');
+                    } else {
+                        dataValue = String(rawValue ?? '');
+                    }
+                    
+                    // Check if any of the selected values match
+                    const match = filterValues.some(v => v.toLowerCase() === dataValue.toLowerCase());
+                    if (!match) {
                         return false;
                     }
                 }
@@ -182,10 +203,17 @@ export class SmartTableComponent implements AfterViewInit {
             .map(field => {
                 const col = this.config.columns.find(c => c.key === field);
                 return col ? col.header : field;
-            })
-            .join(', ');
+            });
+
+        let joinedHeaders = '';
+        if (headers.length <= 1) {
+            joinedHeaders = headers[0] || '';
+        } else {
+            const lastHeader = headers.pop();
+            joinedHeaders = `${headers.join(', ')} y ${lastHeader}`;
+        }
         
-        return `Buscar por: ${headers}...`;
+        return `Buscar por: ${joinedHeaders}.`;
     }
 
     selectRow(row: any) {
@@ -197,5 +225,64 @@ export class SmartTableComponent implements AfterViewInit {
         }
         this.loggerService.debug(`Selected Row: ${JSON.stringify(this.selectedRow)}`, this.CLASS_NAME, context);
         this.selectionChange.emit(this.selectedRow);
+    }
+
+    openFilterDialog(): void {
+        const dialogRef = this.dialog.open(SmartTableFilterDialogComponent, {
+            width: '600px',
+            data: {
+                config: this.config,
+                filterOptions: this.filterOptions,
+                currentFilters: this.columnFilters
+            } as SmartTableFilterData
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.columnFilters = result;
+                this.applyFilters();
+            }
+        });
+    }
+
+    removeFilter(columnKey: string, value: string): void {
+        const index = this.columnFilters[columnKey].indexOf(value);
+        if (index >= 0) {
+            this.columnFilters[columnKey].splice(index, 1);
+            this.columnFilters[columnKey] = [...this.columnFilters[columnKey]];
+            this.applyFilters();
+        }
+    }
+
+    hasActiveFilters(): boolean {
+        return Object.values(this.columnFilters).some(f => f.length > 0);
+    }
+
+    getActiveFilterCount(): number {
+        return Object.values(this.columnFilters).reduce((acc, curr) => acc + curr.length, 0);
+    }
+
+    getColumnHeader(key: string): string {
+        return this.config.columns.find(c => c.key === key)?.header || key;
+    }
+
+    getLabel(key: string, val: string): string {
+        const col = this.config.columns.find(c => c.key === key);
+        if (col?.type === 'boolean') {
+            return val === 'true' ? 'SÍ' : 'NO';
+        }
+        return val;
+    }
+
+    getBadgeInfo(val: any): { label: string, color?: string } {
+        if (val && typeof val === 'object' && 'value' in val) {
+            return {
+                label: val.value,
+                color: val.color
+            };
+        }
+        return {
+            label: String(val ?? '')
+        };
     }
 }

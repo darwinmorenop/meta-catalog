@@ -32,8 +32,8 @@ export interface SaleProductDialogData {
     ReactiveFormsModule,
     SmartTableComponent
   ],
-  templateUrl: './sale-product-dialog.component.html',
-  styleUrl: './sale-product-dialog.component.scss'
+  templateUrl: 'sale-product-dialog.component.html',
+  styleUrl: 'sale-product-dialog.component.scss'
 })
 export class SaleProductDialogComponent implements OnInit {
   private fb = inject(FormBuilder);

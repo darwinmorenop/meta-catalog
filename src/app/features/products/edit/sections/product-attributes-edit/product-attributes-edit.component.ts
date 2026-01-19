@@ -9,7 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule, MatChipInputEvent } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { ProductEditComponent } from '../../product-edit.component';
+import { ProductEditComponent } from 'src/app/features/products/edit/product-edit.component';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
@@ -28,8 +28,8 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
     MatIconModule,
     MatButtonModule
   ],
-  templateUrl: './product-attributes-edit.component.html',
-  styleUrl: './product-attributes-edit.component.scss'
+  templateUrl: 'product-attributes-edit.component.html',
+  styleUrl: 'product-attributes-edit.component.scss'
 })
 export class ProductAttributesEditComponent implements OnInit {
   private parent = inject(ProductEditComponent);

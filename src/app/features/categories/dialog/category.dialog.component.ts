@@ -23,8 +23,8 @@ import { CategoryHierarchyEntity } from 'src/app/shared/entity/view/category.hie
     MatButtonModule,
     MatSelectModule
   ],
-  templateUrl: './category.dialog.component.html',
-  styleUrls: ['./category.dialog.component.scss']
+  templateUrl: 'category.dialog.component.html',
+  styleUrls: ['category.dialog.component.scss']
 })
 export class CategoryDialogComponent implements OnInit {
   private fb = inject(FormBuilder);

@@ -16,8 +16,8 @@ import { Router } from '@angular/router';
     MatIconModule,
     MatDividerModule
   ],
-  templateUrl: './stock-entry-view-dialog.component.html',
-  styleUrl: './stock-entry-view-dialog.component.scss'
+  templateUrl: 'stock-entry-view-dialog.component.html',
+  styleUrl: 'stock-entry-view-dialog.component.scss'
 })
 export class StockEntryViewDialogComponent {
   data = inject<any>(MAT_DIALOG_DATA);

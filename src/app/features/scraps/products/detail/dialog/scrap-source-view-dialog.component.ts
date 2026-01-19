@@ -16,8 +16,8 @@ import { ProductSourceDetail } from 'src/app/shared/entity/view/product.scrap.en
     MatIconModule,
     MatDividerModule
   ],
-  templateUrl: './scrap-source-view-dialog.component.html',
-  styleUrl: './scrap-source-view-dialog.component.scss'
+  templateUrl: 'scrap-source-view-dialog.component.html',
+  styleUrl: 'scrap-source-view-dialog.component.scss'
 })
 export class ScrapSourceViewDialogComponent {
   readonly data = inject<ProductSourceDetail>(MAT_DIALOG_DATA);

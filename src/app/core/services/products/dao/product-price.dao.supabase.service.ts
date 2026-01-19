@@ -2,17 +2,17 @@ import { Injectable, inject } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ProductDashboardPriceEntity } from 'src/app/shared/entity/view/product.price.dashboard.entity';
 import { PriceHistoryEntity } from 'src/app/shared/entity/price.history.entity';
+import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductPriceDaoSupabaseService {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
   private dateUtils = inject(DateUtilsService);
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = ProductPriceDaoSupabaseService.name;
@@ -20,15 +20,11 @@ export class ProductPriceDaoSupabaseService {
   private readonly VIEW_DASHBOARD_NAME = 'v_product_price_dashboard';
 
   constructor() {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
   }
 
   getPriceHistoryByProductId(productId: string): Observable<PriceHistoryEntity[]> {
     const context = 'getPriceHistoryByProductId';
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from(this.TABLE_NAME)
       .select('*')
       .eq('product_id', productId)
@@ -48,7 +44,7 @@ export class ProductPriceDaoSupabaseService {
 
   getAllPriceHistoryDashboardData(): Observable<ProductDashboardPriceEntity[]> {
     const context = 'getAllPriceHistoryDashboardData';
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from(this.VIEW_DASHBOARD_NAME)
       .select('*')
 
@@ -67,7 +63,7 @@ export class ProductPriceDaoSupabaseService {
   createPriceHistory(priceHistory: Partial<PriceHistoryEntity> & { product_id: string }): Observable<boolean> {
     const context = 'createPriceHistory';
     this.logger.debug(`Creating price history for product ${priceHistory.product_id}`, this.CLASS_NAME, context);
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from(this.TABLE_NAME)
       .insert(priceHistory);
 
@@ -86,7 +82,7 @@ export class ProductPriceDaoSupabaseService {
   updatePriceHistory(id: number, priceHistory: Partial<PriceHistoryEntity>): Observable<boolean> {
     const context = 'updatePriceHistory';
     this.logger.debug(`Updating price history for product ${id} with data:${JSON.stringify(priceHistory)}`, this.CLASS_NAME, context);
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from(this.TABLE_NAME)
       .update(priceHistory)
       .eq('id', id);
@@ -105,7 +101,7 @@ export class ProductPriceDaoSupabaseService {
 
   deletePriceHistory(id: number): Observable<boolean> {
     const context = 'deletePriceHistory';
-    const promise = this.supabase
+    const promise = this.supabaseService.getSupabaseClient()
       .from(this.TABLE_NAME)
       .delete()
       .eq('id', id);
@@ -128,7 +124,7 @@ export class ProductPriceDaoSupabaseService {
       product_main_image: entity.product_main_image,
       product_name: entity.product_name,
       product_sku: entity.product_sku,
-      product_ean: entity.product_ean, 
+      product_ean: entity.product_ean,
       product_status: entity.product_status,
       category_id: entity.category_id,
       category_name: entity.category_name,

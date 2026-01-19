@@ -16,8 +16,8 @@ import { PriceHistoryEntity } from 'src/app/shared/entity/price.history.entity';
     MatIconModule,
     MatDividerModule
   ],
-  templateUrl: './price-history-view-dialog.component.html',
-  styleUrl: './price-history-view-dialog.component.scss'
+  templateUrl: 'price-history-view-dialog.component.html',
+  styleUrl: 'price-history-view-dialog.component.scss'
 })
 export class PriceHistoryViewDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { price: PriceHistoryEntity }) {}

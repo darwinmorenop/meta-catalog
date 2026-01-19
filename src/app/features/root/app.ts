@@ -15,8 +15,8 @@ import { UserActiveSelectorDialogComponent } from 'src/app/features/users/dialog
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, CommonModule, RouterModule, MatToolbarModule, MatButtonModule, MatIconModule, MatDialogModule, MatTooltipModule, MatMenuModule],
-  templateUrl: './app.html',
-  styleUrls: ['./app.scss']
+  templateUrl: 'app.html',
+  styleUrls: ['app.scss']
 })
 export class AppComponent {
   private router = inject(Router);

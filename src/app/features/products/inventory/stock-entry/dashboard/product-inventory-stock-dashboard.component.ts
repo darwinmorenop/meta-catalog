@@ -38,8 +38,8 @@ import { ProductInventoryStockEntryDashboardEntity } from 'src/app/shared/entity
     RouterModule,
     MatDialogModule
   ],
-  templateUrl: './product-inventory-stock-dashboard.component.html',
-  styleUrl: './product-inventory-stock-dashboard.component.scss'
+  templateUrl: 'product-inventory-stock-dashboard.component.html',
+  styleUrl: 'product-inventory-stock-dashboard.component.scss'
 })
 export class ProductInventoryStockDashboardComponent implements OnInit {
   private readonly stockService = inject(ProductInventoryStockEntryService);

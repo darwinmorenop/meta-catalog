@@ -4,14 +4,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { ProductDetailComponent } from '../../product-detail.component';
+import { ProductDetailComponent } from 'src/app/features/products/detail/product-detail.component';
 
 @Component({
   selector: 'app-product-attributes-detail',
   standalone: true,
   imports: [CommonModule, MatCardModule, MatDividerModule, MatIconModule, MatChipsModule],
-  templateUrl: './product-attributes-detail.component.html',
-  styleUrl: './product-attributes-detail.component.scss'
+  templateUrl: 'product-attributes-detail.component.html',
+  styleUrl: 'product-attributes-detail.component.scss'
 })
 export class ProductAttributesDetailComponent {
   private parent = inject(ProductDetailComponent);

@@ -1,10 +1,10 @@
 import { Injectable, inject, signal, effect, computed } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
-import { UserDaoSupabaseService } from './dao/user.dao.supabase.service';
+import { UserDaoSupabaseService } from 'src/app/core/services/users/dao/user.dao.supabase.service';
 import { UserEntity } from 'src/app/shared/entity/user.entity';
 import { UserDashboardModel, UserRankEnum } from 'src/app/core/models/users/user.model';
 import { UserNetworkDetail, UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
-import { ThemeService } from '../theme/theme.service';
+import { ThemeService } from 'src/app/core/services/theme/theme.service';
 
 @Injectable({
   providedIn: 'root'

@@ -25,8 +25,8 @@ export interface SaleSimpleSelectorData {
     MatIconModule,
     SmartTableComponent
   ],
-  templateUrl: './sale-simple-selector-dialog.component.html',
-  styleUrl: './sale-simple-selector-dialog.component.scss'
+  templateUrl: 'sale-simple-selector-dialog.component.html',
+  styleUrl: 'sale-simple-selector-dialog.component.scss'
 })
 export class SaleSimpleSelectorDialogComponent {
   private readonly saleService = inject(SaleService);

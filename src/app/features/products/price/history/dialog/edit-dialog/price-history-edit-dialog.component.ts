@@ -30,8 +30,8 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
     MatIconModule,
     DateTimeRangeComponent
   ],
-  templateUrl: './price-history-edit-dialog.component.html',
-  styleUrl: './price-history-edit-dialog.component.scss'
+  templateUrl: 'price-history-edit-dialog.component.html',
+  styleUrl: 'price-history-edit-dialog.component.scss'
 })
 export class PriceHistoryEditDialogComponent {
   private fb = inject(FormBuilder);

@@ -29,8 +29,8 @@ import { ScrapSourceViewDialogComponent } from './dialog/scrap-source-view-dialo
     RouterModule,
     MatDialogModule
   ],
-  templateUrl: './scrap-product-detail.component.html',
-  styleUrl: './scrap-product-detail.component.scss'
+  templateUrl: 'scrap-product-detail.component.html',
+  styleUrl: 'scrap-product-detail.component.scss'
 })
 export class ScrapProductDetailComponent implements OnInit {
   private readonly scrapService = inject(ScrapService);

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BrandDaoSupabaseService } from './dao/brand.dao.supabase.service';
+import { BrandDaoSupabaseService } from 'src/app/core/services/brand/dao/brand.dao.supabase.service';
 import { BrandEntity } from 'src/app/shared/entity/brand.entity';
 
 @Injectable({
