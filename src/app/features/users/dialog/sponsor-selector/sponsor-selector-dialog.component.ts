@@ -13,6 +13,7 @@ import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { UserEntity } from 'src/app/shared/entity/user.entity';
 import { UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
+import { UserRankEnum, UserRankLabel } from 'src/app/core/models/users/user.model';
 
 @Component({
   selector: 'app-sponsor-selector-dialog',
@@ -38,16 +39,22 @@ export class SponsorSelectorDialogComponent {
     stream: () => this.userService.getAvailableSponsors(this.data.editingUserId)
   });
 
-  tableData = computed(() => (this.sponsorsResource.value() ?? []) as UserSponsorEntity[]);
+  tableData = computed(() => {
+    const sponsors = (this.sponsorsResource.value() ?? []) as UserSponsorEntity[];
+    return sponsors.map(s => ({
+      ...s,
+      rankLabel: UserRankLabel[s.rank as UserRankEnum] || s.rank
+    }));
+  });
 
   readonly tableConfig: TableConfig = {
     columns: [
       { key: 'fullName', header: 'Nombre', filterable: true },
-      { key: 'rank', header: 'Rango', filterable: true },
+      { key: 'rankLabel', header: 'Rango', filterable: true },
       { key: 'isEligible', header: 'Elegible', type: 'boolean', filterable: true },
       { key: 'reason', header: 'Motivo / Nota', filterable: true },
     ],
-    searchableFields: ['fullName', 'rank'],
+    searchableFields: ['fullName', 'rankLabel'],
     actions: {
       show: false,
       edit: false,

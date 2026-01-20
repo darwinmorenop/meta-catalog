@@ -1,0 +1,214 @@
+.dialog-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+  }
+  
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: var(--surface-card);
+    border-bottom: 1px solid var(--border-color);
+  
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+  
+      h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-color);
+      }
+    }
+  }
+  
+  .dialog-content {
+    padding: 16px !important;
+
+    .api-error {
+      background-color: rgba(var(--mdc-theme-error, 244, 67, 54), 0.1);
+      color: var(--mdc-theme-error, #f44336);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(var(--mdc-theme-error, 244, 67, 54), 0.2);
+
+      span {
+        flex: 1;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      button {
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        color: var(--mdc-theme-error, #f44336);
+      }
+    }
+  }
+  
+  .profile-form, .link-form {
+    padding: 16px 0;
+    
+    h3 {
+      margin: 24px 0 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+
+      small {
+        text-transform: none;
+        font-weight: 500;
+        font-size: 0.85rem;
+        letter-spacing: normal;
+        margin-left: 8px;
+        color: var(--stat-label);
+      }
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .full-width {
+      width: 100%;
+    }
+
+    .mat-mdc-form-field.mat-mdc-form-field-disabled {
+      opacity: 0.8;
+      
+      ::ng-deep {
+        .mat-mdc-text-field-wrapper {
+          background-color: rgba(128, 128, 128, 0.08) !important;
+        }
+        .mdc-text-field--disabled .mdc-floating-label {
+          color: var(--stat-label) !important;
+        }
+        .mdc-text-field--disabled .mdc-text-field__input {
+          color: var(--stat-label) !important;
+        }
+      }
+    }
+
+    .section-divider {
+      margin: 24px 0;
+    }
+  }
+
+  .link-form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+
+      .selector-row {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+          background: rgba(128, 128, 128, 0.05);
+          padding: 16px;
+          border-radius: 12px;
+          border: 1px dashed var(--border-color);
+
+          .selected-status {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              color: var(--text-color);
+              font-weight: 500;
+
+              .contact-found {
+                  display: flex;
+                  flex-direction: column;
+                  line-height: 1.2;
+
+                  strong {
+                      color: var(--primary-color);
+                      font-size: 1rem;
+                  }
+
+                  small {
+                      color: var(--stat-label);
+                      font-size: 0.75rem;
+                  }
+              }
+          }
+      }
+
+      .actions-link {
+          display: flex;
+          justify-content: flex-end;
+      }
+  }
+
+  .profile-security-section {
+    background: rgba(128, 128, 128, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px dashed var(--border-color);
+    margin: 1rem 0;
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .profile-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        
+        .profile-text {
+          display: flex;
+          flex-direction: column;
+          .profile-name {
+            font-weight: 600;
+            color: var(--text-color);
+          }
+        }
+      }
+    }
+  }
+
+  .profile-details-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+  }
+
+  .history-actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+
+      button {
+          flex: 1;
+      }
+  }
+  
+  .dialog-actions {
+    padding: 16px 24px !important;
+    border-top: 1px solid var(--border-color);
+    background: var(--surface-card);
+  }
+
+  @media (max-width: 600px) {
+    .form-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }

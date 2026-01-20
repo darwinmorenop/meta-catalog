@@ -1,0 +1,232 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+      <div class="title-row">
+        <mat-icon color="primary">{{ isViewMode ? 'visibility' : (isEditMode ? 'edit' : 'person_add') }}</mat-icon>
+        <h2>
+          @if (isViewMode) { Detalle de Contacto }
+          @else if (isEditMode) { Editar Contacto }
+          @else { Añadir a Agenda }
+        </h2>
+      </div>
+      <button mat-icon-button (click)="dialogRef.close()" class="close-button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  
+    <mat-dialog-content class="dialog-content">
+      @if (apiError()) {
+        <div class="api-error">
+          <mat-icon>error</mat-icon>
+          <span>{{ apiError() }}</span>
+          <button mat-icon-button (click)="apiError.set(null)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      }
+
+      @if (isCreateMode) {
+        <mat-tab-group>
+          <mat-tab label="Crear Nuevo">
+            <ng-container *ngTemplateOutlet="formTemplate"></ng-container>
+          </mat-tab>
+          <mat-tab label="Vincular Existente">
+            <form [formGroup]="linkForm" class="link-form">
+              <div class="selector-row">
+                <button type="button" mat-flat-button color="primary" (click)="openUserSearch()">
+                  <mat-icon>search</mat-icon>
+                  Buscar por Teléfono o Email
+                </button>
+                <div class="selected-status" *ngIf="linkForm.get('contact_id')?.value">
+                    <mat-icon color="primary">check_circle</mat-icon>
+                    <span class="contact-found">
+                        Usuario Encontrado: <strong>{{ selectedContactName() }}</strong>
+                        <small [hidden]="true">(ID: {{ linkForm.get('contact_id')?.value }})</small>
+                    </span>
+                </div>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Alias Personal (Cómo quieres identificarlo)</mat-label>
+                <input matInput formControlName="alias">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Etiquetas</mat-label>
+                <mat-chip-grid #chipGridLink>
+                  <mat-chip-row *ngFor="let tag of linkForm.get('tags')?.value" (removed)="removeTag(tag, 'tags', linkForm)">
+                    {{tag}}
+                    <button matChipRemove><mat-icon>cancel</mat-icon></button>
+                  </mat-chip-row>
+                  <input placeholder="Añadir etiqueta..."
+                    [matChipInputFor]="chipGridLink"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="true"
+                    (matChipInputTokenEnd)="addTag($event, 'tags', linkForm)">
+                </mat-chip-grid>
+              </mat-form-field>
+              
+              <div class="actions-link">
+                <button mat-flat-button color="primary" [disabled]="linkForm.invalid" (click)="linkExisting()">
+                    Vincular a mi Agenda
+                </button>
+              </div>
+            </form>
+          </mat-tab>
+        </mat-tab-group>
+      } @else {
+        <ng-container *ngTemplateOutlet="formTemplate"></ng-container>
+      }
+    </mat-dialog-content>
+  
+    <mat-dialog-actions align="end" class="dialog-actions">
+      <button mat-button (click)="dialogRef.close()">{{ isViewMode ? 'Cerrar' : 'Cancelar' }}</button>
+      @if (!isViewMode && !isCreateMode) {
+        <button mat-flat-button color="primary" (click)="save()" [disabled]="form.invalid">
+          <mat-icon>save</mat-icon>
+          Guardar Cambios
+        </button>
+      }
+      @if (isCreateMode) {
+          <!-- Save for 'Crear Nuevo' is inside the form Template via the footer button if needed, or here -->
+          <button mat-flat-button color="primary" (click)="save()" [disabled]="form.invalid">
+            <mat-icon>person_add</mat-icon>
+            Crear y Añadir
+          </button>
+      }
+    </mat-dialog-actions>
+  </div>
+
+  <ng-template #formTemplate>
+    <form [formGroup]="form" class="profile-form">
+      @if (canEditBasicInfo) {
+        <h3>Datos Básicos</h3>
+      }@else{
+        <h3>Datos Básicos <small>(Sólo editables por el propietario)</small></h3>
+      }
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="first_name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Apellido</mat-label>
+          <input matInput formControlName="last_name">
+        </mat-form-field>
+      </div>
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="phone">
+        </mat-form-field>
+      </div>
+
+      <mat-divider class="section-divider"></mat-divider>
+      
+      <h3>Relación en Agenda</h3>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Alias</mat-label>
+          <input matInput formControlName="alias" placeholder="Ej: Mi mejor cliente">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="birthday">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Etiquetas</mat-label>
+        <mat-chip-grid #chipGridTags>
+          <mat-chip-row *ngFor="let tag of form.get('tags')?.value" (removed)="removeTag(tag, 'tags', form)">
+            {{tag}}
+            <button matChipRemove *ngIf="!isViewMode"><mat-icon>cancel</mat-icon></button>
+          </mat-chip-row>
+          <input placeholder="Añadir etiqueta..." *ngIf="!isViewMode"
+            [matChipInputFor]="chipGridTags"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="addTag($event, 'tags', form)">
+        </mat-chip-grid>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Intereses (Lead)</mat-label>
+        <mat-chip-grid #chipGridLead>
+          <mat-chip-row *ngFor="let l of form.get('lead')?.value" (removed)="removeTag(l, 'lead', form)">
+            {{l}}
+            <button matChipRemove *ngIf="!isViewMode"><mat-icon>cancel</mat-icon></button>
+          </mat-chip-row>
+          <input placeholder="Añadir interés..." *ngIf="!isViewMode"
+            [matChipInputFor]="chipGridLead"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="addTag($event, 'lead', form)">
+        </mat-chip-grid>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Notas de Agenda</mat-label>
+        <textarea matInput formControlName="notes" rows="3"></textarea>
+      </mat-form-field>
+
+      <mat-divider class="section-divider"></mat-divider>
+      
+      <h3>Perfil y Preferencias</h3>
+      <div class="profile-details-grid">
+          <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Perfil Olfativo</mat-label>
+              <mat-chip-grid #chipGridOlfative>
+                  <mat-chip-row *ngFor="let o of form.get('olfative')?.value" (removed)="removeTag(o, 'olfative', form)">
+                      {{o}}
+                      <button matChipRemove *ngIf="!form.get('olfative')?.disabled"><mat-icon>cancel</mat-icon></button>
+                  </mat-chip-row>
+                  <input placeholder="Añadir aroma..." *ngIf="!form.get('olfative')?.disabled"
+                      [matChipInputFor]="chipGridOlfative"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      [matChipInputAddOnBlur]="true"
+                      (matChipInputTokenEnd)="addTag($event, 'olfative', form)">
+              </mat-chip-grid>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Tipo de Piel</mat-label>
+              <mat-chip-grid #chipGridSkin>
+                  <mat-chip-row *ngFor="let s of form.get('skin')?.value" (removed)="removeTag(s, 'skin', form)">
+                      {{s}}
+                      <button matChipRemove *ngIf="!form.get('skin')?.disabled"><mat-icon>cancel</mat-icon></button>
+                  </mat-chip-row>
+                  <input placeholder="Añadir tipo..." *ngIf="!form.get('skin')?.disabled"
+                      [matChipInputFor]="chipGridSkin"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      [matChipInputAddOnBlur]="true"
+                      (matChipInputTokenEnd)="addTag($event, 'skin', form)">
+              </mat-chip-grid>
+          </mat-form-field>
+      </div>
+
+      @if (!isCreateMode) {
+          <mat-divider class="section-divider"></mat-divider>
+          <h3>Historial de Actividad</h3>
+          <div class="history-actions">
+              <button type="button" mat-stroked-button color="primary" (click)="viewHistory('contact')">
+                  <mat-icon>history</mat-icon>
+                  Historial de Contacto
+              </button>
+              <button type="button" mat-stroked-button color="primary" (click)="viewHistory('follow_up')">
+                  <mat-icon>event_note</mat-icon>
+                  Historial de Seguimiento
+              </button>
+          </div>
+      }
+    </form>
+  </ng-template>

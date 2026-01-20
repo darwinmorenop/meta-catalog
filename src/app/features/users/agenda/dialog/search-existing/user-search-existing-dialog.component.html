@@ -1,0 +1,52 @@
+<div class="search-dialog-container">
+  <div class="dialog-header">
+    <mat-icon color="primary">person_search</mat-icon>
+    <h2>Buscar Usuario</h2>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <p class="instruction">Introduce el teléfono (incluyendo prefijo +) o el email del usuario que deseas añadir a tu agenda.</p>
+    
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Teléfono (ej: +34600000000)</mat-label>
+        <input matInput formControlName="phone" placeholder="+34...">
+        <mat-icon matSuffix>phone</mat-icon>
+        <mat-error *ngIf="searchForm.get('phone')?.hasError('pattern')">
+          Formato inválido. Debe incluir prefijo (ej: +34...)
+        </mat-error>
+      </mat-form-field>
+
+      <div class="separator">
+        <span>O</span>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="email@ejemplo.com">
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="searchForm.get('email')?.hasError('email')">
+          Email inválido
+        </mat-error>
+      </mat-form-field>
+
+      <div class="message-area" *ngIf="errorMessage() || searchForm.hasError('atLeastOneField')">
+        <span class="error-text" *ngIf="errorMessage()">{{ errorMessage() }}</span>
+        <span class="info-text" *ngIf="!errorMessage() && searchForm.hasError('atLeastOneField') && searchForm.touched">
+          Debes completar al menos uno de los campos
+        </span>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-flat-button color="primary" 
+            [disabled]="searchForm.invalid || isLoading()" 
+            (click)="onSearch()">
+      <mat-icon *ngIf="!isLoading()">search</mat-icon>
+      <mat-spinner diameter="20" *ngIf="isLoading()"></mat-spinner>
+      <span style="margin-left: 8px">Buscar</span>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -13,10 +13,20 @@ export interface UserEntity {
   sponsorId: number | null; 
   path: string;
   image: string;
+  profile: UserProfileEntity;
+  birthday: string | null;
+  status: string;
+  notes: string | null;
+  user_owner_id: number;
   user_profile_id: string;
   settings: UserSettingsEntity;
 }
 
 export interface UserSettingsEntity {
   theme: 'light' | 'dark';
+}
+
+export interface UserProfileEntity {
+ olfative: string[] | null;
+ skin: string[] | null;   
 }

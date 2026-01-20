@@ -45,7 +45,7 @@ export class ProductDashboardComponent {
   // Conteo de productos activos
   activeCount = computed(() => {
     const products = this.productsResource.value() ?? [];
-    return products.filter(p => p.status === ProductStatusEnum.Active).length;
+    return products.filter(p => p.status === ProductStatusEnum.active).length;
   });
 
   // Conteo de productos con stock bajo

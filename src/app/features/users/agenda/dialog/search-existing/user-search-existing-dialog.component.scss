@@ -1,0 +1,79 @@
+.search-dialog-container {
+  min-width: 350px;
+  max-width: 450px;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+}
+
+.dialog-content {
+  padding: 1.5rem !important;
+
+  .instruction {
+    color: var(--stat-label);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    line-height: 1.4;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .separator {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+    color: var(--stat-label);
+    font-size: 0.8rem;
+    font-weight: 700;
+
+    &::before, &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    span {
+      padding: 0 1rem;
+    }
+  }
+
+  .message-area {
+    margin-top: 1rem;
+    min-height: 20px;
+    font-size: 0.85rem;
+    text-align: center;
+
+    .error-text {
+      color: var(--mdc-theme-error, #f44336);
+      font-weight: 500;
+    }
+
+    .info-text {
+      color: var(--stat-label);
+    }
+  }
+}
+
+.dialog-actions {
+  padding: 1rem 1.5rem !important;
+  border-top: 1px solid var(--border-color);
+  background: rgba(128, 128, 128, 0.02);
+}
+
+mat-spinner {
+  display: inline-block;
+}

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { UserEntity } from 'src/app/shared/entity/user.entity';
 import { UserNetworkDetail, UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { UserRankEnum } from 'src/app/core/models/users/user.model';
@@ -21,6 +21,7 @@ export class UserDaoSupabaseService {
   private mapToEntity(item: any): UserEntity {
     return {
       id: item.id,
+      user_owner_id: item.user_owner_id,
       createdAt: item.created_at,
       updatedAt: item.updated_at,
       externalAuthId: item.external_auth_id || item.externalAuthId,
@@ -35,7 +36,11 @@ export class UserDaoSupabaseService {
       identifier: item.identifier,
       image: item.image,
       user_profile_id: item.user_profile_id,
-      settings: item.settings
+      settings: item.settings,
+      profile: item.profile,
+      birthday: item.birthday,
+      status: item.status,
+      notes: item.notes,
     };
   }
 
@@ -166,6 +171,40 @@ export class UserDaoSupabaseService {
         .eq('id', id)
     ).pipe(
       map(res => !res.error)
+    );
+  }
+
+  findByPhoneOrEmail(phone?: string, email?: string): Observable<Partial<UserEntity> | null> {
+    const context = 'findByPhoneOrEmail';
+    this.loggerService.debug(`Recovering data for user ${phone} or ${email}`, this.CLASS_NAME, context);
+    const filters = [];
+    if (phone) filters.push(`phone.eq.${phone}`);
+    if (email) filters.push(`email.eq.${email}`);
+    
+    if (filters.length === 0) return of(null);
+
+    return from(
+      this.supabaseService.getSupabaseClient()
+        .from('user')
+        .select('id,first_name,last_name')
+        .or(filters.join(','))
+        .limit(1)
+    ).pipe(
+      map(res => {
+        if (res.data && res.data.length > 0) {
+          const item = res.data[0];
+          return {
+            id: item.id,
+            firstName: item.first_name,
+            lastName: item.last_name
+          } as Partial<UserEntity>;
+        }
+        return null;
+      }),
+      catchError(err => {
+        this.loggerService.error(`Error recovering data for user ${phone} or ${email}`, this.CLASS_NAME, context);
+        return of(null);
+      })
     );
   }
 }

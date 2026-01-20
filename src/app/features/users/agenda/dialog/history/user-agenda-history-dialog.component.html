@@ -1,0 +1,98 @@
+<div class="history-dialog">
+  <div class="dialog-header">
+    <div class="title-row">
+        <mat-icon color="primary">history</mat-icon>
+        <h2>{{ data.title }}</h2>
+    </div>
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    @if (data.mode === 'edit') {
+        <div class="add-history-form" [class.editing]="editingEntry()">
+            <div class="form-header">
+                <h3>{{ editingEntry() ? 'Editar Registro' : 'Nuevo Registro' }}</h3>
+                @if (editingEntry()) {
+                    <button mat-button color="warn" (click)="cancelEdit()">Cancelar Edición</button>
+                }
+            </div>
+            
+            <form [formGroup]="historyForm" (ngSubmit)="editingEntry() ? onUpdateEntry() : onAddEntry()">
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="flex-1">
+                        <mat-label>Resultado</mat-label>
+                        <mat-select formControlName="result">
+                            <mat-option value="Exito">Éxito</mat-option>
+                            <mat-option value="Interesado">Interesado</mat-option>
+                            <mat-option value="Pendiente">Pendiente</mat-option>
+                            <mat-option value="Fallido">Fallido</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Notas</mat-label>
+                    <textarea matInput formControlName="notes" rows="2" placeholder="Describe brevemente la interacción..."></textarea>
+                </mat-form-field>
+                <div class="form-actions">
+                    <button mat-flat-button color="primary" type="submit" [disabled]="historyForm.invalid">
+                        <mat-icon>{{ editingEntry() ? 'edit' : 'add' }}</mat-icon>
+                        <span>{{ editingEntry() ? 'Actualizar Registro' : 'Añadir Localmente' }}</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <mat-divider class="section-divider"></mat-divider>
+    }
+
+    <div class="history-list-section">
+        <div class="list-header">
+            <h3>Resumen de Actividad</h3>
+            @if (hasChanged()) {
+                <span class="change-indicator">Modificado</span>
+            }
+        </div>
+        @if (localHistory().length === 0) {
+            <div class="empty-state">
+                <mat-icon>history_toggle_off</mat-icon>
+                <p>No hay registros en el historial.</p>
+            </div>
+        } @else {
+            <div class="history-list">
+                @for (entry of localHistory(); track entry.created_at) {
+                    <div class="history-item" [class.is-editing]="editingEntry() === entry">
+                        <div class="history-meta">
+                            <div class="meta-left">
+                                <span class="date">{{ entry.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+                                <span class="result-badge" [class]="entry.result.toLowerCase()">{{ entry.result }}</span>
+                            </div>
+                            <div class="actions" *ngIf="data.mode === 'edit'">
+                                <button mat-icon-button color="primary" (click)="onEditEntry(entry)" matTooltip="Editar registro">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-icon-button color="warn" (click)="onDeleteEntry(entry)" matTooltip="Eliminar registro">
+                                    <mat-icon>delete_outline</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="history-notes">{{ entry.notes }}</div>
+                    </div>
+                    @if (!$last) {
+                        <mat-divider></mat-divider>
+                    }
+                }
+            </div>
+        }
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    @if (data.mode === 'edit') {
+        <button mat-flat-button color="primary" (click)="onConfirm()" [disabled]="!hasChanged()">Confirmar Cambios</button>
+    } @else {
+        <button mat-flat-button color="primary" (click)="onConfirm()">Cerrar</button>
+    }
+  </mat-dialog-actions>
+</div>

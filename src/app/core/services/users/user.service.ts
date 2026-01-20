@@ -125,4 +125,8 @@ export class UserService {
     return this.userDaoSupabaseService.delete(id);
   }
 
+  findByPhoneOrEmail(phone?: string, email?: string): Observable<Partial<UserEntity> | null> {
+    return this.userDaoSupabaseService.findByPhoneOrEmail(phone, email);
+  }
+
 }

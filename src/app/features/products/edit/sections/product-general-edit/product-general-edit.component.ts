@@ -77,7 +77,7 @@ export class ProductGeneralEditComponent implements OnInit {
       sku: [p?.sku || ''],
       ean: [p?.ean || ''],
       category_id: [p?.category?.id || null, [Validators.required]],
-      status: [p?.status || ProductStatusEnum.Active],
+      status: [p?.status || ProductStatusEnum.active],
       description: [p?.description || ''],
       summary: [p?.summary || '']
     });
