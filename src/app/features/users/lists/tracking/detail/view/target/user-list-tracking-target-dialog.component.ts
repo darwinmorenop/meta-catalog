@@ -18,7 +18,7 @@ import { RouterLink } from '@angular/router';
     RouterLink
   ],
   templateUrl: './user-list-tracking-target-dialog.component.html',
-  styleUrl: '../user-list-tracking-dialog.shared.scss'
+  styleUrl: './user-list-tracking-target-dialog.component.scss'
 })
 export class UserListTrackingTargetDialogComponent {
   constructor(

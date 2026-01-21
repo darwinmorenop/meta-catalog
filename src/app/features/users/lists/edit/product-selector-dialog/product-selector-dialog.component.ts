@@ -16,6 +16,7 @@ import { TableConfig } from 'src/app/shared/models/table-config';
 
 export interface ProductSelectorData {
   existingIds: number[];
+  multiple?: boolean;
 }
 
 @Component({
@@ -40,9 +41,8 @@ export class ProductSelectorDialogComponent {
   private productService = inject(ProductService);
 
   addedProducts = signal<Product[]>([]);
-  removedIds = signal<number[]>([]);
   
-  selectionCount = computed(() => this.addedProducts().length + this.removedIds().length);
+  selectionCount = computed(() => this.addedProducts().length);
 
   tableConfig: TableConfig = {
     columns: [
@@ -69,12 +69,10 @@ export class ProductSelectorDialogComponent {
   tableData = computed(() => {
     const products = (this.productsResource.value() as Product[]) || [];
     const added = this.addedProducts();
-    const removed = this.removedIds();
     const existingIds = this.data.existingIds;
 
     return products.map(p => {
       const isAlreadyAdded = existingIds.includes(p.id); // Was in parent list
-      const isMarkedForRemoval = removed.includes(p.id); // Marked to be deleted
       const isNewlySelected = added.some(sp => sp.id === p.id); // New selection to add
       
       let status: { value: string, color: string };
@@ -82,15 +80,9 @@ export class ProductSelectorDialogComponent {
       let tooltip: string;
 
       if (isAlreadyAdded) {
-        if (isMarkedForRemoval) {
-          status = { value: 'Por Eliminar', color: '#f44336' };
-          icon = 'undo';
-          tooltip = 'Mantener en lista';
-        } else {
-          status = { value: 'En Lista', color: '#9e9e9e' };
-          icon = 'remove_circle';
-          tooltip = 'Quitar de la lista';
-        }
+        status = { value: 'En Lista', color: '#9e9e9e' };
+        icon = '';
+        tooltip = '';
       } else {
         if (isNewlySelected) {
           status = { value: 'Seleccionado', color: '#4caf50' };
@@ -109,7 +101,8 @@ export class ProductSelectorDialogComponent {
         product_main_image: p.media?.find(m => m.is_main)?.url || 'assets/images/placeholder.png',
         status_label: status,
         smart_table_view_icon: icon,
-        smart_table_view_tooltip: tooltip
+        smart_table_view_tooltip: tooltip,
+        smart_table_view_disabled: isAlreadyAdded
       };
     });
   });
@@ -117,24 +110,26 @@ export class ProductSelectorDialogComponent {
   onSelectRow(product: any) {
     const isAlreadyAdded = this.data.existingIds.includes(product.id);
 
-    if (isAlreadyAdded) {
-      // Toggle removal
-      this.removedIds.update(ids => 
-        ids.includes(product.id) ? ids.filter(id => id !== product.id) : [...ids, product.id]
-      );
-    } else {
-      // Toggle selection for new products
-      this.addedProducts.update(prev => {
-        const index = prev.findIndex(p => p.id === product.id);
+    if (isAlreadyAdded) return;
+
+    // Toggle selection for new products
+    this.addedProducts.update(prev => {
+      const isMultiple = this.data.multiple !== false; // Default to true
+      const index = prev.findIndex(p => p.id === product.id);
+      
+      if (isMultiple) {
         return index > -1 ? prev.filter(p => p.id !== product.id) : [...prev, product];
-      });
-    }
+      } else {
+        // Single selection: if already selected, unselect; else replace
+        return index > -1 ? [] : [product];
+      }
+    });
   }
 
   onConfirm() {
     this.dialogRef.close({
       added: this.addedProducts(),
-      removedIds: this.removedIds()
+      removedIds: []
     });
   }
 

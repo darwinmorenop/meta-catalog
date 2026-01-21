@@ -1,0 +1,35 @@
+<div class="edit-dialog-container">
+    <header class="dialog-header">
+        <div class="product-info">
+            <img [src]="data.product_main_image" [alt]="data.product_name" class="product-image">
+            <div class="product-text">
+                <h2 mat-dialog-title>{{ isEdit ? 'Editar' : 'Añadir' }} Seguimiento de Descuento</h2>
+                <span class="product-name">{{ data.product_name }}</span>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </header>
+
+    <mat-dialog-content class="dialog-content">
+        <div class="info-banner">
+            <mat-icon>trending_down</mat-icon>
+            <p>
+                Se te notificará cuando el precio baje respecto al precio actual (<strong>{{ data.price_at_addition | currency }}</strong>).
+            </p>
+        </div>
+
+        <form [formGroup]="form" class="edit-form">
+            <!-- For sale tracking we don't display many fields, just confirmation/info -->
+            <p class="confirmation-text">Deseas activar el seguimiento por descuento para este producto.</p>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-button (click)="dialogRef.close()">Cancelar</button>
+        <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">
+            {{ isEdit ? 'Guardar Cambios' : 'Activar Seguimiento' }}
+        </button>
+    </mat-dialog-actions>
+</div>

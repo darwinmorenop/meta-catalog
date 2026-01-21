@@ -20,12 +20,9 @@
                                 {{ items[0].list_is_private ? 'Privada' : 'Pública' }}
                             </span>
                         } @else {
-                            <h1>Mi Lista</h1>
+                            <h1>Lista de seguimiento</h1>
                         }
                     </div>
-                    @if (items.length > 0 && items[0].list_description) {
-                        <p class="list-description">{{ items[0].list_description }}</p>
-                    }
                 </div>
             }
         </div>

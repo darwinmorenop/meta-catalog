@@ -19,7 +19,7 @@ import { UserService } from 'src/app/core/services/users/user.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
-import { ListRcpUpsertRequestEntity, ListItemRcpUpsertRequestEntity } from 'src/app/shared/entity/rcp/list.rcp.entity';
+import { ListRcpUpsertRequestEntity, ListItemRcpEntity } from 'src/app/shared/entity/rcp/list.rcp.entity';
 import { ProductSelectorDialogComponent } from './product-selector-dialog/product-selector-dialog.component';
 import { Product } from 'src/app/core/models/products/product.model';
 import { ListItemTrackingTypeEnum } from 'src/app/shared/entity/list.entity';

@@ -1,0 +1,42 @@
+<div class="edit-dialog-container">
+    <header class="dialog-header">
+        <div class="product-info">
+            <img [src]="data.product_main_image" [alt]="data.product_name" class="product-image">
+            <div class="product-text">
+                <h2 mat-dialog-title>{{ isEdit ? 'Editar' : 'Añadir' }} Seguimiento por Objetivo</h2>
+                <span class="product-name">{{ data.product_name }}</span>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </header>
+
+    <mat-dialog-content class="dialog-content">
+        <div class="info-banner">
+            <mat-icon>ads_click</mat-icon>
+            <p>
+                Se te notificará cuando el precio sea igual o inferior al objetivo marcado. Precio actual: <strong>{{ data.price_at_addition | currency }}</strong>
+            </p>
+        </div>
+
+        <form [formGroup]="form" class="edit-form">
+            <div class="target-field-container">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Precio Objetivo</mat-label>
+                    <input matInput type="number" formControlName="target_price" placeholder="0.00">
+                    <span matPrefix>$&nbsp;</span>
+                    <mat-error *ngIf="form.get('target_price')?.hasError('required')">El precio es obligatorio</mat-error>
+                    <mat-error *ngIf="form.get('target_price')?.hasError('min')">El precio debe ser mayor a 0</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-button (click)="dialogRef.close()">Cancelar</button>
+        <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">
+            {{ isEdit ? 'Guardar Cambios' : 'Activar Seguimiento' }}
+        </button>
+    </mat-dialog-actions>
+</div>

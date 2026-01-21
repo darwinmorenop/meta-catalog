@@ -1,4 +1,4 @@
-import { Component, inject, computed, effect } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -7,15 +7,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 import { UserListService } from 'src/app/core/services/users/user.list.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
-import { ListItemViewEntity } from 'src/app/shared/entity/view/list.view.entity';
-import { UserListTrackingSaleDialogComponent } from './dialog/sale/user-list-tracking-sale-dialog.component';
-import { UserListTrackingTargetDialogComponent } from './dialog/target/user-list-tracking-target-dialog.component';
 import { ListItemTrackingTypeEnum, ListItemTrackingTypeLabel } from 'src/app/shared/entity/list.entity';
+import { UserListTrackingSaleDialogComponent } from './sale/user-list-tracking-sale-dialog.component';
+import { UserListTrackingTargetDialogComponent } from './target/user-list-tracking-target-dialog.component';
 
 @Component({
   selector: 'app-user-list-detail',
@@ -28,6 +28,7 @@ import { ListItemTrackingTypeEnum, ListItemTrackingTypeLabel } from 'src/app/sha
     MatTooltipModule,
     MatSnackBarModule,
     MatDialogModule,
+    MatMenuModule,
     RouterModule,
     SmartTableComponent
   ],

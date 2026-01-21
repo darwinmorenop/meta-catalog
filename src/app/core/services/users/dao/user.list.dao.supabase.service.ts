@@ -6,12 +6,13 @@ import { SupabaseService } from 'src/app/core/services/supabase/supabase.service
 import { ListEntity, ListSlugEnum } from 'src/app/shared/entity/list.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { ListItemViewEntity, ListViewEntity } from 'src/app/shared/entity/view/list.view.entity';
-import { ListRcpCopyRequestEntity, ListRcpUpsertRequestEntity } from 'src/app/shared/entity/rcp/list.rcp.entity';
+import { ListItemRcpUpsertRequestEntity, ListRcpCopyRequestEntity, ListRcpUpsertRequestEntity } from 'src/app/shared/entity/rcp/list.rcp.entity';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserListDaoSupabaseService {
+
 
   private supabaseService = inject(SupabaseService);
   private dateUtils = inject(DateUtilsService);
@@ -178,6 +179,33 @@ export class UserListDaoSupabaseService {
       catchError(err => {
         this.loggerService.error(this.CLASS_NAME, 'delete', err);
         return of(false);
+      })
+    );
+  }
+
+  removeItem(listId: string, itemId: string): Observable<boolean> {
+    const query = this.supabaseService.getSupabaseClient()
+      .from('list_items')
+      .delete()
+      .eq('list_id', listId)
+      .eq('id', itemId);
+    return from(query).pipe(
+      // En Supabase, si no hay error, la operación fue exitosa
+      map(res => res.error === null), catchError(err => {
+        this.loggerService.error(this.CLASS_NAME, 'removeItem', err);
+        return of(false);
+      })
+    );
+  }
+
+  upsertItem(data: ListItemRcpUpsertRequestEntity): Observable<string|null> {
+    const query = this.supabaseService.getSupabaseClient()
+      .rpc('upsert_single_list_item', data);
+    return from(query).pipe(
+      map(res => res.data),
+      catchError(err => {
+        this.loggerService.error(this.CLASS_NAME, 'upsertItem', err);
+        return of(null);
       })
     );
   }
