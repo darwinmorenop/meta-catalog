@@ -4,7 +4,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 import { UserAgendaDashboardEntity } from 'src/app/shared/entity/view/user.agenda.dashboard.entity';
-import { UserAgendaEntity, UserAgendaHistory } from 'src/app/shared/entity/user.agenda';
+import { UserAgendaEntity, UserAgendaHistory } from 'src/app/shared/entity/user.agenda.entity';
 import { UserAgendaCreateRcpEntity, UserAgendaCreateRcpResponseEntity, UserAgendaLinkRcpEntity, UserAgendaLinkRcpResponseEntity } from 'src/app/shared/entity/rcp/user.agenda.rcp.entity';
 import { ProductStatusEnum } from 'src/app/core/models/products/product.status.enum';
 

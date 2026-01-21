@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { UserAgendaHistory } from 'src/app/shared/entity/user.agenda';
+import { UserAgendaHistory } from 'src/app/shared/entity/user.agenda.entity';
 
 export interface UserAgendaHistoryDialogData {
   title: string;

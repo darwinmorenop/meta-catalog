@@ -20,7 +20,7 @@ import { UserSearchExistingDialogComponent } from './search-existing/user-search
 import { UserDashboardModel } from 'src/app/core/models/users/user.model';
 import { MatDivider } from "@angular/material/divider";
 import { UserEntity } from 'src/app/shared/entity/user.entity';
-import { UserAgendaHistory } from "src/app/shared/entity/user.agenda";
+import { UserAgendaHistory } from "src/app/shared/entity/user.agenda.entity";
 import { UserAgendaCreateRcpResponseEntity } from 'src/app/shared/entity/rcp/user.agenda.rcp.entity';
 import { UserAgendaHistoryDialogComponent } from './history/user-agenda-history-dialog.component';
 

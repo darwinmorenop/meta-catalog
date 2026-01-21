@@ -36,6 +36,14 @@ export class UserListService {
     return this.userListDaoSupabaseService.getTrackingByUser(userId);
   }
 
+  getNotifier(userIds?: number[]): Observable<ListViewEntity[]> {
+    return this.userListDaoSupabaseService.getNotifier(userIds);
+  }
+
+  getNotifierByUser(userId: number): Observable<ListItemViewEntity[]> {
+    return this.userListDaoSupabaseService.getNotifierByUser(userId);
+  }
+
   getAllItemsComplete(listId: string): Observable<ListItemViewEntity[]> {
     return this.userListDaoSupabaseService.getAllItemsComplete(listId);
   }

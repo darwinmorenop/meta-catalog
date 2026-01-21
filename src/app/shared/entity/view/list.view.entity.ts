@@ -34,6 +34,8 @@ export interface ListItemViewEntity {
     price_at_addition: number;
     target_price: number;
     added_at: Date;
+    notified_at: Date;
+    notification_sent: boolean; 
     created_at: Date;
     updated_at: Date;
     price_difference: number;

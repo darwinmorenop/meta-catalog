@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserAgendaDaoSupabaseService } from 'src/app/core/services/users/dao/user.agenda.dao.supabase.service';
 import { UserAgendaDashboardEntity } from 'src/app/shared/entity/view/user.agenda.dashboard.entity';
-import { UserAgendaEntity, UserAgendaHistory } from 'src/app/shared/entity/user.agenda';
+import { UserAgendaEntity, UserAgendaHistory } from 'src/app/shared/entity/user.agenda.entity';
 import { UserAgendaCreateRcpEntity, UserAgendaCreateRcpResponseEntity, UserAgendaLinkRcpEntity, UserAgendaLinkRcpResponseEntity } from 'src/app/shared/entity/rcp/user.agenda.rcp.entity';
 
 @Injectable({

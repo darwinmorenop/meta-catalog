@@ -41,6 +41,7 @@ export const routes: Routes = [
     { path: 'tracking', loadComponent: () => import('src/app/features/users/lists/tracking/user-list-tracking.component').then(m => m.UserListTrackingComponent) },
     { path: 'tracking/:id', loadComponent: () => import('src/app/features/users/lists/tracking/detail/view/user-list-tracking-detail.component').then(m => m.UserListTrackingDetailComponent) },
     { path: 'tracking/:id/edit', loadComponent: () => import('src/app/features/users/lists/tracking/detail/edit/user-list-tracking-edit.component').then(m => m.UserListTrackingEditComponent) }, 
+    { path: 'stock-notifier', loadComponent: () => import('src/app/features/users/lists/notifier/user-list-notifier.component').then(m => m.UserListNotifierComponent) },
     { path: 'scraps', component: ScrapsDashboardComponent },
     { path: 'scraps/products', loadComponent: () => import('src/app/features/scraps/products/dashboard/scrap-product-dashboard.component').then(m => m.ScrapProductDashboardComponent) },
     { path: 'scraps/products/:productId', loadComponent: () => import('src/app/features/scraps/products/detail/scrap-product-detail.component').then(m => m.ScrapProductDetailComponent) },

@@ -11,7 +11,8 @@ export interface ListEntity {
 
 export enum ListSlugEnum {
     favorites='favorites',
-    price_tracking ='price_tracking'
+    price_tracking ='price_tracking',
+    stock_notifier = 'stock_notifier'
 }
 
 export enum ListItemTrackingTypeEnum {
@@ -35,6 +36,8 @@ export interface ListItemEntity {
     updated_at: Date;
     price_at_addition: number;
     target_price: number;
+    notified_at: Date;
+    notification_sent: boolean;
     tracking_type: ListItemTrackingTypeEnum;
 }
 

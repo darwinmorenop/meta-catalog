@@ -94,6 +94,32 @@ export class UserListDaoSupabaseService {
     );
   }
 
+  getNotifier(userIds?: number[]): Observable<ListViewEntity[]> {
+    let query = this.supabaseService.getSupabaseClient()
+      .from('v_list')
+      .select('*')
+      .eq('slug', ListSlugEnum.stock_notifier);
+
+    if (userIds && userIds.length > 0) {
+      query = query.or(`owner_id.in.(${userIds.join(',')})`);
+    }
+
+    return from(query).pipe(
+      map(res => (res.data || []).map(item => this.mapToDashboardEntity(item)))
+    );
+  }
+
+  getNotifierByUser(userId: number): Observable<ListItemViewEntity[]> {
+    let query = this.supabaseService.getSupabaseClient()
+      .from('v_list_items')
+      .select('*')
+      .eq('owner_id', userId)
+      .eq('slug', ListSlugEnum.stock_notifier);
+
+    return from(query).pipe(
+      map(res => (res.data || []).map(item => this.mapToListItemEntity(item)))
+    );
+  }
 
   getById(id: string): Observable<ListViewEntity> {
     const query = this.supabaseService.getSupabaseClient()
