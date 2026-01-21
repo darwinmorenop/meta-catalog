@@ -15,6 +15,8 @@ import { UserProfile, Resource, Action, labelResource, labelAction, PermissionMa
 import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { PermissionEditDialogComponent } from './permissions/permission-edit-dialog.component';
+import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
+import { TableConfig } from 'src/app/shared/models/table-config';
 
 export interface UserProfileDialogData {
   profile: UserProfile | null;
@@ -32,11 +34,11 @@ export interface UserProfileDialogData {
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatTableModule,
     MatDividerModule,
     MatTooltipModule,
     MatChipsModule,
-    MatSelectModule
+    MatSelectModule,
+    SmartTableComponent
   ],
   templateUrl: 'user-profile-dialog.component.html',
   styleUrl: 'user-profile-dialog.component.scss'
@@ -54,6 +56,34 @@ export class UserProfileDialogComponent implements OnInit {
   availableResources: Resource[] = Object.values(Resource);
   labelResource = labelResource;
   labelAction = labelAction;
+
+  tableConfig: TableConfig = {
+    columns: [
+      { key: 'resourceLabel', header: 'Recurso', filterable: true },
+      { key: 'actionChips', header: 'Acciones', type: 'chips' }
+    ],
+    searchableFields: ['resourceLabel'],
+    pageSizeOptions: [5, 10, 20],
+    actions: {
+      show: true,
+      view: true,
+      edit: true,
+      delete: true
+    }
+  };
+
+  get tableData() {
+    return this.permissions.map(p => ({
+      ...p,
+      resourceLabel: `${this.getResourceLabel(p.resource)} (${p.resource})`,
+      actionChips: p.actions.map(a => ({
+        label: this.getActionLabel(a),
+        color: '#673ab7' // Constant color for actions
+      })),
+      smart_table_edit_disabled: this.isViewMode,
+      smart_table_delete_disabled: this.isViewMode
+    }));
+  }
 
   get isViewMode() { return this.data.mode === 'view'; }
   get isEditMode() { return this.data.mode === 'edit'; }
@@ -90,14 +120,14 @@ export class UserProfileDialogComponent implements OnInit {
     return this.availableResources.filter(r => !this.permissions.find(p => p.resource === r));
   }
 
-  viewResourceActions(item: { resource: Resource; actions: Action[] }) {
+  onViewResource(item: any) {
      this.dialog.open(PermissionEditDialogComponent, {
       width: '500px',
       data: { resource: item.resource, actions: item.actions, mode: 'view' }
     });
   }
 
-  editResourceActions(item: { resource: Resource; actions: Action[] }) {
+  onEditResource(item: any) {
     const dialogRef = this.dialog.open(PermissionEditDialogComponent, {
       width: '500px',
       data: { resource: item.resource, actions: item.actions, mode: 'edit' }
@@ -113,6 +143,10 @@ export class UserProfileDialogComponent implements OnInit {
         }
       }
     });
+  }
+
+  onDeleteResource(item: any) {
+    this.removeResource(item.resource);
   }
 
   removeResource(resource: Resource) {

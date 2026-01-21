@@ -1,0 +1,35 @@
+<div class="dialog-header">
+    <h2 mat-dialog-title>Seleccionar Productos</h2>
+    @if (selectionCount() > 0) {
+        <span class="selection-badge">{{ selectionCount() }} seleccionados</span>
+    }
+</div>
+
+<mat-dialog-content class="dialog-content">
+    <div class="table-container">
+        @if (tableData(); as products) {
+            <app-smart-table
+                [data]="products"
+                [config]="tableConfig"
+                [isLoading]="productsResource.isLoading()"
+                (view)="onSelectRow($event)">
+            </app-smart-table>
+        }
+
+        @if (productsResource.isLoading()) {
+            <div class="loading-overlay">
+                Cargando productos...
+            </div>
+        }
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="onConfirm()" [disabled]="selectionCount() === 0">
+        Añadir seleccionados
+        @if (selectionCount() > 0) {
+            ({{ selectionCount() }})
+        }
+    </button>
+</mat-dialog-actions>

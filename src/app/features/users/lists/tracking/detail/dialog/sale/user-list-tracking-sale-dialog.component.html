@@ -1,0 +1,42 @@
+<div class="dialog-container">
+    <header class="dialog-header">
+        <div class="product-info">
+            <img [src]="data.product_main_image" [alt]="data.product_name" class="product-image">
+            <div class="product-text">
+                <h2 mat-dialog-title>{{ data.product_name }}</h2>
+                <span class="tracking-badge sale">Seguimiento de Descuento</span>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </header>
+
+    <mat-dialog-content class="dialog-content">
+        <div class="status-banner" [class.discount]="hasDiscount">
+            <mat-icon>{{ hasDiscount ? 'trending_down' : 'trending_flat' }}</mat-icon>
+            <span>{{ hasDiscount ? '¡El producto tiene un descuento!' : 'Sin descuento actualmente' }}</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="label">Precio al añadir</span>
+                <span class="value">{{ data.price_at_addition | currency }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">Diferencia actual</span>
+                <span class="value" [class.negative]="hasDiscount">
+                    {{ data.price_difference | currency }}
+                    <small *ngIf="data.discount_percentage">({{ data.discount_percentage }})</small>
+                </span>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-button (click)="dialogRef.close()">Cerrar</button>
+        <a mat-flat-button color="primary" [routerLink]="['/products', data.product_id]" (click)="dialogRef.close()">
+            Ver Producto
+        </a>
+    </mat-dialog-actions>
+</div>

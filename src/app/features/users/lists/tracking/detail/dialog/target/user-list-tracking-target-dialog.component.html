@@ -1,0 +1,61 @@
+<div class="dialog-container">
+    <header class="dialog-header">
+        <div class="product-info">
+            <img [src]="data.product_main_image" [alt]="data.product_name" class="product-image">
+            <div class="product-text">
+                <h2 mat-dialog-title>{{ data.product_name }}</h2>
+                <span class="tracking-badge target">Seguimiento de Precio Objetivo</span>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </header>
+
+    <mat-dialog-content class="dialog-content">
+        <div class="status-banner" [class.success]="hasReachedTarget">
+            <mat-icon>{{ hasReachedTarget ? 'check_circle' : 'hourglass_empty' }}</mat-icon>
+            <span>{{ hasReachedTarget ? '¡Precio objetivo alcanzado!' : 'Esperando a que baje el precio...' }}</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="label">Precio al añadir</span>
+                <span class="value">{{ data.price_at_addition | currency }}</span>
+            </div>
+            <div class="stat-item primary">
+                <span class="label">Precio objetivo</span>
+                <span class="value">{{ data.target_price | currency }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">Diferencia actual</span>
+                <span class="value" [class.negative]="data.price_difference < 0">
+                    {{ data.price_difference | currency }}
+                </span>
+            </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="current-prices">
+            <h3>Precios Actuales</h3>
+            <div class="price-row">
+                <div class="price-box">
+                    <span class="label">Original</span>
+                    <span class="value strikethrough">{{ data.original_price | currency }}</span>
+                </div>
+                <div class="price-box">
+                    <span class="label">Venta</span>
+                    <span class="value">{{ data.sale_price | currency }}</span>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-button (click)="dialogRef.close()">Cerrar</button>
+        <a mat-flat-button color="primary" [routerLink]="['/products', data.product_id]" (click)="dialogRef.close()">
+            Ver Producto
+        </a>
+    </mat-dialog-actions>
+</div>

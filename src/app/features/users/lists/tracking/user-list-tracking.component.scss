@@ -1,0 +1,20 @@
+@use 'app/shared/styles/list-dashboard' as *;
+
+@include dashboard-layout;
+
+.dashboard-container {
+    .header-section {
+        .title-group {
+            h1 {
+                background: linear-gradient(45deg, #FF9800, #F44336);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+
+                :host-context(body.dark-theme) & {
+                    background-image: linear-gradient(45deg, #fbbf24, #f87171);
+                }
+            }
+        }
+    }
+}

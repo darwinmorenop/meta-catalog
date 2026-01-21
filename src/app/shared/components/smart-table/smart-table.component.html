@@ -106,6 +106,21 @@
                         </div>
                         }
 
+                        @case ('chips') {
+                        <div class="chips-cell">
+                            <mat-chip-set>
+                                @for (chip of element[col.key]; track chip) {
+                                    @let chipInfo = getBadgeInfo(chip);
+                                    <mat-chip highlighted 
+                                        [style.background-color]="chipInfo.color ? chipInfo.color + '1A' : 'var(--surface-hover)'"
+                                        [style.color]="chipInfo.color || 'var(--text-secondary)'">
+                                        {{ chipInfo.label }}
+                                    </mat-chip>
+                                }
+                            </mat-chip-set>
+                        </div>
+                        }
+
                         @default {
                         <span>
                             {{ element[col.key] }}
@@ -124,21 +139,21 @@
                     <button mat-icon-button color="primary" 
                         (click)="view.emit(element); $event.stopPropagation();"
                         [disabled]="element.smart_table_view_disabled">
-                        <mat-icon>{{config.actions?.viewIcon}}</mat-icon>
+                        <mat-icon>{{element.smart_table_view_icon || config.actions?.viewIcon}}</mat-icon>
                     </button>
                     }
                     @if (config.actions?.edit) {
                     <button mat-icon-button color="primary" 
                         (click)="edit.emit(element); $event.stopPropagation()"
                         [disabled]="element.smart_table_edit_disabled">
-                        <mat-icon>{{config.actions?.editIcon}}</mat-icon>
+                        <mat-icon>{{element.smart_table_edit_icon || config.actions?.editIcon}}</mat-icon>
                     </button>
                     }
                     @if (config.actions?.delete) {
                     <button mat-icon-button color="warn" 
                         (click)="delete.emit(element); $event.stopPropagation()"
                         [disabled]="element.smart_table_delete_disabled">
-                        <mat-icon>{{config.actions?.deleteIcon}}</mat-icon>
+                        <mat-icon>{{element.smart_table_delete_icon || config.actions?.deleteIcon}}</mat-icon>
                     </button>
                     }
                 </td>

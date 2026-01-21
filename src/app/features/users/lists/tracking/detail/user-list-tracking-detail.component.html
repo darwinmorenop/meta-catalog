@@ -1,0 +1,49 @@
+<div class="detail-container">
+    <div class="header-section">
+        <div class="title-group">
+            <button mat-icon-button (click)="goBack()" matTooltip="Volver a mis listas">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            @if (tableData(); as items) {
+                <div class="title-content">
+                    <div class="title-main">
+                        @if (items.length > 0) {
+                            <h1>
+                                {{ items[0].list_name }}
+                                @if (showName() && ownerName()) {
+                                    <span class="owner-subtitle">({{ ownerName() }})</span>
+                                }
+                            </h1>
+                            <span class="count-badge">{{ items.length }}</span>
+                            <span class="privacy-badge" [class.private]="items[0].list_is_private">
+                                <mat-icon>{{ items[0].list_is_private ? 'lock' : 'public' }}</mat-icon>
+                                {{ items[0].list_is_private ? 'Privada' : 'Pública' }}
+                            </span>
+                        } @else {
+                            <h1>Mi Lista</h1>
+                        }
+                    </div>
+                    @if (items.length > 0 && items[0].list_description) {
+                        <p class="list-description">{{ items[0].list_description }}</p>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="actions-group">
+            <button mat-stroked-button color="primary" (click)="itemsResource.reload()">
+                <mat-icon>refresh</mat-icon>
+                <span>Actualizar</span>
+            </button>
+        </div>
+    </div>
+
+    <mat-card class="table-card">
+        <app-smart-table
+            [data]="tableData()"
+            [config]="tableConfig"
+            [isLoading]="itemsResource.isLoading()"
+            (view)="onViewProduct($event)">
+        </app-smart-table>
+    </mat-card>
+</div>

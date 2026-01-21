@@ -1,0 +1,167 @@
+.edit-container {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+
+        .title-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            h1 {
+                margin: 0;
+                font-size: 2rem;
+                font-weight: 800;
+                background: linear-gradient(45deg, var(--primary-color, #3f51b5), #673ab7);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                letter-spacing: -0.5px;
+                width: fit-content;
+
+                :host-context(body.dark-theme) & {
+                    background-image: linear-gradient(45deg, #818cf8, #c084fc);
+                }
+            }
+
+            .subtitle {
+                margin: 4px 0 0;
+                color: var(--stat-label);
+                font-size: 1rem;
+            }
+        }
+
+        .actions-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            button {
+                height: 48px;
+                border-radius: 12px;
+                font-weight: 600;
+                padding: 0 24px;
+            }
+        }
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 400px 1fr;
+        gap: 24px;
+        align-items: start;
+
+        @media (max-width: 1100px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .form-card, .products-card {
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        
+        mat-card-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+
+            .spacer { flex: 1; }
+        }
+
+        mat-card-content {
+            padding: 0 24px 24px;
+        }
+    }
+
+    .toggles {
+        margin-top: 16px;
+        padding: 16px;
+        background: rgba(var(--primary-color-rgb, 103, 58, 183), 0.03);
+        border-radius: 12px;
+
+        .toggle-hint {
+            margin: 8px 0 0;
+            font-size: 0.85rem;
+            color: var(--stat-label);
+        }
+    }
+
+    .user-selector-section {
+        margin-top: 20px;
+        padding: 16px;
+        border: 1px dashed var(--border-color);
+        border-radius: 12px;
+        background: var(--bg-card-alt, rgba(0,0,0,0.02));
+
+        .selector-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--stat-label);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .selected-user-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                color: var(--text-primary);
+
+                mat-icon {
+                    color: var(--primary-color);
+                    background: rgba(var(--primary-color-rgb, 103, 58, 183), 0.1);
+                    padding: 8px;
+                    border-radius: 50%;
+                    width: 24px;
+                    height: 24px;
+                    font-size: 24px;
+                }
+
+                .user-name {
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+            }
+
+            button {
+                border-radius: 8px;
+                font-size: 0.85rem;
+                height: 36px;
+            }
+        }
+    }
+
+    .empty-state {
+        padding: 60px 0;
+        text-align: center;
+        color: var(--stat-label);
+
+        mat-icon {
+            font-size: 48px;
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+    }
+}

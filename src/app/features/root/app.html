@@ -107,6 +107,26 @@
         <mat-icon>contact_mail</mat-icon>
         <span>Agenda</span>
       </button>
+      <button mat-menu-item [matMenuTriggerFor]="listsMenu">
+        <mat-icon>view_list</mat-icon>
+        <span>Listas</span>
+      </button>
+    </mat-menu>
+
+    <!-- Submenu Listas (Dentro de Usuarios) -->
+    <mat-menu #listsMenu="matMenu">
+      <button mat-menu-item (click)="navigateTo('/users/lists')">
+        <mat-icon>list</mat-icon>
+        <span>General</span>
+      </button>
+      <button mat-menu-item (click)="navigateTo('/favorites')">
+        <mat-icon>favorite</mat-icon>
+        <span>Favoritos</span>
+      </button>
+      <button mat-menu-item (click)="navigateTo('/tracking')">
+        <mat-icon>track_changes</mat-icon>
+        <span>Seguimiento</span>
+      </button>
     </mat-menu>
 
     <!-- Otras secciones -->

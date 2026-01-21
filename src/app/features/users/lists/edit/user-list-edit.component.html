@@ -1,0 +1,99 @@
+<div class="edit-container">
+    <div class="header-section">
+        <div class="title-group">
+            <button mat-icon-button (click)="goBack()" matTooltip="Volver">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <div>
+                <h1>{{ isEdit() ? 'Editar Lista' : 'Nueva Lista' }}</h1>
+                <p class="subtitle">Configura los detalles y productos de tu lista</p>
+            </div>
+        </div>
+
+        <div class="actions-group">
+            <button mat-button (click)="goBack()">Cancelar</button>
+            <button mat-flat-button color="primary" (click)="onSave()" 
+                    [disabled]="!hasChanges() || listForm.invalid"
+                    [matTooltip]="!hasChanges() ? 'No hay cambios para guardar' : ''">
+                <mat-icon>save</mat-icon>
+                <span>Guardar Lista</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <mat-card class="form-card">
+            <mat-card-header>
+                <mat-card-title>Información General</mat-card-title>
+            </mat-card-header>
+            <mat-card-content [formGroup]="listForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre de la lista</mat-label>
+                    <input matInput formControlName="name" placeholder="Ej: Mis Favoritos Yanbal">
+                    @if (listForm.get('name')?.hasError('required')) {
+                        <mat-error>El nombre es obligatorio</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Descripción</mat-label>
+                    <textarea matInput formControlName="description" rows="3" placeholder="Añade una descripción..."></textarea>
+                </mat-form-field>
+
+                <div class="user-selector-section">
+                    <div class="selector-label">Propietario de la lista</div>
+                    <div class="selected-user-box">
+                        <div class="user-info">
+                            <mat-icon>person</mat-icon>
+                            <span class="user-name">
+                              {{ selectedOwner()?.name || selectedOwner()?.firstName || 'Cargando...' }}
+                              {{ selectedOwner()?.lastName || '' }}
+                            </span>
+                        </div>
+                        @if (showUserSelector && !readonlyMode()) {
+                            <button mat-stroked-button color="primary" size="small" (click)="onChangeOwner()">
+                                <mat-icon>edit</mat-icon>
+                                Cambiar
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="toggles">
+                    <mat-slide-toggle formControlName="is_private" color="primary">
+                        Lista Privada
+                    </mat-slide-toggle>
+                    <p class="toggle-hint">
+                        {{ listForm.get('is_private')?.value ? 'Solo tú podrás ver esta lista.' : 'Otros usuarios podrán encontrar y ver esta lista.' }}
+                    </p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="products-card">
+            <mat-card-header>
+                <mat-card-title>Productos en la Lista</mat-card-title>
+                <span class="spacer"></span>
+                <button mat-stroked-button color="primary" (click)="onAddProduct()">
+                    <mat-icon>add</mat-icon>
+                    <span>Añadir Producto</span>
+                </button>
+            </mat-card-header>
+            <mat-card-content>
+                <app-smart-table
+                    [data]="items()"
+                    [config]="tableConfig"
+                    [isLoading]="listItemsResource.isLoading()"
+                    (delete)="onDeleteProduct($event)">
+                </app-smart-table>
+
+                @if (items().length === 0 && !listItemsResource.isLoading()) {
+                    <div class="empty-state">
+                        <mat-icon>inventory_2</mat-icon>
+                        <p>No hay productos en esta lista todavía. ¡Añade el primero!</p>
+                    </div>
+                }
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

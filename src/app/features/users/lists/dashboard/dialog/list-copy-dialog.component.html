@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Copiar Lista</h2>
+
+<mat-dialog-content>
+    <p>Introduce un nombre para la nueva lista:</p>
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Nombre de la lista</mat-label>
+        <input matInput [(ngModel)]="newName" placeholder="Ej: Copia de {{ data.oldName }}" autofocus>
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-flat-button color="primary" [disabled]="!newName.trim()" (click)="onConfirm()">
+        <mat-icon>content_copy</mat-icon>
+        Copiar
+    </button>
+</mat-dialog-actions>
