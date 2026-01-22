@@ -5,12 +5,15 @@ import { UserEntity } from 'src/app/shared/entity/user.entity';
 import { UserDashboardModel, UserRankEnum } from 'src/app/core/models/users/user.model';
 import { UserNetworkDetail, UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { ThemeService } from 'src/app/core/services/theme/theme.service';
+import { UserProfile } from 'src/app/shared/entity/user.profile.entity';
+import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private userDaoSupabaseService = inject(UserDaoSupabaseService);
+  private userProfileService = inject(UserProfileService);
   private themeService = inject(ThemeService);
 
   private readonly ACTIVE_USER_KEY = 'activeUserId';
@@ -29,6 +32,9 @@ export class UserService {
     return network.find(u => u.relativeLevel === 0) || network[0];
   });
 
+  // The permissions profile of the current user
+  currentUserProfile = signal<UserProfile | null>(null);
+
   constructor() {
     this.loadAll();
 
@@ -37,6 +43,13 @@ export class UserService {
       const user = this.currentUser();
       if (user && user.settings) {
         this.themeService.setTheme(user.settings.theme);
+      }
+
+      // Load permissions when user changes
+      if (user && user.user_profile_id) {
+        this.loadUserProfile(user.user_profile_id);
+      } else {
+        this.currentUserProfile.set(null);
       }
     });
   }
@@ -51,6 +64,18 @@ export class UserService {
         this.getUserDetailWithNetwork(id).subscribe(network => {
           this.currentUserNetwork.set(network);
         });
+      }
+    });
+  }
+
+  private loadUserProfile(profileId: string) {
+    this.userProfileService.getById(profileId).subscribe({
+      next: (profile) => {
+        this.currentUserProfile.set(profile);
+      },
+      error: (err) => {
+        console.error('Error loading user profile permissions', err);
+        this.currentUserProfile.set(null);
       }
     });
   }

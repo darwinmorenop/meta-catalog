@@ -13,6 +13,10 @@ export class UserProfileService {
     return this.userProfileDaoSupabaseService.getAll();
   }
 
+  getById(id: string): Observable<UserProfile> {
+    return this.userProfileDaoSupabaseService.getById(id);
+  }
+
   insert(userProfile: UserProfile): Observable<UserProfile> {
     return this.userProfileDaoSupabaseService.insert(userProfile);
   }

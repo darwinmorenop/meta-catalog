@@ -30,6 +30,21 @@ export class UserProfileDaoSupabaseService {
     );
   }
 
+  getById(id: string): Observable<UserProfile> {
+    return from(
+      this.supabaseService.getSupabaseClient()
+        .from('user_profile')
+        .select('*')
+        .eq('id', id)
+        .single()
+    ).pipe(
+      map(res => {
+        if (res.error) throw res.error;
+        return this.mapToEntity(res.data);
+      })
+    );
+  }
+
   insert(userProfile: UserProfile): Observable<UserProfile> {
     return from(
       this.supabaseService.getSupabaseClient()
