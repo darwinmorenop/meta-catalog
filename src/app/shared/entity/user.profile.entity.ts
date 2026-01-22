@@ -1,12 +1,32 @@
 export enum Resource {
-  users = 'users',
+  dashboard = 'dashboard',
+  store = 'store',
+  cart = 'cart',
+  inventory_inbound = 'inventory_inbound',
+  categories = 'categories',
   products = 'products',
+  campaigns = 'campaigns',
+  scraps = 'scraps',
+  users = 'users',
+  inventory_stock = 'inventory_stock',
+  inventory_movements = 'inventory_movements',
+  sales = 'sales',
   settings = 'settings'
 }
 
 export const labelResource = {
-  [Resource.users]: 'Usuarios',
+  [Resource.dashboard]: 'Dashboard',
+  [Resource.store]: 'Tienda',
+  [Resource.cart]: 'Carrito',
+  [Resource.inventory_inbound]: 'Entrada Inventario',
+  [Resource.categories]: 'Categorías',
   [Resource.products]: 'Productos',
+  [Resource.campaigns]: 'Campañas',
+  [Resource.scraps]: 'Mermas',
+  [Resource.users]: 'Usuarios',
+  [Resource.inventory_stock]: 'Stock Inventario',
+  [Resource.inventory_movements]: 'Movimientos Inventario',
+  [Resource.sales]: 'Ventas',
   [Resource.settings]: 'Configuraciones'
 }
 
