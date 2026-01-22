@@ -1,0 +1,74 @@
+<div class="store-container">
+    <div class="store-header">
+        <div class="title-group">
+            <h1>Tienda de Productos</h1>
+            <p class="subtitle">Descubre y gestiona tus productos favoritos</p>
+        </div>
+        
+        <div class="store-actions">
+            <!-- Add search or filters here if needed -->
+            <button mat-stroked-button (click)="productsResource.reload()">
+                <mat-icon>refresh</mat-icon>
+                Refrescar
+            </button>
+        </div>
+    </div>
+
+    <div class="product-grid">
+        <div *ngIf="productsResource.isLoading()" class="loading-overlay">
+            <mat-icon class="spinning">sync</mat-icon>
+            Cargando productos...
+        </div>
+
+        <mat-card *ngFor="let product of products()" class="amazon-card">
+            <div class="image-container">
+                <img [src]="product.media[0]?.url || 'assets/images/placeholder.png'" [alt]="product.name">
+                <button mat-icon-button class="fav-overlay" (click)="toggleFavorite(product)" 
+                        [color]="isFavorite(product.id) ? 'warn' : ''"
+                        [matTooltip]="isFavorite(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'">
+                    <mat-icon>{{ isFavorite(product.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+                </button>
+            </div>
+
+            <mat-card-content class="card-info">
+                <span class="brand">{{ product.brand }}</span>
+                <h3 class="product-name" [matTooltip]="product.name">{{ product.name }}</h3>
+                
+                <div class="price-section">
+                    <span class="currency">€</span>
+                    <span class="price-integer">{{ product.pricing.price | number:'1.0-0' }}</span>
+                    <span class="price-decimal">{{ (product.pricing.price % 1 * 100) | number:'2.0-0' }}</span>
+                </div>
+
+                <div class="stock-status" [ngClass]="{'low-stock': product.stock.manufacturer_stock <= product.stock.min_stock_alert}">
+                    {{ product.stock.manufacturer_stock > 0 ? 'En stock' : 'Sin stock' }}
+                </div>
+            </mat-card-content>
+
+            <mat-card-actions class="card-actions">
+                <div class="action-buttons">
+                    <button mat-icon-button (click)="addToList(product)" matTooltip="Añadir a una lista">
+                        <mat-icon>bookmark_border</mat-icon>
+                    </button>
+                    
+                    <button mat-icon-button (click)="toggleTracking(product)" 
+                            [color]="isTracking(product.id) ? 'primary' : ''"
+                            matTooltip="Seguimiento de precio">
+                        <mat-icon>{{ isTracking(product.id) ? 'notifications_active' : 'notifications' }}</mat-icon>
+                    </button>
+
+                    <span class="spacer"></span>
+
+                    <button mat-flat-button color="primary" class="cart-btn" (click)="addToCart(product)">
+                        <mat-icon [matBadge]="getCartItem(product.id)?.quantity || ''" 
+                                  matBadgeColor="accent"
+                                  [matBadgeHidden]="!getCartItem(product.id)">
+                            {{ getCartItem(product.id) ? 'shopping_cart_checkout' : 'shopping_cart' }}
+                        </mat-icon>
+                        <span class="cart-text">{{ getCartItem(product.id) ? 'En Carrito' : 'Añadir' }}</span>
+                    </button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

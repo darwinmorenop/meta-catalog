@@ -11,6 +11,8 @@ import { ProductScrapDetailComponent } from 'src/app/features/scraps/product-det
 
 export const routes: Routes = [
     { path: '', component: HomeComponent, pathMatch: 'full' },
+    { path: 'store', loadComponent: () => import('src/app/features/store/dashboard/store-dashboard.component').then(m => m.StoreDashboardComponent) },
+    { path: 'cart/dashboard', loadComponent: () => import('src/app/features/cart/dashboard/cart-dashboard.component').then(m => m.CartDashboardComponent) },
     { path: 'inventory/inbound', loadComponent: () => import('src/app/features/inventory/inbound/dashboard/inventory-inbound-dashboard.component').then(m => m.InventoryInboundDashboardComponent) },
     { path: 'inventory/inbound/register', loadComponent: () => import('src/app/features/inventory/inbound/register/inventory-inbound-register.component').then(m => m.InventoryInboundRegisterComponent) },
     { path: 'inventory/inbound/:id/edit', loadComponent: () => import('src/app/features/inventory/inbound/edit/inventory-inbound-edit.component').then(m => m.InventoryInboundEditComponent) },

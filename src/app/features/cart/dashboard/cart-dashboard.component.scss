@@ -1,0 +1,44 @@
+.dashboard-container {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 32px;
+
+        .title-group {
+            h1 {
+                margin: 0;
+                font-size: 2rem;
+                font-weight: 800;
+                letter-spacing: -0.02em;
+            }
+
+            .subtitle {
+                margin: 4px 0 0;
+                color: var(--text-secondary);
+                font-size: 1.1rem;
+            }
+        }
+
+        .actions-group {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+
+            .scope-selector {
+                width: 200px;
+            }
+        }
+    }
+
+    .table-card {
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        background: var(--surface-card);
+    }
+}

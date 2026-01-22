@@ -23,7 +23,7 @@ export class UserListDaoSupabaseService {
   }
 
   getAll(userIds?: number[]): Observable<ListViewEntity[]> {
-    const systemSlugs = `${ListSlugEnum.favorites},${ListSlugEnum.price_tracking}`;
+    const systemSlugs = `${ListSlugEnum.favorites},${ListSlugEnum.price_tracking},${ListSlugEnum.stock_notifier}`;
 
     let query = this.supabaseService.getSupabaseClient()
       .from('v_list')

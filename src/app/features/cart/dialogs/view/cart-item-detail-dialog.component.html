@@ -1,0 +1,60 @@
+<h2 mat-dialog-title>Detalle del Item del Carrito</h2>
+<mat-dialog-content>
+  <div class="detail-container">
+    <div class="product-header">
+      <img [src]="data.product_image" [alt]="data.product_name" class="product-large-image">
+      <div class="product-title">
+        <h3>{{ data.product_name }}</h3>
+        <span class="product-id">ID Producto: {{ data.product_id }}</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="info-section">
+      <h4>Información del Usuario</h4>
+      <div class="user-info">
+        <img [src]="data.owner_image || 'assets/images/default-avatar.png'" class="user-avatar">
+        <div class="user-text">
+          <span class="full-name">{{ data.owner_full_name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="status-section">
+      <h4>Estado y Cantidad</h4>
+      <div class="status-grid">
+        <div class="status-item">
+          <span class="label">Cantidad:</span>
+          <span class="value">{{ data.quantity }}</span>
+        </div>
+        <div class="status-item">
+          <span class="label">Seleccionado:</span>
+          <mat-chip [color]="data.is_selected ? 'primary' : ''">
+            <mat-icon matChipAvatar *ngIf="data.is_selected">check_circle</mat-icon>
+            {{ data.is_selected ? 'Sí' : 'No' }}
+          </mat-chip>
+        </div>
+        <div class="status-item">
+          <span class="label">Guardado:</span>
+          <mat-chip [color]="data.is_saved_for_later ? 'accent' : ''">
+            <mat-icon matChipAvatar *ngIf="data.is_saved_for_later">bookmark</mat-icon>
+            {{ data.is_saved_for_later ? 'Sí' : 'No' }}
+          </mat-chip>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="timestamps">
+      <p><strong>Añadido:</strong> {{ data.created_at | date:'medium' }}</p>
+      <p><strong>Última actualización:</strong> {{ data.updated_at | date:'medium' }}</p>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" (click)="onClose()">Cerrar</button>
+</mat-dialog-actions>

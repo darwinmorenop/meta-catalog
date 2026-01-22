@@ -1,0 +1,57 @@
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 350px;
+  }
+  .product-header {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    
+    .product-large-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .product-title {
+      h3 { margin: 0; font-size: 1.2rem; }
+      .product-id { font-size: 0.8rem; color: #666; }
+    }
+  }
+  .info-section, .status-section {
+    padding: 8px 0;
+    h4 { margin: 0 0 12px 0; font-size: 0.9rem; text-transform: uppercase; color: #888; letter-spacing: 0.05em; }
+  }
+  .user-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .user-text {
+      display: flex;
+      flex-direction: column;
+      .full-name { font-weight: 500; }
+      .user-id { font-size: 0.75rem; color: #666; }
+    }
+  }
+  .status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      .label { font-size: 0.8rem; color: #666; }
+      .value { font-weight: 600; font-size: 1.1rem; }
+    }
+  }
+  .timestamps {
+    font-size: 0.8rem;
+    color: #888;
+    p { margin: 4px 0; }
+  }

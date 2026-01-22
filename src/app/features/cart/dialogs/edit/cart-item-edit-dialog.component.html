@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Editar Item del Carrito</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" class="edit-form">
+    <div class="product-preview">
+      <img [src]="data.product_image" [alt]="data.product_name" class="product-image">
+      <div class="product-info">
+        <span class="product-name">{{ data.product_name }}</span>
+        <span class="user-name">Usuario: {{ data.owner_full_name }}</span>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Cantidad</mat-label>
+      <input matInput type="number" formControlName="quantity" min="1">
+      <mat-error *ngIf="form.get('quantity')?.hasError('required')">Requerido</mat-error>
+      <mat-error *ngIf="form.get('quantity')?.hasError('min')">Mínimo 1</mat-error>
+    </mat-form-field>
+
+    <div class="checkbox-group">
+      <mat-checkbox formControlName="is_selected">Seleccionado para compra</mat-checkbox>
+      <mat-checkbox formControlName="is_saved_for_later">Guardar para más tarde</mat-checkbox>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">Guardar</button>
+</mat-dialog-actions>

@@ -4,6 +4,11 @@
   <span class="spacer"></span>
   
   <div class="nav-buttons">
+    <button mat-button (click)="navigateTo('/store')">
+      <mat-icon>storefront</mat-icon>
+      <span class="btn-label">Tienda</span>
+    </button>
+
     <button mat-button [matMenuTriggerFor]="productMenu">
       <mat-icon>inventory_2</mat-icon>
       <span class="btn-label">Productos</span>
@@ -86,6 +91,12 @@
         <span>Registrar</span>
       </button>
     </mat-menu>
+
+    <!-- Carrito -->
+    <button mat-button (click)="navigateTo('/cart/dashboard')">
+      <mat-icon>shopping_cart</mat-icon>
+      <span class="btn-label">Carrito</span>
+    </button>
 
     <!-- Menú Usuarios -->
     <button mat-button [matMenuTriggerFor]="usuariosMenu">
