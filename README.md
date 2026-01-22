@@ -6,8 +6,6 @@
 - [ ] Create multimedia inconsistencies like: Product with no images
 - [ ] sku INT- is an inconsistency. Product with category unknown
 - [ ] change sponsor when update
-- [ ] store with cart
-- [ ] wishlist
-- [ ] permission in app: directive, button_disable, etc
+- [ ] permission in app: directive, button_disable, etc. Application client and admin not downloan html o js (guardAdmin)
 
 

@@ -21,10 +21,6 @@ export class CartService {
     return this.cartDao.update(user_id, product_id, updates);
   }
 
-  changeQuantity(user_id: number, product_id: number, quantity: number): Observable<any> {
-    return this.cartDao.changeQuantity(user_id, product_id, quantity);
-  }
-
   changeIsSelected(user_id: number, product_id: number, is_selected: boolean): Observable<any> {
     return this.cartDao.changeIsSelected(user_id, product_id, is_selected);
   }

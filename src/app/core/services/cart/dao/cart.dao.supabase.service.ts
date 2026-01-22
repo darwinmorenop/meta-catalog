@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
 import { CartItemEntity } from 'src/app/shared/entity/cart.entity';
@@ -55,18 +55,6 @@ export class CartDaoSupabaseService {
         .update(updates)
         .eq('user_id', user_id)
         .eq('product_id', product_id)
-    ).pipe(map(res => res.data));
-  }
-
-  changeQuantity(user_id: number, product_id: number, quantity: number): Observable<any> {
-    const dataToSend = {
-      p_user_id: user_id,
-      p_product_id: product_id,
-      p_qty: quantity
-    }
-    return from(
-      this.supabaseService.getSupabaseClient()
-        .rpc('change_quantity', dataToSend)
     ).pipe(map(res => res.data));
   }
 

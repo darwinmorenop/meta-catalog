@@ -103,6 +103,10 @@
             backdrop-filter: blur(4px);
             z-index: 2;
             color: var(--text-color);
+
+            &.active {
+                color: #e74c3c;
+            }
         }
     }
 
@@ -110,12 +114,17 @@
         padding: 16px;
         flex: 1;
 
-        .brand {
-            font-size: 0.75rem;
+        .category-path {
+            font-size: 0.7rem;
             color: var(--stat-label);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             font-weight: 600;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
         }
 
         .product-name {
@@ -132,41 +141,91 @@
             line-height: 1.4;
         }
 
-        .price-section {
+        .price-stock-row {
             display: flex;
-            align-items: flex-start;
-            margin-top: 12px;
-            color: var(--text-color);
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            width: 100%;
 
-            .currency {
-                font-size: 0.9rem;
-                font-weight: 600;
-                margin-top: 4px;
-                margin-right: 2px;
+            .price-container {
+                .price-section {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+
+                    .main-price {
+                        display: flex;
+                        align-items: flex-start;
+                        color: var(--text-color);
+
+                        .currency {
+                            font-size: 0.8rem;
+                            font-weight: 600;
+                            margin-top: 4px;
+                            margin-left: 2px;
+                        }
+
+                        .price-integer {
+                            font-size: 1.6rem;
+                            font-weight: 800;
+                            line-height: 1;
+                        }
+
+                        .price-decimal {
+                            font-size: 0.8rem;
+                            font-weight: 600;
+                            margin-top: 4px;
+                            margin-left: 1px;
+                        }
+                    }
+
+                    .original-price {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        font-size: 0.8rem;
+                        
+                        .strikethrough {
+                            color: #7f8c8d;
+                            text-decoration: line-through;
+                        }
+
+                        .discount-tag {
+                            background: rgba(231, 76, 60, 0.15);
+                            color: #e74c3c;
+                            padding: 1px 4px;
+                            border-radius: 4px;
+                            font-weight: 800;
+                            font-size: 0.8rem;
+                        }
+                    }
+                }
             }
 
-            .price-integer {
-                font-size: 1.8rem;
-                font-weight: 800;
-                line-height: 1;
-            }
-
-            .price-decimal {
-                font-size: 0.9rem;
+            .stock-status {
+                font-size: 0.8rem;
                 font-weight: 600;
-                margin-top: 4px;
-                margin-left: 1px;
+                color: #27ae60;
+                padding: 4px 10px;
+                background: rgba(39, 174, 96, 0.1);
+                border-radius: 20px;
+
+                &.low-stock {
+                    color: #e67e22;
+                    background: rgba(230, 126, 34, 0.1);
+                }
+
+                &.out-of-stock {
+                    color: #7f8c8d;
+                    background: rgba(127, 140, 141, 0.1);
+                }
             }
         }
 
-        .stock-status {
-            margin-top: 12px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #27ae60;
-
-            &.low-stock {
-                color: #e67e22;
+        .action-buttons {
+            button.active-tracking {
+                color: #27ae60 !important;
             }
         }
     }
@@ -191,21 +250,90 @@
                 &[color="warn"] { color: #f44336; }
             }
 
-            .cart-btn {
-                border-radius: 8px;
-                padding: 0 16px;
-                height: 40px;
-                font-weight: 600;
+            .cart-controls {
+                margin-left: auto;
+                
+                .quantity-selector {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(0,0,0,0.05);
+                    border: 1px solid var(--border-color);
+                    border-radius: 20px;
+                    padding: 4px;
+                    gap: 8px;
 
-                mat-icon {
-                    margin-right: 8px;
-                    font-size: 20px;
-                    width: 20px;
-                    height: 20px;
+                    button[mat-icon-button] {
+                        width: 32px;
+                        height: 32px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #ffffff;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        color: var(--text-color);
+                        
+                        mat-icon {
+                            font-size: 18px;
+                            width: 18px;
+                            height: 18px;
+                            margin: 0;
+                        }
+
+                        &:hover {
+                            background: rgba(0,0,0,0.05);
+                        }
+
+                        &.delete-btn {
+                            background: #fee2e2; // Light red
+                            color: #dc2626; // Strong red
+                            
+                            &:hover {
+                                background: #fecaca;
+                            }
+                        }
+
+                        &.add-btn, &.remove-btn {
+                            background: #ffffff; 
+                            color: #000000;
+                            border: 1px solid #e0e0e0;
+                            
+                            mat-icon {
+                                font-weight: 900;
+                            }
+
+                            &:hover {
+                                background: #f5f5f5;
+                            }
+                        }
+                    }
+
+                    .quantity-value {
+                        font-weight: 800;
+                        min-width: 20px;
+                        text-align: center;
+                        font-size: 1.1rem;
+                        color: var(--text-color);
+                        user-select: none;
+                    }
                 }
 
-                .cart-text {
-                    font-size: 0.9rem;
+                .cart-btn {
+                    border-radius: 20px;
+                    padding: 0 16px;
+                    height: 36px;
+                    font-weight: 600;
+
+                    mat-icon {
+                        margin-right: 4px;
+                        font-size: 18px;
+                        width: 18px;
+                        height: 18px;
+                    }
+
+                    .cart-text {
+                        font-size: 0.85rem;
+                    }
                 }
             }
         }
@@ -223,6 +351,47 @@ body.dark-theme {
         
         .card-actions {
             background: rgba(255,255,255,0.03);
+
+            .quantity-selector {
+                background: rgba(255,255,255,0.05);
+                border-color: rgba(255,255,255,0.1);
+
+                button[mat-icon-button] {
+                    background: rgba(255,255,255,0.15);
+                    color: #ffffff;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+
+                    &:hover {
+                        background: rgba(255,255,255,0.25);
+                    }
+
+                    &.delete-btn {
+                        background: rgba(239, 68, 68, 0.2); // Red transparent
+                        color: #f87171; // Light red text/icon
+                        
+                        &:hover {
+                            background: rgba(239, 68, 68, 0.3);
+                        }
+                    }
+
+                    &.add-btn, &.remove-btn {
+                        background: #ffffff;
+                        color: #000000;
+                        
+                        mat-icon {
+                            font-weight: 900;
+                        }
+
+                        &:hover {
+                            background: #e0e0e0;
+                        }
+                    }
+                }
+
+                .quantity-value {
+                    color: #ffffff;
+                }
+            }
         }
     }
 }

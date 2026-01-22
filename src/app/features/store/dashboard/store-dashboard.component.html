@@ -7,7 +7,7 @@
         
         <div class="store-actions">
             <!-- Add search or filters here if needed -->
-            <button mat-stroked-button (click)="productsResource.reload()">
+            <button mat-stroked-button (click)="refresh()">
                 <mat-icon>refresh</mat-icon>
                 Refrescar
             </button>
@@ -15,7 +15,7 @@
     </div>
 
     <div class="product-grid">
-        <div *ngIf="productsResource.isLoading()" class="loading-overlay">
+        <div *ngIf="isLoading()" class="loading-overlay">
             <mat-icon class="spinning">sync</mat-icon>
             Cargando productos...
         </div>
@@ -24,24 +24,38 @@
             <div class="image-container">
                 <img [src]="product.media[0]?.url || 'assets/images/placeholder.png'" [alt]="product.name">
                 <button mat-icon-button class="fav-overlay" (click)="toggleFavorite(product)" 
-                        [color]="isFavorite(product.id) ? 'warn' : ''"
-                        [matTooltip]="isFavorite(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'">
-                    <mat-icon>{{ isFavorite(product.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+                        [class.active]="product.is_favorite"
+                        [matTooltip]="product.is_favorite ? 'Quitar de favoritos' : 'Añadir a favoritos'">
+                    <mat-icon>{{ product.is_favorite ? 'favorite' : 'favorite_border' }}</mat-icon>
                 </button>
             </div>
 
             <mat-card-content class="card-info">
-                <span class="brand">{{ product.brand }}</span>
+                <span class="category-path" [matTooltip]="product.category.full_path">{{ product.category.full_path }}</span>
                 <h3 class="product-name" [matTooltip]="product.name">{{ product.name }}</h3>
                 
-                <div class="price-section">
-                    <span class="currency">€</span>
-                    <span class="price-integer">{{ product.pricing.price | number:'1.0-0' }}</span>
-                    <span class="price-decimal">{{ (product.pricing.price % 1 * 100) | number:'2.0-0' }}</span>
-                </div>
+                <div class="price-stock-row">
+                    <div class="price-container">
+                        <div class="price-section" [ngClass]="{'on-sale': product.pricing.sale_price > 0 && product.pricing.sale_price !== product.pricing.price}">
+                            <div class="main-price">
+                                <span class="price-integer">{{ (product.pricing.sale_price > 0 ? product.pricing.sale_price : product.pricing.price) | number:'1.0-0' }}</span>
+                                <span class="price-decimal">{{ ((product.pricing.sale_price > 0 ? product.pricing.sale_price : product.pricing.price) % 1 * 100) | number:'2.0-0' }}</span>
+                                <span class="currency">€</span>
+                            </div>
+                            
+                            <div class="original-price" *ngIf="product.pricing.sale_price > 0 && product.pricing.sale_price !== product.pricing.price">
+                                <span class="strikethrough">{{ product.pricing.price | number:'1.2-2' }}€</span>
+                                <span class="discount-tag">-{{ ((product.pricing.price - product.pricing.sale_price) / product.pricing.price * 100) | number:'1.0-0' }}%</span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="stock-status" [ngClass]="{'low-stock': product.stock.manufacturer_stock <= product.stock.min_stock_alert}">
-                    {{ product.stock.manufacturer_stock > 0 ? 'En stock' : 'Sin stock' }}
+                    <div class="stock-status" [ngClass]="{
+                        'low-stock': product.stock.manufacturer_stock > 0 && product.stock.manufacturer_stock <= product.stock.min_stock_alert,
+                        'out-of-stock': product.stock.manufacturer_stock <= 0
+                    }">
+                        {{ product.stock.manufacturer_stock > 0 ? 'En stock' : 'Sin stock' }}
+                    </div>
                 </div>
             </mat-card-content>
 
@@ -52,21 +66,43 @@
                     </button>
                     
                     <button mat-icon-button (click)="toggleTracking(product)" 
-                            [color]="isTracking(product.id) ? 'primary' : ''"
-                            matTooltip="Seguimiento de precio">
-                        <mat-icon>{{ isTracking(product.id) ? 'notifications_active' : 'notifications' }}</mat-icon>
+                            [class.active-tracking]="product.is_price_tracked"
+                            [matTooltip]="product.is_price_tracked ? 'Seguimiento activo' : 'Seguimiento de precio'">
+                        <mat-icon>{{ product.is_price_tracked ? 'check_circle' : 'trending_down' }}</mat-icon>
                     </button>
 
                     <span class="spacer"></span>
 
-                    <button mat-flat-button color="primary" class="cart-btn" (click)="addToCart(product)">
-                        <mat-icon [matBadge]="getCartItem(product.id)?.quantity || ''" 
-                                  matBadgeColor="accent"
-                                  [matBadgeHidden]="!getCartItem(product.id)">
-                            {{ getCartItem(product.id) ? 'shopping_cart_checkout' : 'shopping_cart' }}
-                        </mat-icon>
-                        <span class="cart-text">{{ getCartItem(product.id) ? 'En Carrito' : 'Añadir' }}</span>
-                    </button>
+                    <div class="cart-controls" [ngClass]="{'has-items': product.cart_quantity > 0}">
+                        <ng-container *ngIf="product.cart_quantity > 0; else addButton">
+                            <div class="quantity-selector">
+                                <button mat-icon-button (click)="removeFromCart(product)" 
+                                        [class.delete-btn]="product.cart_quantity === 1"
+                                        [class.remove-btn]="product.cart_quantity > 1"
+                                        [matTooltip]="product.cart_quantity === 1 ? 'Eliminar del carrito' : 'Reducir cantidad'">
+                                    <mat-icon>{{ product.cart_quantity === 1 ? 'delete_outline' : 'remove' }}</mat-icon>
+                                </button>
+                                <span class="quantity-value">{{ product.cart_quantity }}</span>
+                                <button mat-icon-button class="add-btn" (click)="addToCart(product)" matTooltip="Añadir más">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div>
+                        </ng-container>
+                        <ng-template #addButton>
+                            <ng-container *ngIf="product.stock.manufacturer_stock > 0; else notifyButton">
+                                <button mat-flat-button color="primary" class="cart-btn" (click)="addToCart(product)">
+                                    <mat-icon>shopping_cart</mat-icon>
+                                    <span class="cart-text">Añadir</span>
+                                </button>
+                            </ng-container>
+                            <ng-template #notifyButton>
+                                <button mat-flat-button [color]="product.is_stock_notified ? 'accent' : 'secondary'" class="cart-btn notify-btn" (click)="toggleStockNotifier(product)">
+                                    <mat-icon>{{ product.is_stock_notified ? 'notifications_active' : 'notifications' }}</mat-icon>
+                                    <span class="cart-text">{{ product.is_stock_notified ? 'Suscrito' : 'Avísame' }}</span>
+                                </button>
+                            </ng-template>
+                        </ng-template>
+                    </div>
                 </div>
             </mat-card-actions>
         </mat-card>
