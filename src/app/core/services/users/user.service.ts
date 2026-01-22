@@ -35,6 +35,9 @@ export class UserService {
   // The permissions profile of the current user
   currentUserProfile = signal<UserProfile | null>(null);
 
+  // Loading state
+  isInitialized = signal(false);
+
   constructor() {
     this.loadAll();
 
@@ -50,6 +53,10 @@ export class UserService {
         this.loadUserProfile(user.user_profile_id);
       } else {
         this.currentUserProfile.set(null);
+        if (user) {
+          // If we have a user but no profile, we are technically "initialized" with no permissions
+          this.isInitialized.set(true);
+        }
       }
     });
   }
@@ -61,9 +68,17 @@ export class UserService {
       const savedId = localStorage.getItem(this.ACTIVE_USER_KEY);
       if (savedId) {
         const id = +savedId;
-        this.getUserDetailWithNetwork(id).subscribe(network => {
-          this.currentUserNetwork.set(network);
+        this.getUserDetailWithNetwork(id).subscribe({
+          next: (network) => {
+            this.currentUserNetwork.set(network);
+            // The effect will trigger loadUserProfile, which will set isInitialized to true
+          },
+          error: () => {
+             this.isInitialized.set(true);
+          }
         });
+      } else {
+        this.isInitialized.set(true);
       }
     });
   }
@@ -72,10 +87,12 @@ export class UserService {
     this.userProfileService.getById(profileId).subscribe({
       next: (profile) => {
         this.currentUserProfile.set(profile);
+        this.isInitialized.set(true);
       },
       error: (err) => {
         console.error('Error loading user profile permissions', err);
         this.currentUserProfile.set(null);
+        this.isInitialized.set(true);
       }
     });
   }

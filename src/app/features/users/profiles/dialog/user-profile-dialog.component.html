@@ -51,7 +51,7 @@
 
       <div class="permissions-table-container">
         <app-smart-table
-          [data]="tableData"
+          [data]="tableData()"
           [config]="tableConfig"
           (view)="onViewResource($event)"
           (edit)="onEditResource($event)"

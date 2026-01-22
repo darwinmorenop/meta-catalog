@@ -13,6 +13,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ThemeService } from 'src/app/core/services/theme/theme.service';
 import { UserService } from 'src/app/core/services/users/user.service';
 import { UserActiveSelectorDialogComponent } from 'src/app/features/users/dialog/active-selector/user-active-selector-dialog.component';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
+import { PermissionService } from 'src/app/core/services/permission.service';
+import { Action, Resource } from 'src/app/shared/entity/user.profile.entity';
+
+import { HasPermissionDirective } from 'src/app/shared/directives/has-permission.directive';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +34,8 @@ import { UserActiveSelectorDialogComponent } from 'src/app/features/users/dialog
     MatMenuModule,
     MatSidenavModule,
     MatListModule,
-    MatExpansionModule
+    MatExpansionModule,
+    HasPermissionDirective
   ],
   templateUrl: 'app.html',
   styleUrls: ['app.scss']
@@ -37,18 +43,25 @@ import { UserActiveSelectorDialogComponent } from 'src/app/features/users/dialog
 export class AppComponent {
   private router = inject(Router);
   private dialog = inject(MatDialog);
+  private loggerService = inject(LoggerService);
+  private readonly CLASS_NAME = AppComponent.name;
   themeService = inject(ThemeService);
   userService = inject(UserService);
+  permissionService = inject(PermissionService);
+
+  readonly Resource = Resource;
+  readonly Action = Action;
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   navItems = [
-    { label: 'Campañas', icon: 'campaign', route: '/campaigns' },
-    { label: 'Categorías', icon: 'category', route: '/categories' },
+    { label: 'Campañas', icon: 'campaign', route: '/campaigns', resource: Resource.campaigns },
+    { label: 'Categorías', icon: 'category', route: '/categories', resource: Resource.categories },
   ];
 
   navigateTo(route: string) {
-    console.log('Navigating to:', route);
+    const context = "navigateTo";
+    this.loggerService.trace(`Navigating to: ${route}`, this.CLASS_NAME, context);
     this.router.navigate([route]);
     if (this.sidenav && this.sidenav.mode === 'over') {
         this.sidenav.close();

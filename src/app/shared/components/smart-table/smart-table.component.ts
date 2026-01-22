@@ -206,7 +206,7 @@ export class SmartTableComponent implements AfterViewInit {
                 if(col){
                     return col.header;
                 }
-                this.loggerService.warn(`Column ${field} not found in config`, this.CLASS_NAME, context);
+                this.loggerService.trace(`Column ${field} not found in config`, this.CLASS_NAME, context);
                 return field;
             });
 

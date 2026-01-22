@@ -1,6 +1,6 @@
 .dashboard-container {
   padding: 2rem;
-  background-color: #f8fafc;
+  background-color: var(--bg-color);
   min-height: 100vh;
 }
 
@@ -16,13 +16,13 @@
     gap: 1rem;
 
     .back-button {
-      background-color: white;
+      background-color: var(--card-bg);
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      color: #64748b;
+      color: var(--stat-label);
       
       &:hover {
-        color: #1e293b;
-        background-color: #f1f5f9;
+        color: var(--text-color);
+        background-color: var(--surface-hover);
       }
     }
   }
@@ -31,12 +31,12 @@
     margin: 0;
     font-size: 2rem;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-color);
   }
 
   .subtitle {
     margin: 0.5rem 0 0;
-    color: #64748b;
+    color: var(--stat-label);
   }
 }
 
@@ -46,13 +46,13 @@
   align-items: center;
 
   .refresh-button {
-    background-color: white;
-    color: #64748b;
+    background-color: var(--card-bg);
+    color: var(--stat-label);
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 
     &:hover:not(:disabled) {
-      color: #1e293b;
-      background-color: #f1f5f9;
+      color: var(--text-color);
+      background-color: var(--surface-hover);
     }
   }
 }
@@ -71,9 +71,10 @@
 
 .stat-card {
   border-radius: 12px;
-  border: none;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  transition: transform 0.2s;
+  transition: transform 0.2s, background-color 0.3s ease;
 
   &:hover {
     transform: translateY(-4px);
@@ -91,25 +92,39 @@
     padding: 8px;
   }
 
-  .categories-icon { background-color: #f0fdf4; color: #22c55e; }
+  .categories-icon { 
+    background-color: rgba(34, 197, 94, 0.15); 
+    color: #22c55e; 
+  }
 
   .stat-value {
     font-size: 2.5rem;
     font-weight: 800;
-    color: #1e293b;
+    color: var(--stat-value);
     display: block;
     margin-top: 1rem;
+  }
+
+  mat-card-title {
+    color: var(--text-color);
+  }
+
+  mat-card-subtitle {
+    color: var(--stat-label);
   }
 }
 
 .table-card {
   border-radius: 12px;
-  border: none;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  transition: background-color 0.3s ease;
 
   mat-card-title {
     padding: 1rem 0;
     font-weight: 600;
+    color: var(--text-color);
   }
 }
 

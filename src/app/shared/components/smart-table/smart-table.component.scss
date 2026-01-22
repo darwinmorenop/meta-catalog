@@ -146,6 +146,11 @@
             border-bottom: 1px solid var(--border-color);
         }
     }
+
+    mat-paginator {
+        background-color: transparent !important;
+        border-top: 1px solid var(--border-color);
+    }
 }
 
 .search-select-container {

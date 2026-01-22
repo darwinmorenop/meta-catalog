@@ -2,25 +2,33 @@
 @import "@angular/material/prebuilt-themes/purple-green.css";
 
 :root {
-  --bg-color: #f1f5f9;
+  --bg-color: #f8fafc;
   --text-color: #1e293b;
+  --text-secondary: #64748b;
   --card-bg: #ffffff;
   --header-bg: #3f51b5;
   --header-text: #ffffff;
   --border-color: #e2e8f0;
   --stat-label: #64748b;
   --stat-value: #1e293b;
+  --surface-hover: #f1f5f9;
+  --primary-color: #3f51b5;
+  --primary-rgb: 63, 81, 181;
 }
 
 body.dark-theme {
-  --bg-color: #121212;
-  --text-color: #e0e0e0;
-  --card-bg: #1e1e1e;
-  --header-bg: #1f1f1f;
+  --bg-color: #0f172a;
+  --text-color: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --card-bg: #1e293b;
+  --header-bg: #1e293b;
   --header-text: #ffffff;
-  --border-color: #333333;
+  --border-color: #334155;
   --stat-label: #94a3b8;
   --stat-value: #ffffff;
+  --surface-hover: rgba(255, 255, 255, 0.05);
+  --primary-color: #818cf8;
+  --primary-rgb: 129, 140, 248;
 }
 
 html, body { 
@@ -50,6 +58,18 @@ body {
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+.mat-mdc-paginator {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.mat-mdc-select-value, 
+.mat-mdc-select-arrow,
+.mat-mdc-paginator-range-label,
+.mat-mdc-paginator-page-size-label {
+  color: var(--text-color) !important;
+}
+
 .mat-mdc-dialog-container .mdc-dialog__surface {
   background-color: var(--card-bg) !important;
   color: var(--text-color) !important;
@@ -66,10 +86,15 @@ mat-form-field {
 /* Dark theme specific adjustments for form fields */
 body.dark-theme {
   .mat-mdc-form-field-label {
-    color: #94a3b8 !important;
+    color: var(--text-secondary) !important;
   }
   
   .mat-mdc-input-element {
-    color: #ffffff !important;
+    color: var(--text-color) !important;
+  }
+
+  .mat-mdc-button:disabled, 
+  .mat-mdc-icon-button:disabled {
+    color: rgba(255, 255, 255, 0.3) !important;
   }
 }

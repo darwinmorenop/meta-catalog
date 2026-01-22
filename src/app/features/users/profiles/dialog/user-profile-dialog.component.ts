@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -52,7 +52,8 @@ export class UserProfileDialogComponent implements OnInit {
   readonly data = inject<UserProfileDialogData>(MAT_DIALOG_DATA);
 
   form!: FormGroup;
-  permissions: { resource: Resource; actions: Action[] }[] = [];
+  private _permissions = signal<{ resource: Resource; actions: Action[] }[]>([]);
+  permissions = this._permissions.asReadonly();
   availableResources: Resource[] = Object.values(Resource);
   labelResource = labelResource;
   labelAction = labelAction;
@@ -72,18 +73,18 @@ export class UserProfileDialogComponent implements OnInit {
     }
   };
 
-  get tableData() {
-    return this.permissions.map(p => ({
+  tableData = computed(() => {
+    return this.permissions().map(p => ({
       ...p,
       resourceLabel: `${this.getResourceLabel(p.resource)} (${p.resource})`,
       actionChips: p.actions.map(a => ({
-        label: this.getActionLabel(a),
-        color: '#673ab7' // Constant color for actions
+        value: this.getActionLabel(a),
+        color: '#673ab7'
       })),
       smart_table_edit_disabled: this.isViewMode,
       smart_table_delete_disabled: this.isViewMode
     }));
-  }
+  });
 
   get isViewMode() { return this.data.mode === 'view'; }
   get isEditMode() { return this.data.mode === 'edit'; }
@@ -104,20 +105,21 @@ export class UserProfileDialogComponent implements OnInit {
   }
 
   loadPermissions(permissionMap: PermissionMap) {
-    this.permissions = Object.entries(permissionMap).map(([resource, actions]) => ({
+    const perms = Object.entries(permissionMap).map(([resource, actions]) => ({
       resource: resource as Resource,
       actions: actions || []
     }));
+    this._permissions.set(perms);
   }
 
   addResource(resource: Resource) {
-    if (!this.permissions.find(p => p.resource === resource)) {
-      this.permissions = [...this.permissions, { resource, actions: [] }];
+    if (!this.permissions().find(p => p.resource === resource)) {
+      this._permissions.update(prev => [...prev, { resource, actions: [] }]);
     }
   }
 
   get unusedResources() {
-    return this.availableResources.filter(r => !this.permissions.find(p => p.resource === r));
+    return this.availableResources.filter(r => !this.permissions().find(p => p.resource === r));
   }
 
   onViewResource(item: any) {
@@ -135,12 +137,14 @@ export class UserProfileDialogComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(newActions => {
       if (newActions) {
-        const index = this.permissions.findIndex(p => p.resource === item.resource);
-        if (index > -1) {
-          const updated = [...this.permissions];
-          updated[index] = { ...updated[index], actions: newActions };
-          this.permissions = updated;
-        }
+        this._permissions.update(prev => {
+          const updated = [...prev];
+          const index = updated.findIndex(p => p.resource === item.resource);
+          if (index > -1) {
+            updated[index] = { ...updated[index], actions: newActions };
+          }
+          return updated;
+        });
       }
     });
   }
@@ -150,7 +154,7 @@ export class UserProfileDialogComponent implements OnInit {
   }
 
   removeResource(resource: Resource) {
-    this.permissions = this.permissions.filter(p => p.resource !== resource);
+    this._permissions.update(prev => prev.filter(p => p.resource !== resource));
   }
 
   getResourceLabel(resource: Resource): string {
@@ -158,14 +162,14 @@ export class UserProfileDialogComponent implements OnInit {
   }
 
   getActionLabel(action: Action): string {
-    return labelAction[action] || action;
+    return labelAction[action] || action.toString();
   }
 
   save() {
     if (this.form.invalid) return;
 
     const permissionMap: PermissionMap = {};
-    this.permissions.forEach(p => {
+    this.permissions().forEach(p => {
       permissionMap[p.resource] = p.actions;
     });
 

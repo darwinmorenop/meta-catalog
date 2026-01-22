@@ -15,96 +15,100 @@
     </div>
 
     <div class="product-grid">
-        <div *ngIf="isLoading()" class="loading-overlay">
-            <mat-icon class="spinning">sync</mat-icon>
-            Cargando productos...
-        </div>
-
-        <mat-card *ngFor="let product of products()" class="amazon-card">
-            <div class="image-container">
-                <img [src]="product.media[0]?.url || 'assets/images/placeholder.png'" [alt]="product.name">
-                <button mat-icon-button class="fav-overlay" (click)="toggleFavorite(product)" 
-                        [class.active]="product.is_favorite"
-                        [matTooltip]="product.is_favorite ? 'Quitar de favoritos' : 'Añadir a favoritos'">
-                    <mat-icon>{{ product.is_favorite ? 'favorite' : 'favorite_border' }}</mat-icon>
-                </button>
+        @if (isLoading()) {
+            <div class="loading-overlay">
+                <mat-icon class="spinning">sync</mat-icon>
+                Cargando productos...
             </div>
+        }
 
-            <mat-card-content class="card-info">
-                <span class="category-path" [matTooltip]="product.category.full_path">{{ product.category.full_path }}</span>
-                <h3 class="product-name" [matTooltip]="product.name">{{ product.name }}</h3>
-                
-                <div class="price-stock-row">
-                    <div class="price-container">
-                        <div class="price-section" [ngClass]="{'on-sale': product.pricing.sale_price > 0 && product.pricing.sale_price !== product.pricing.price}">
-                            <div class="main-price">
-                                <span class="price-integer">{{ (product.pricing.sale_price > 0 ? product.pricing.sale_price : product.pricing.price) | number:'1.0-0' }}</span>
-                                <span class="price-decimal">{{ ((product.pricing.sale_price > 0 ? product.pricing.sale_price : product.pricing.price) % 1 * 100) | number:'2.0-0' }}</span>
-                                <span class="currency">€</span>
-                            </div>
-                            
-                            <div class="original-price" *ngIf="product.pricing.sale_price > 0 && product.pricing.sale_price !== product.pricing.price">
-                                <span class="strikethrough">{{ product.pricing.price | number:'1.2-2' }}€</span>
-                                <span class="discount-tag">-{{ ((product.pricing.price - product.pricing.sale_price) / product.pricing.price * 100) | number:'1.0-0' }}%</span>
+        @for (product of products(); track product.id) {
+            <mat-card class="amazon-card">
+                <div class="image-container">
+                    <img [src]="product.media[0]?.url || 'assets/images/placeholder.png'" [alt]="product.name">
+                    <button mat-icon-button class="fav-overlay" (click)="toggleFavorite(product)" 
+                            [class.active]="product.is_favorite"
+                            [matTooltip]="product.is_favorite ? 'Quitar de favoritos' : 'Añadir a favoritos'">
+                        <mat-icon>{{ product.is_favorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+                    </button>
+                </div>
+
+                <mat-card-content class="card-info">
+                    <span class="category-path" [matTooltip]="product.category.full_path">{{ product.category.full_path }}</span>
+                    <h3 class="product-name" [matTooltip]="product.name">{{ product.name }}</h3>
+                    
+                    <div class="price-stock-row">
+                        <div class="price-container">
+                            <div class="price-section" [ngClass]="{'on-sale': product.pricing.sale_price > 0 && product.pricing.sale_price !== product.pricing.price}">
+                                <div class="main-price">
+                                    <span class="price-integer">{{ (product.pricing.sale_price > 0 ? product.pricing.sale_price : product.pricing.price) | number:'1.0-0' }}</span>
+                                    <span class="price-decimal">{{ ((product.pricing.sale_price > 0 ? product.pricing.sale_price : product.pricing.price) % 1 * 100) | number:'2.0-0' }}</span>
+                                    <span class="currency">€</span>
+                                </div>
+                                
+                                @if (product.pricing.sale_price > 0 && product.pricing.sale_price !== product.pricing.price) {
+                                    <div class="original-price">
+                                        <span class="strikethrough">{{ product.pricing.price | number:'1.2-2' }}€</span>
+                                        <span class="discount-tag">-{{ ((product.pricing.price - product.pricing.sale_price) / product.pricing.price * 100) | number:'1.0-0' }}%</span>
+                                    </div>
+                                }
                             </div>
                         </div>
+
+                        <div class="stock-status" [ngClass]="{
+                            'low-stock': product.stock.manufacturer_stock > 0 && product.stock.manufacturer_stock <= product.stock.min_stock_alert,
+                            'out-of-stock': product.stock.manufacturer_stock <= 0
+                        }">
+                            {{ product.stock.manufacturer_stock > 0 ? 'En stock' : 'Sin stock' }}
+                        </div>
                     </div>
+                </mat-card-content>
 
-                    <div class="stock-status" [ngClass]="{
-                        'low-stock': product.stock.manufacturer_stock > 0 && product.stock.manufacturer_stock <= product.stock.min_stock_alert,
-                        'out-of-stock': product.stock.manufacturer_stock <= 0
-                    }">
-                        {{ product.stock.manufacturer_stock > 0 ? 'En stock' : 'Sin stock' }}
+                <mat-card-actions class="card-actions">
+                    <div class="action-buttons">
+                        <button mat-icon-button (click)="addToList(product)" matTooltip="Añadir a una lista">
+                            <mat-icon>bookmark_border</mat-icon>
+                        </button>
+                        
+                        <button mat-icon-button (click)="toggleTracking(product)" 
+                                [class.active-tracking]="product.is_price_tracked"
+                                [matTooltip]="product.is_price_tracked ? 'Seguimiento activo' : 'Seguimiento de precio'">
+                            <mat-icon>{{ product.is_price_tracked ? 'check_circle' : 'trending_down' }}</mat-icon>
+                        </button>
+
+                        <span class="spacer"></span>
+
+                        <div class="cart-controls" [ngClass]="{'has-items': product.cart_quantity > 0}">
+                            @if (product.cart_quantity > 0) {
+                                <div class="quantity-selector">
+                                    <button mat-icon-button (click)="removeFromCart(product)" 
+                                            [class.delete-btn]="product.cart_quantity === 1"
+                                            [class.remove-btn]="product.cart_quantity > 1"
+                                            [matTooltip]="product.cart_quantity === 1 ? 'Eliminar del carrito' : 'Reducir cantidad'">
+                                        <mat-icon>{{ product.cart_quantity === 1 ? 'delete_outline' : 'remove' }}</mat-icon>
+                                    </button>
+                                    <span class="quantity-value">{{ product.cart_quantity }}</span>
+                                    <button mat-icon-button class="add-btn" (click)="addToCart(product)" matTooltip="Añadir más">
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                </div>
+                            } @else {
+                                @if (product.stock.manufacturer_stock > 0) {
+                                    <button mat-flat-button color="primary" class="cart-btn" (click)="addToCart(product)">
+                                        <mat-icon>shopping_cart</mat-icon>
+                                        <span class="cart-text">Añadir</span>
+                                    </button>
+                                } @else {
+                                    <button mat-flat-button [color]="product.is_stock_notified ? 'accent' : 'secondary'" class="cart-btn notify-btn" (click)="toggleStockNotifier(product)">
+                                        <mat-icon>{{ product.is_stock_notified ? 'notifications_active' : 'notifications' }}</mat-icon>
+                                        <span class="cart-text">{{ product.is_stock_notified ? 'Suscrito' : 'Avísame' }}</span>
+                                    </button>
+                                }
+                            }
+                        </div>
                     </div>
-                </div>
-            </mat-card-content>
-
-            <mat-card-actions class="card-actions">
-                <div class="action-buttons">
-                    <button mat-icon-button (click)="addToList(product)" matTooltip="Añadir a una lista">
-                        <mat-icon>bookmark_border</mat-icon>
-                    </button>
-                    
-                    <button mat-icon-button (click)="toggleTracking(product)" 
-                            [class.active-tracking]="product.is_price_tracked"
-                            [matTooltip]="product.is_price_tracked ? 'Seguimiento activo' : 'Seguimiento de precio'">
-                        <mat-icon>{{ product.is_price_tracked ? 'check_circle' : 'trending_down' }}</mat-icon>
-                    </button>
-
-                    <span class="spacer"></span>
-
-                    <div class="cart-controls" [ngClass]="{'has-items': product.cart_quantity > 0}">
-                        <ng-container *ngIf="product.cart_quantity > 0; else addButton">
-                            <div class="quantity-selector">
-                                <button mat-icon-button (click)="removeFromCart(product)" 
-                                        [class.delete-btn]="product.cart_quantity === 1"
-                                        [class.remove-btn]="product.cart_quantity > 1"
-                                        [matTooltip]="product.cart_quantity === 1 ? 'Eliminar del carrito' : 'Reducir cantidad'">
-                                    <mat-icon>{{ product.cart_quantity === 1 ? 'delete_outline' : 'remove' }}</mat-icon>
-                                </button>
-                                <span class="quantity-value">{{ product.cart_quantity }}</span>
-                                <button mat-icon-button class="add-btn" (click)="addToCart(product)" matTooltip="Añadir más">
-                                    <mat-icon>add</mat-icon>
-                                </button>
-                            </div>
-                        </ng-container>
-                        <ng-template #addButton>
-                            <ng-container *ngIf="product.stock.manufacturer_stock > 0; else notifyButton">
-                                <button mat-flat-button color="primary" class="cart-btn" (click)="addToCart(product)">
-                                    <mat-icon>shopping_cart</mat-icon>
-                                    <span class="cart-text">Añadir</span>
-                                </button>
-                            </ng-container>
-                            <ng-template #notifyButton>
-                                <button mat-flat-button [color]="product.is_stock_notified ? 'accent' : 'secondary'" class="cart-btn notify-btn" (click)="toggleStockNotifier(product)">
-                                    <mat-icon>{{ product.is_stock_notified ? 'notifications_active' : 'notifications' }}</mat-icon>
-                                    <span class="cart-text">{{ product.is_stock_notified ? 'Suscrito' : 'Avísame' }}</span>
-                                </button>
-                            </ng-template>
-                        </ng-template>
-                    </div>
-                </div>
-            </mat-card-actions>
-        </mat-card>
+                </mat-card-actions>
+            </mat-card>
+        }
     </div>
 </div>

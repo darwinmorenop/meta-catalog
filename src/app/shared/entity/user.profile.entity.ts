@@ -22,7 +22,7 @@ export const labelResource = {
   [Resource.categories]: 'Categorías',
   [Resource.products]: 'Productos',
   [Resource.campaigns]: 'Campañas',
-  [Resource.scraps]: 'Mermas',
+  [Resource.scraps]: 'Scraps',
   [Resource.users]: 'Usuarios',
   [Resource.inventory_stock]: 'Stock Inventario',
   [Resource.inventory_movements]: 'Movimientos Inventario',

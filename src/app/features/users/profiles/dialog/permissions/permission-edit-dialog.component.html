@@ -16,7 +16,9 @@
               highlighted
               color="accent">
               {{ getActionLabel(action) }}
-              <mat-icon matChipRemove *ngIf="!isViewMode">cancel</mat-icon>
+              @if (!isViewMode) {
+                <mat-icon matChipRemove>cancel</mat-icon>
+              }
             </mat-chip>
           }
           @if (selectedActions.length === 0) {
