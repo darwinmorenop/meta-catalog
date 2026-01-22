@@ -17,6 +17,8 @@ import { Product } from 'src/app/core/models/products/product.model';
 import { CartItemEntity } from 'src/app/shared/entity/cart.entity';
 import { ListSlugEnum, ListItemTrackingTypeEnum } from 'src/app/shared/entity/list.entity';
 import { ListViewEntity, ListItemViewEntity } from 'src/app/shared/entity/view/list.view.entity';
+import { HasPermissionDirective } from 'src/app/shared/directives/has-permission.directive';
+import { Resource, Action } from 'src/app/shared/entity/user.profile.entity';
 
 @Component({
   selector: 'app-store-dashboard',
@@ -28,7 +30,8 @@ import { ListViewEntity, ListItemViewEntity } from 'src/app/shared/entity/view/l
     MatIconModule,
     MatTooltipModule,
     MatBadgeModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    HasPermissionDirective
   ],
   templateUrl: './store-dashboard.component.html',
   styleUrl: './store-dashboard.component.scss'
@@ -39,6 +42,10 @@ export class StoreDashboardComponent {
   private userService = inject(UserService);
   private listService = inject(UserListService);
   private snackBar = inject(MatSnackBar);
+
+  // Expose enums for template
+  eResource = Resource;
+  eAction = Action;
 
   currentUser = computed(() => this.userService.currentUser());
 

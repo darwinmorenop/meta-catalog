@@ -59,7 +59,8 @@
 
                     <span class="spacer"></span>
 
-                    <button mat-flat-button color="primary" class="cart-btn" (click)="addToCart(product)">
+                    <button *appHasPermission="[eResource.cart, eAction.create]"
+                            mat-flat-button color="primary" class="cart-btn" (click)="addToCart(product)">
                         <mat-icon [matBadge]="getCartItem(product.id)?.quantity || ''" 
                                   matBadgeColor="accent"
                                   [matBadgeHidden]="!getCartItem(product.id)">
