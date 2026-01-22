@@ -1,3 +1,30 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 250px;
+}
+
+.menu-button {
+  display: none; // Hidden by default (desktop)
+  margin-right: 8px;
+  color: var(--header-text);
+
+  @media (max-width: 960px) {
+    display: block; // Show on mobile/tablet
+  }
+}
+
+.menu-icon {
+    margin-right: 12px;
+}
+
+.nested-expansion {
+    margin-left: 16px;
+    border-left: 1px solid rgba(0,0,0,0.1);
+}
+
 .main-header {
   position: sticky;
   top: 0;
@@ -88,6 +115,10 @@
     display: flex;
     gap: 8px;
 
+    @media (max-width: 960px) {
+        display: none; // Hide on mobile/tablet
+    }
+
     button {
       display: flex;
       align-items: center;
@@ -115,6 +146,11 @@
 
 .main-content {
   padding: 24px;
+
+  @media (max-width: 600px) {
+      padding: 16px; // Reduced padding for mobile
+  }
+
   background-color: var(--bg-color);
   min-height: calc(100vh - 64px);
   box-sizing: border-box;
