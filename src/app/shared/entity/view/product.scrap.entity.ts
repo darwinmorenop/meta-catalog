@@ -3,6 +3,7 @@ export interface ProductScrapEntity {
     product_manufacturer_ref: string,
     product_main_image: string,
     product_name: string,
+    product_slug: string,
     product_status: "archived" | "active",
     product_description: string,
     product_summary: string,

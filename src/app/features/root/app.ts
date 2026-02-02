@@ -57,6 +57,7 @@ export class AppComponent {
   navItems = [
     { label: 'Campañas', icon: 'campaign', route: '/campaigns', resource: Resource.campaigns },
     { label: 'Categorías', icon: 'category', route: '/categories', resource: Resource.categories },
+    { label: 'Scrap', icon: 'inventory_2', route: '/scraps', resource: Resource.scraps },
   ];
 
   navigateTo(route: string) {

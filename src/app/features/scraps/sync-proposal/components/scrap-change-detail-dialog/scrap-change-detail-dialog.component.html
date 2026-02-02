@@ -6,8 +6,8 @@
   
   <mat-dialog-content class="dialog-content">
     <div class="product-info">
-      <h3>{{ data.productName }}</h3>
-      <p class="ref">Ref: {{ data.manufacturerRef }}</p>
+      <h3>{{ data.product_name }}</h3>
+      <p class="ref">Ref: {{ data.manufacturer_ref }}</p>
       <span class="type-badge" [ngClass]="data.type.toLowerCase()">
         {{ data.type }}
       </span>
@@ -41,7 +41,7 @@
     <div class="original-data" *ngIf="data.type === 'CREATE'">
       <mat-divider></mat-divider>
       <h4>Datos del Scrap:</h4>
-      <pre>{{ data.originalScrap | json }}</pre>
+      <pre>{{ data.original_scrap | json }}</pre>
     </div>
   </mat-dialog-content>
 

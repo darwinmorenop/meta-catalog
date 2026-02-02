@@ -5,6 +5,7 @@ import { ProductScrapSyncOptions, ProductScrapSyncPendingChange } from 'src/app/
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ScrapRcpArchivedRequestEntity, ScrapRcpInsertEntity, ScrapRcpInsertRequestEntity, ScrapRcpResponseEntity, ScrapRcpUpdateEntity, ScrapRcpUpdateRequestEntity } from 'src/app/shared/entity/rcp/scrap.rcp.entity';
 import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
+import { ProductScrapDetails } from 'src/app/core/models/products/scrap/product.scrap.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,15 @@ export class ScrapWriteDaoSupabaseService {
         .delete()
         .eq('id', id)
     ).pipe(map(res => res.data));
+  }
+
+  applyChanges(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
+    if (changes.length === 0) return of(this.getDefaultResponse());
+    const type = changes[0].type;
+    if (type === 'CREATE') return this.createProducts(changes, scrapId, options);
+    if (type === 'UPDATE') return this.updateProducts(changes, scrapId, options);
+    if (type === 'ARCHIVE') return this.archiveProducts(changes, scrapId, options);
+    return of(this.getDefaultResponse());
   }
 
   applyChangesAll(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
@@ -95,15 +105,6 @@ export class ScrapWriteDaoSupabaseService {
     return obs$;
   }
 
-  applyChanges(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
-    if (changes.length === 0) return of(this.getDefaultResponse());
-    const type = changes[0].type;
-    if (type === 'CREATE') return this.createProducts(changes, scrapId, options);
-    if (type === 'UPDATE') return this.updateProducts(changes, scrapId, options);
-    if (type === 'ARCHIVE') return this.archiveProducts(changes, scrapId, options);
-    return of(this.getDefaultResponse());
-  }
-
   private getDefaultResponse(): ScrapRcpResponseEntity {
     return {
       success: false,
@@ -113,22 +114,35 @@ export class ScrapWriteDaoSupabaseService {
     };
   }
 
+  private mapDetails(details?: any): ProductScrapDetails | undefined {
+    if (!details) return undefined;
+    return {
+      description: details.description || [],
+      benefits: details.benefits || [],
+      ingredients_commercial: details.ingredients_commercial || [],
+      ingredients_modal: details.ingredients_modal || [],
+      usage: details.usage || [],
+      images: details.images || []
+    };
+  }
+
   private createProducts(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
     const context = 'createProducts';
     const products: ScrapRcpInsertEntity[] = changes.map(c => {
       return {
-        name: c.originalScrap.name,
-        description: c.originalScrap.description,
-        summary: c.originalScrap.summary,
-        manufacturer_ref: c.manufacturerRef,
-        url_source: c.originalScrap.urlSource,
-        url: c.originalScrap.url,
+        name: c.original_scrap.name,
+        description: c.original_scrap.description,
+        details: this.mapDetails(c.original_scrap.details),
+        summary: c.original_scrap.summary,
+        manufacturer_ref: c.manufacturer_ref,
+        url_source: c.original_scrap.urlSource,
+        url: c.original_scrap.urlBase,
         scrap_id: scrapId,
-        original_price: c.originalScrap.originalPrice,
-        sale_price: c.originalScrap.salePrice,
-        stock_status: c.originalScrap.totalStock,
-        img_main: c.originalScrap.imageUrl,
-        img_sec: c.originalScrap.secondImageUrl
+        original_price: c.original_scrap.originalPrice,
+        sale_price: c.original_scrap.salePrice,
+        stock_status: c.original_scrap.totalStock,
+        img_main: c.original_scrap.imageUrl,
+        img_sec: c.original_scrap.secondImageUrl
       };
     });
     const dataToSend: ScrapRcpInsertRequestEntity = {
@@ -169,18 +183,19 @@ export class ScrapWriteDaoSupabaseService {
     const products: ScrapRcpUpdateEntity[] = changes.map(c => {
       return {
         product_id: c.productId!,
-        name: c.originalScrap.name,
-        description: c.originalScrap.description,
-        summary: c.originalScrap.summary,
-        manufacturer_ref: c.manufacturerRef,
-        url_source: c.originalScrap.urlSource,
-        url: c.originalScrap.url,
+        name: c.original_scrap.name,
+        description: c.original_scrap.description,
+        details: this.mapDetails(c.original_scrap.details) as ProductScrapDetails,
+        summary: c.original_scrap.summary,
+        manufacturer_ref: c.manufacturer_ref,
+        url_source: c.original_scrap.urlSource,
+        url: c.original_scrap.urlBase,
         scrap_id: scrapId,
-        original_price: c.originalScrap.originalPrice,
-        sale_price: c.originalScrap.salePrice,
-        stock_status: c.originalScrap.totalStock,
-        img_main: c.originalScrap.imageUrl,
-        img_sec: c.originalScrap.secondImageUrl
+        original_price: c.original_scrap.originalPrice,
+        sale_price: c.original_scrap.salePrice,
+        stock_status: c.original_scrap.totalStock,
+        img_main: c.original_scrap.imageUrl,
+        img_sec: c.original_scrap.secondImageUrl
       };
     });
     const dataToSend: ScrapRcpUpdateRequestEntity = {

@@ -18,10 +18,25 @@
                 <mat-checkbox [disabled]="true" [(ngModel)]="syncOptions.syncStatus">Sincronizar Estado (Nuevos/Archivados)</mat-checkbox>
                 <mat-checkbox [disabled]="scrapTotalSize() > 0" [(ngModel)]="syncOptions.syncPrices">Sincronizar Precios</mat-checkbox>
                 <mat-checkbox [disabled]="scrapTotalSize() > 0" [(ngModel)]="syncOptions.syncStock">Sincronizar Stock</mat-checkbox>
+                <mat-checkbox [disabled]="scrapTotalSize() > 0" [(ngModel)]="syncOptions.syncDetails">Sincronizar Detalles</mat-checkbox>
                 <mat-checkbox [disabled]="scrapTotalSize() > 0" [(ngModel)]="syncOptions.syncProperties">Sincronizar Propiedades (Nombre, Desc, etc)</mat-checkbox>
             </div>
+
+            <div class="categories-container">
+                <h4>Categorías a procesar</h4>
+                <div class="categories-grid">
+                    @for (category of availableCategories; track category) {
+                        <mat-checkbox 
+                            [disabled]="scrapTotalSize() > 0" 
+                            [checked]="isCategorySelected(category)"
+                            (change)="onCategoryToggle(category, $event.checked)">
+                            {{category}}
+                        </mat-checkbox>
+                    }
+                </div>
+            </div>
             <div class="config-actions">
-                <button [disabled]="scrapTotalSize() > 0 || isSyncing()" mat-flat-button color="primary" (click)="loadProposal()">
+                <button [disabled]="scrapTotalSize() > 0 || isSyncing() || (syncOptions.categories?.length === 0)" mat-flat-button color="primary" (click)="loadProposal()">
                     <mat-icon [class.spinning]="isSyncing()">sync</mat-icon>
                     Cargar Propuesta
                 </button>

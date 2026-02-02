@@ -11,7 +11,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ScrapService } from 'src/app/core/services/scrap/scrap.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
-import { ProductScrapSyncPendingChange, ProductScrapSyncOptions } from 'src/app/core/models/products/scrap/product.scrap.sync.model';
+import { ProductScrapSyncPendingChange, ProductScrapSyncOptions, ScrapCategory } from 'src/app/core/models/products/scrap/product.scrap.sync.model';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ScrapEntity } from 'src/app/shared/entity/scrap.entity';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -51,8 +51,12 @@ export class SyncProposalComponent implements OnInit {
     syncStatus: true,
     syncPrices: false,
     syncStock: false,
-    syncProperties: false
+    syncDetails: false,
+    syncProperties: false,
+    categories: []
   };
+
+  availableCategories = Object.values(ScrapCategory);
 
   isSyncing = signal<boolean>(false);
   showProposal = signal<boolean>(false);
@@ -92,11 +96,11 @@ export class SyncProposalComponent implements OnInit {
 
   proposalTableConfig: TableConfig = {
     columns: [
-      { key: 'manufacturerRef', header: 'Referencia', filterable: true },
-      { key: 'productName', header: 'Nombre', filterable: true },
+      { key: 'manufacturer_ref', header: 'Referencia', filterable: true },
+      { key: 'product_name', header: 'Nombre', filterable: true },
       { key: 'saved', header: 'Aplicado', filterable: true }
     ],
-    searchableFields: ['manufacturerRef'],
+    searchableFields: ['manufacturer_ref', 'product_name'],
     pageSizeOptions: [5, 10, 20],
     actions: { show: true, view: true, edit: true, editIcon: 'save', delete: false }
   };
@@ -237,6 +241,19 @@ export class SyncProposalComponent implements OnInit {
       width: '500px',
       data: change
     });
+  }
+
+  onCategoryToggle(category: ScrapCategory, checked: boolean) {
+    const currentCategories = this.syncOptions.categories || [];
+    if (checked) {
+      this.syncOptions.categories = [...currentCategories, category];
+    } else {
+      this.syncOptions.categories = currentCategories.filter(c => c !== category);
+    }
+  }
+
+  isCategorySelected(category: ScrapCategory): boolean {
+    return this.syncOptions.categories?.includes(category) || false;
   }
 
   goBack() {

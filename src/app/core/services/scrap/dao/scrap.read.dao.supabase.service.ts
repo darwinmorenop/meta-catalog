@@ -23,31 +23,6 @@ export class ScrapReadDaoSupabaseService {
   constructor() {
   }
 
-  getAllProductsScrap(): Observable<ProductScrapEntity[]> {
-    const context = 'getAllProductsScrap';
-    const promise = this.supabaseService.getSupabaseClient()
-      .from('v_product_scrap_report')
-      .select('*')
-      .or('source_is_active.eq.true,source_is_active.is.null')
-      .order('product_name', { ascending: true });
-    return from(promise).pipe(
-      tap(response => {
-        if (response.error) throw response.error;
-      }),
-      map(response => {
-        const data = (response.data as any[]) || [];
-        return data.map(item => ({
-          ...item,
-          last_scraped_at: this.dateUtils.parseDbDate(item.last_scraped_at),
-        })) as ProductScrapEntity[];
-      }),
-      catchError(error => {
-        this.logger.error('Error fetching products for scrap:', error, this.CLASS_NAME, context);
-        return of([]);
-      })
-    );
-  }
-
   getProductsScrapById(scrapId: number): Observable<ProductScrapEntity[]> {
     const context = 'getProductsScrapById';
     const promise = this.supabaseService.getSupabaseClient()

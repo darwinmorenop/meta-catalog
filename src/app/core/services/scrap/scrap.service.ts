@@ -76,10 +76,6 @@ export class ScrapService {
         return this.scrapWriteDaoSupabaseService.delete(scrapId);
     }
 
-    getAllProductsScrap(): Observable<ProductScrapEntity[]> {
-        return this.scrapReadDaoSupabaseService.getAllProductsScrap();
-    }
-
     getProductsWithSources(productId?: number): Observable<ProductWithSourcesEntity[]> {
         return this.scrapReadDaoSupabaseService.getProductsWithSources(productId);
     }
