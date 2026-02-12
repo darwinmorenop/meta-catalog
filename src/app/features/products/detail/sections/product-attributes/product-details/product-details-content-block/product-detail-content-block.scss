@@ -1,0 +1,157 @@
+:host {
+  display: block;
+}
+
+.block {
+  // ─── Indentación por profundidad ───
+  &--depth-1 { padding-left: 16px; border-left: 2px solid #2A2A2A; }
+  &--depth-2 { padding-left: 12px; border-left: 2px solid #1E1E1E; }
+
+  & + .block { margin-top: 8px; }
+
+  // ─── QUESTION ───
+  &__question {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    &-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    &-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+
+  // ─── SECTION ───
+  &__section {
+    margin-bottom: 8px;
+
+    &-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #00E5FF;
+      margin: 0 0 4px 0;
+      letter-spacing: 0.02em;
+    }
+
+    &-body {
+      font-size: 13px;
+      color: #B5B5B5;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  // ─── KEY_VALUE ───
+  &__kv {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 0;
+    flex-wrap: wrap;
+
+    &-title {
+      font-weight: 600;
+      color: #FFFFFF;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    &-separator {
+      color: #2A2A2A;
+      flex-shrink: 0;
+    }
+
+    &-content {
+      color: #B5B5B5;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  }
+
+  // ─── STEP ───
+  &__step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+
+    &-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #00E5FF;
+      color: #0B0B0B;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    &-bullet {
+      color: #00E5FF;
+      font-size: 16px;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+
+    &-text {
+      font-size: 13px;
+      color: #B5B5B5;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  // ─── FEATURE ───
+  &__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4px 0;
+
+    &-icon {
+      color: #00E5FF;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    &-text {
+      font-size: 13px;
+      color: #FFFFFF;
+      margin: 0;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+  }
+
+  // ─── PARAGRAPH ───
+  &__paragraph {
+    font-size: 13px;
+    color: #B5B5B5;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  // ─── CHILDREN container ───
+  &__children {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}

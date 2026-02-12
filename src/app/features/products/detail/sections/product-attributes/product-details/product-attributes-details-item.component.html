@@ -1,0 +1,64 @@
+@let p = product();
+
+<article class="pdv">
+  <!-- ═══ GALERÍA DE IMÁGENES ═══ -->
+  @if (hasImages()) {
+    <section class="pdv__gallery">
+      @for (img of p.images; track img) {
+        <img class="pdv__gallery-img" [src]="img" [alt]="" loading="lazy" />
+      }
+    </section>
+  }
+
+  <!-- ═══ SECCIONES DE CONTENIDO (description, benefits, usage, ingredients) ═══ -->
+  @for (section of sections(); track section.id) {
+    <section class="pdv__section" [id]="section.id">
+      <h2 class="pdv__section-title">
+        <span class="pdv__section-icon">{{ section.icon }}</span>
+        {{ section.label }}
+      </h2>
+      <div class="pdv__section-content">
+        @for (block of section.blocks; track block.text) {
+          <app-content-block [block]="block" [depth]="0" />
+        }
+      </div>
+    </section>
+  }
+
+  <!-- ═══ INGREDIENTES MODAL (lista plana) ═══ -->
+  @if (hasModalIngredients()) {
+    <section class="pdv__section" id="ingredients-modal">
+      <h2 class="pdv__section-title">
+        <span class="pdv__section-icon">🧪</span>
+        Lista completa de ingredientes
+      </h2>
+      <div class="pdv__ingredients-modal">
+        @for (ing of p.ingredients_modal; track ing) {
+          <span class="pdv__ingredient-chip">{{ ing }}</span>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- ═══ VIDEOS ═══ -->
+  @if (hasVideos()) {
+    <section class="pdv__section" id="videos">
+      <h2 class="pdv__section-title">
+        <span class="pdv__section-icon">🎬</span>
+        Videos
+      </h2>
+      <div class="pdv__videos">
+        @for (video of p.videos; track video) {
+          <iframe
+            class="pdv__video-frame"
+            [src]="video"
+            frameborder="0"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+        }
+      </div>
+    </section>
+  }
+
+</article>

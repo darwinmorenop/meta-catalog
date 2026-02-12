@@ -6,13 +6,14 @@ import { ProductScrapSyncOptions, ProductScrapSyncPendingChange } from 'src/app/
 import { ScrapService } from 'src/app/core/services/scrap/scrap.service';
 import { ProductScrap } from 'src/app/core/models/products/scrap/product.scrap.model';
 import { ProductScrapEntity } from 'src/app/shared/entity/view/product.scrap.entity';
+import { ScrapRcpResponseEntity } from 'src/app/shared/entity/rcp/scrap.rcp.entity';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ScrapRemoteService {
 
-    private baseUrl = 'http://localhost:8000/api/scrap/changes';
+    private baseUrl = 'http://localhost:8000/api/scrap';
     private http: HttpClient = inject(HttpClient);
     private loggerService: LoggerService = inject(LoggerService);
     private readonly CLASS_NAME = ScrapRemoteService.name;
@@ -21,6 +22,22 @@ export class ScrapRemoteService {
         const context = 'getChanges';
         this.loggerService.debug(`Starting with options: ${JSON.stringify(options)}`, this.CLASS_NAME, context);
         return this.http.post<{ changes: ProductScrapSyncPendingChange[], scrapSize: number }>(
-            `${this.baseUrl}`, { options: options, limit: 5 });
+            `${this.baseUrl}/changes`, { options: options, limit: 5, include_raw: false });
+    }
+
+    applyChanges(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<any> {
+        if (changes.length === 0) return of(null);
+        const context = 'applyChanges';
+        this.loggerService.debug(`Starting with changes: ${JSON.stringify(changes)}`, this.CLASS_NAME, context);
+        return this.http.post<{ changes: ProductScrapSyncPendingChange[], scrapSize: number, summary:any,executionTime: string }>(
+            `${this.baseUrl}/apply`, { options: options, limit: 5, scrap_id: scrapId ,changes:changes});
+    }
+
+    applyChangesAll(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<any> {
+        if (changes.length === 0) return of(null);
+        const context = 'applyChangesAll';
+        this.loggerService.debug(`Starting with changes: ${JSON.stringify(changes)}`, this.CLASS_NAME, context);
+        return this.http.post<{ changes: ProductScrapSyncPendingChange[], scrapSize: number, summary:any,executionTime: string }>(
+            `${this.baseUrl}/apply-all`, { options: options, limit: 5, scrap_id: scrapId ,changes:changes});
     }
 }

@@ -8,6 +8,7 @@ import { ScrapSummaryEntry } from 'src/app/shared/entity/view/scrap.entry';
 import { ScrapRcpResponseEntity } from 'src/app/shared/entity/rcp/scrap.rcp.entity';
 import { ProductScrapSyncOptions, ProductScrapSyncPendingChange } from 'src/app/core/models/products/scrap/product.scrap.sync.model';
 import { ScrapReadDaoSupabaseService } from 'src/app/core/services/scrap/dao/scrap.read.dao.supabase.service';
+import { ScrapRemoteService } from './scrap.remote.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,7 @@ import { ScrapReadDaoSupabaseService } from 'src/app/core/services/scrap/dao/scr
 export class ScrapService {
     private scrapWriteDaoSupabaseService: ScrapWriteDaoSupabaseService = inject(ScrapWriteDaoSupabaseService);
     private scrapReadDaoSupabaseService: ScrapReadDaoSupabaseService = inject(ScrapReadDaoSupabaseService);
+    private scrapRemoteService: ScrapRemoteService = inject(ScrapRemoteService);
     private loggerService: LoggerService = inject(LoggerService);
     private readonly CLASS_NAME = ScrapService.name;
     private currentProduct = signal<ProductScrapEntity | null>(null);
@@ -65,11 +67,11 @@ export class ScrapService {
     }
 
     applyChanges(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
-        return this.scrapWriteDaoSupabaseService.applyChanges(changes, scrapId, options);
+        return this.scrapRemoteService.applyChanges(changes, scrapId, options);
     }
 
     applyChangesAll(changes: ProductScrapSyncPendingChange[], scrapId: number, options: ProductScrapSyncOptions): Observable<ScrapRcpResponseEntity> {
-        return this.scrapWriteDaoSupabaseService.applyChangesAll(changes, scrapId, options);
+        return this.scrapRemoteService.applyChangesAll(changes, scrapId, options);
     }
 
     delete(scrapId: number): Observable<any> {

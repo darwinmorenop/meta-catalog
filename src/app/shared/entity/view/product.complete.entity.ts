@@ -29,6 +29,7 @@ export interface ProductCompleteEntity {
     attribute_pao: string,
     attribute_inci: string[],
     attribute_notes: any,
+    attribute_details: any,
     // Pricing
     price_sale_price: number,
     price_original_price: number,

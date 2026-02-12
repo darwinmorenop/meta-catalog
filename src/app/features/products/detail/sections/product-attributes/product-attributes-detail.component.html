@@ -99,5 +99,11 @@
                 </div>
             </mat-card-content>
         </mat-card>
+
+        @if (attributes()?.details) {
+            <div class="full-width">
+                <app-product-attributes-details-item [product]="attributes()?.details!" />
+            </div>
+        }
     </div>
 </div>

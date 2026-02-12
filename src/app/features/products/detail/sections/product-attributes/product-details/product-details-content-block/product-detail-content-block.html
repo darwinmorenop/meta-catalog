@@ -1,0 +1,70 @@
+@let b = block();
+@let d = depth();
+
+<div class="block block--{{ b.type }} block--depth-{{ d }}">
+
+  @switch (b.type) {
+
+    <!-- ═══ QUESTION: Padre principal con pregunta ═══ -->
+    @case ('question') {
+      <div class="block__question">
+        <span class="block__question-icon">❓</span>
+        <h3 class="block__question-text">{{ b.text }}</h3>
+      </div>
+    }
+
+    <!-- ═══ SECTION: Título + contenido opcional ═══ -->
+    @case ('section') {
+      <div class="block__section">
+        <h4 class="block__section-title">{{ b.title }}</h4>
+        @if (b.text) {
+          <p class="block__section-body">{{ b.text }}</p>
+        }
+      </div>
+    }
+
+    <!-- ═══ KEY_VALUE: Título: Contenido ═══ -->
+    @case ('key_value') {
+      <div class="block__kv">
+        <span class="block__kv-title">{{ b.title }}</span>
+        <span class="block__kv-separator">—</span>
+        <span class="block__kv-content">{{ b.text }}</span>
+      </div>
+    }
+
+    <!-- ═══ STEP: Paso numerado o viñeta ═══ -->
+    @case ('step') {
+      <div class="block__step">
+        @if (b.title) {
+          <span class="block__step-number">{{ b.title }}</span>
+        } @else {
+          <span class="block__step-bullet">•</span>
+        }
+        <p class="block__step-text">{{ b.text }}</p>
+      </div>
+    }
+
+    <!-- ═══ FEATURE: Dato corto / beneficio suelto ═══ -->
+    @case ('feature') {
+      <div class="block__feature">
+        <span class="block__feature-icon">✦</span>
+        <p class="block__feature-text">{{ b.text }}</p>
+      </div>
+    }
+
+    <!-- ═══ PARAGRAPH / INFO / DEFAULT ═══ -->
+    @default {
+      <p class="block__paragraph">{{ b.text }}</p>
+    }
+  }
+
+  <!-- ═══ HIJOS RECURSIVOS ═══ -->
+  @if (b.items?.length) {
+    <div class="block__children">
+      @for (child of b.items; track child.text) {
+        <app-content-block [block]="child" [depth]="d + 1" />
+      }
+    </div>
+  }
+
+</div>

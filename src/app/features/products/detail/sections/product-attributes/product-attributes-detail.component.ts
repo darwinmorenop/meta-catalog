@@ -4,12 +4,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { ProductAttributesDetailsItemComponent } from 'src/app/features/products/detail/sections/product-attributes/product-details/product-attributes-details-item.component';
 import { ProductDetailComponent } from 'src/app/features/products/detail/product-detail.component';
 
 @Component({
   selector: 'app-product-attributes-detail',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatDividerModule, MatIconModule, MatChipsModule],
+  imports: [CommonModule, MatCardModule, MatDividerModule, MatIconModule, MatChipsModule, ProductAttributesDetailsItemComponent],
   templateUrl: 'product-attributes-detail.component.html',
   styleUrl: 'product-attributes-detail.component.scss'
 })

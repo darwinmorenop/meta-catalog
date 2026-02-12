@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { ProductCompleteEntity } from "src/app/shared/entity/view/product.complete.entity";
 import { Product } from "src/app/core/models/products/product.model";
 import { ProductStatusEnum } from "src/app/core/models/products/product.status.enum";
-import { ProductAttributes, ProductAttributesGender, ProductAttributesUnit } from "src/app/core/models/products/product.attributes.model";
+import { ProductAttributes, ProductAttributesGender, ProductAttributesUnit, ProductDetails } from "src/app/core/models/products/product.attributes.model";
 import { ProductCategory, ProductCategoryBreadcrumb } from "src/app/core/models/products/product.category.model";
 import { ProductPricing } from "src/app/core/models/products/product.pricing.model";
 import { ProductStockInfo } from "src/app/core/models/products/product.stock.info.model";
@@ -41,6 +41,7 @@ export class ProductUtilsService {
             id: m.id,
             product_id: m.product_id,
             url: m.url,
+            enabled: m.enabled,
             type: m.type,
             is_main: m.is_main,
             display_order: m.display_order,
@@ -77,8 +78,34 @@ export class ProductUtilsService {
                 top: product.attribute_notes?.top || [],
                 heart: product.attribute_notes?.heart || [],
                 base: product.attribute_notes?.base || []
-            }
+            },
+            details: this.getDetails(product.attribute_details)
         };
+    }
+
+    private getDetails(details: any): ProductDetails {
+        try {
+            return {
+                description: details.description,
+                benefits: details.benefits,
+                ingredients_commercial: details.ingredients_commercial,
+                ingredients_modal: details.ingredients_modal,
+                usage: details.usage,
+                images: details.images,
+                videos: details.videos
+            };
+        } catch (error) {
+            console.error('Error parsing product details:', error);
+            return {
+                description: [],
+                benefits: [],
+                ingredients_commercial: [],
+                ingredients_modal: [],
+                usage: [],
+                images: [],
+                videos: []
+            };
+        }
     }
 
     private getPricing(product: ProductCompleteEntity): ProductPricing {
