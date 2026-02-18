@@ -1,3 +1,4 @@
+@if (authService.isAuthenticated) {
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav mode="over" class="sidenav">
     <mat-toolbar color="primary">Menu</mat-toolbar>
@@ -324,13 +325,10 @@
         }
       </div>
 
-      <button mat-icon-button (click)="themeService.toggleTheme()" matTooltip="Cambiar tema" class="theme-toggle">
-        <mat-icon>{{ themeService.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
-      </button>
 
       @if (userService.currentUser(); as user) {
         <div class="user-active-control">
-          <button mat-flat-button class="active-user-btn" (click)="openActiveUserSelector()" matTooltip="Usuario Activo">
+          <button mat-flat-button class="active-user-btn" [matMenuTriggerFor]="userMenu" matTooltip="Mi Perfil">
             <div class="user-btn-content">
               <div class="avatar-header">
                 <img [src]="user.image || 'assets/images/default-avatar.png'" [alt]="user.firstName">
@@ -338,13 +336,22 @@
               <span class="username">{{ user.firstName }}</span>
             </div>
           </button>
-        </div>
-      } @else {
-        <div class="user-active-control">
-          <button mat-stroked-button class="no-user-btn" (click)="openActiveUserSelector()" matTooltip="Seleccionar Usuario Activo">
-            <mat-icon>account_circle</mat-icon>
-            <span class="username">Identificarse</span>
-          </button>
+
+          <mat-menu #userMenu="matMenu">
+            <button mat-menu-item (click)="navigateTo('/users/' + (user.id ?? ''))">
+              <mat-icon>account_circle</mat-icon>
+              <span>Mi Perfil</span>
+            </button>
+            <button mat-menu-item (click)="themeService.toggleTheme()">
+              <mat-icon>{{ themeService.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+              <span>{{ themeService.theme() === 'dark' ? 'Modo Claro' : 'Modo Oscuro' }}</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="logout()" class="logout-btn">
+              <mat-icon color="warn">logout</mat-icon>
+              <span class="text-warn">Cerrar Sesión</span>
+            </button>
+          </mat-menu>
         </div>
       }
     </mat-toolbar>
@@ -354,3 +361,8 @@
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
+} @else {
+  <main class="login-container">
+    <router-outlet></router-outlet>
+  </main>
+}

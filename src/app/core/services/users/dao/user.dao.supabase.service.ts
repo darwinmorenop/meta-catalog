@@ -111,6 +111,19 @@ export class UserDaoSupabaseService {
     );
   }
 
+  getById(userId: string): Observable<UserEntity | null> {
+    return from(
+      this.supabaseService.getSupabaseClient()
+        .from('user')
+        .select('*')
+        .eq('id', userId)
+        .single()
+    ).pipe(
+      map(res => res.data ? this.mapToEntity(res.data) : null),
+      catchError(() => of(null))
+    );
+  }
+
   getAvailableSponsorsRpc(editingUserId: string): Observable<UserSponsorEntity[]> {
     return from(
       this.supabaseService.getSupabaseClient().rpc('get_available_sponsors', { p_edit_user_id: editingUserId })

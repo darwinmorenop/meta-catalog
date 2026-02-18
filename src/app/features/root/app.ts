@@ -10,12 +10,14 @@ import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
 import { ThemeService } from 'src/app/core/services/theme/theme.service';
 import { UserService } from 'src/app/core/services/users/user.service';
 import { UserActiveSelectorDialogComponent } from 'src/app/features/users/dialog/active-selector/user-active-selector-dialog.component';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { PermissionService } from 'src/app/core/services/permission.service';
 import { Action, Resource } from 'src/app/shared/entity/user.profile.entity';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 import { HasPermissionDirective } from 'src/app/shared/directives/has-permission.directive';
 
@@ -35,6 +37,9 @@ import { HasPermissionDirective } from 'src/app/shared/directives/has-permission
     MatSidenavModule,
     MatListModule,
     MatExpansionModule,
+    MatMenuModule,
+    MatDialogModule,
+    MatDividerModule,
     HasPermissionDirective
   ],
   templateUrl: 'app.html',
@@ -48,6 +53,7 @@ export class AppComponent {
   themeService = inject(ThemeService);
   userService = inject(UserService);
   permissionService = inject(PermissionService);
+  authService = inject(AuthService);
 
   readonly Resource = Resource;
   readonly Action = Action;
@@ -72,6 +78,12 @@ export class AppComponent {
   openActiveUserSelector() {
     this.dialog.open(UserActiveSelectorDialogComponent, {
       width: '500px'
+    });
+  }
+
+  logout() {
+    this.authService.signOut().subscribe(() => {
+      this.router.navigate(['/login']);
     });
   }
 }

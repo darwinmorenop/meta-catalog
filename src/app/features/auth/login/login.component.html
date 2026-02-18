@@ -1,0 +1,104 @@
+<div class="login-page">
+  <div class="background-decor">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
+
+  <mat-card class="login-card glass">
+    <mat-card-header>
+      <div class="brand">
+        <mat-icon class="brand-icon">auto_awesome</mat-icon>
+        <h1 class="brand-name">Meta Catalog</h1>
+      </div>
+      <mat-card-title>
+        @if (isForgotPasswordMode()) { Recuperar contraseña }
+        @else { {{ isLoginMode() ? 'Bienvenido de nuevo' : 'Crea tu cuenta' }} }
+      </mat-card-title>
+      <mat-card-subtitle>
+        @if (isForgotPasswordMode()) { Introduce tu email para restablecer tu contraseña }
+        @else { {{ isLoginMode() ? 'Inicia sesión para gestionar tu catálogo' : 'Regístrate para empezar a organizar tus productos' }} }
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (!isForgotPasswordMode()) {
+        <div class="social-login">
+          <button mat-stroked-button class="social-button google" (click)="signInWithOAuth('google')" [disabled]="isLoading()">
+            <img src="assets/images/google-icon.svg" alt="Google" class="social-icon">
+          </button>
+          <button mat-stroked-button class="social-button facebook" (click)="signInWithOAuth('facebook')" [disabled]="isLoading()">
+            <img src="assets/images/facebook-icon.svg" alt="Facebook" class="social-icon">
+          </button>
+          <button mat-stroked-button class="social-button apple" (click)="signInWithOAuth('apple')" [disabled]="isLoading()">
+            <img src="assets/images/apple-icon.svg" alt="Apple" class="social-icon">
+          </button>
+        </div>
+
+        <div class="divider">
+          <span>o usa tu correo</span>
+        </div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        @if (!isLoginMode() && !isForgotPasswordMode()) {
+          <div class="name-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="firstName">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Apellido</mat-label>
+              <input matInput formControlName="lastName">
+            </mat-form-field>
+          </div>
+        }
+
+        <mat-form-field appearance="outline">
+          <mat-label>Correo electrónico</mat-label>
+          <input matInput type="email" formControlName="email">
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+
+        @if (!isForgotPasswordMode()) {
+          <mat-form-field appearance="outline" class="password-field">
+            <mat-label>Contraseña</mat-label>
+            <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password">
+            <button mat-icon-button matSuffix (click)="hidePassword.set(!hidePassword())" type="button">
+              <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+          
+          @if (isLoginMode()) {
+            <div class="forgot-link">
+              <button mat-button color="primary" type="button" (click)="toggleForgotPassword()">
+                ¿Olvidaste tu contraseña?
+              </button>
+            </div>
+          }
+        }
+
+        <button mat-flat-button color="primary" class="login-button" [disabled]="isLoading()">
+          @if (isForgotPasswordMode()) { ENVIAR EMAIL }
+          @else { {{ isLoginMode() ? 'ENTRAR' : 'REGISTRARME' }} }
+        </button>
+
+        @if (isForgotPasswordMode()) {
+          <button mat-button class="back-link" type="button" (click)="toggleForgotPassword()">
+            Volver al login
+          </button>
+        }
+      </form>
+    </mat-card-content>
+
+    <mat-card-footer>
+      <p class="toggle-mode">
+        {{ isLoginMode() ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
+        <button mat-button color="primary" (click)="toggleMode()">
+          {{ isLoginMode() ? 'Regístrate' : 'Inicia sesión' }}
+        </button>
+      </p>
+    </mat-card-footer>
+  </mat-card>
+</div>

@@ -7,6 +7,7 @@ import { UserNetworkDetail, UserSponsorEntity } from 'src/app/shared/entity/rcp/
 import { ThemeService } from 'src/app/core/services/theme/theme.service';
 import { UserProfile } from 'src/app/shared/entity/user.profile.entity';
 import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class UserService {
   private userDaoSupabaseService = inject(UserDaoSupabaseService);
   private userProfileService = inject(UserProfileService);
   private themeService = inject(ThemeService);
+  private authService = inject(AuthService);
 
   private readonly ACTIVE_USER_KEY = 'activeUserId';
   
@@ -40,6 +42,26 @@ export class UserService {
 
   constructor() {
     this.loadAll();
+
+    // Sincronizar con Supabase Auth
+    effect(() => {
+      const authUser = this.authService.user();
+      if (authUser) {
+        // this.logger.debug(`Usuario autenticado detectado: ${authUser.id}`, 'UserService');
+        this.getUserDetailWithNetwork(authUser.id).subscribe(network => {
+          this.currentUserNetwork.set(network);
+          localStorage.setItem(this.ACTIVE_USER_KEY, authUser.id);
+        });
+      } else {
+        // Si no hay sesión, intentamos cargar el último usuario guardado (comportamiento legacy/dev)
+        const savedId = localStorage.getItem(this.ACTIVE_USER_KEY);
+        if (savedId && !this.currentUserNetwork()) {
+           this.getUserDetailWithNetwork(savedId).subscribe(network => {
+            this.currentUserNetwork.set(network);
+          });
+        }
+      }
+    });
 
     // Effect to apply user theme settings
     effect(() => {
