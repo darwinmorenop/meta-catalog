@@ -129,7 +129,7 @@ export class UserDialogComponent implements OnInit {
     });
   }
 
-  private updateSponsor(id: number, name: string) {
+  private updateSponsor(id: string, name: string) {
     this.form.patchValue({ sponsorId: id });
     this.selectedSponsorName.set(name);
   }

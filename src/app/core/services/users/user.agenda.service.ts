@@ -11,7 +11,7 @@ import { UserAgendaCreateRcpEntity, UserAgendaCreateRcpResponseEntity, UserAgend
 export class UserAgendaService {
   private userAgendaDaoSupabaseService = inject(UserAgendaDaoSupabaseService);
 
-  getAll(userIds?: number[]): Observable<UserAgendaDashboardEntity[]> {
+  getAll(userIds?: string[]): Observable<UserAgendaDashboardEntity[]> {
     return this.userAgendaDaoSupabaseService.getAll(userIds);
   }
 
@@ -27,15 +27,15 @@ export class UserAgendaService {
     return this.userAgendaDaoSupabaseService.update(userAgenda);
   }
 
-  unlink(owner_id: number, contact_id: number): Observable<boolean> {
+  unlink(owner_id: string, contact_id: string): Observable<boolean> {
     return this.userAgendaDaoSupabaseService.unlink(owner_id, contact_id);
   }
 
-  getHistory(owner_id: number, contact_id: number): Observable<{ follow_up_history: UserAgendaHistory[], last_contact_history: UserAgendaHistory[] }> {
+  getHistory(owner_id: string, contact_id: string): Observable<{ follow_up_history: UserAgendaHistory[], last_contact_history: UserAgendaHistory[] }> {
     return this.userAgendaDaoSupabaseService.getHistory(owner_id, contact_id);
   }
 
-  addHistoryEntry(owner_id: number, contact_id: number, type: 'contact' | 'follow_up', entry: UserAgendaHistory): Observable<boolean> {
+  addHistoryEntry(owner_id: string, contact_id: string, type: 'contact' | 'follow_up', entry: UserAgendaHistory): Observable<boolean> {
     return this.userAgendaDaoSupabaseService.addHistoryEntry(owner_id, contact_id, type, entry);
   }
 

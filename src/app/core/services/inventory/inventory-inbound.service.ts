@@ -24,7 +24,7 @@ export class InventoryInboundService {
     return this.dao.getAll();
   }
 
-  getAllDashboardData(userIds?: number[]): Observable<InventoryInboundDashboardEntity[]> {
+  getAllDashboardData(userIds?: string[]): Observable<InventoryInboundDashboardEntity[]> {
     this.logger.debug('Getting all inventory inbound dashboard data', this.CLASS_NAME, 'getAllDashboardData');
     return this.dao.getAllDashboardData(userIds);
   }

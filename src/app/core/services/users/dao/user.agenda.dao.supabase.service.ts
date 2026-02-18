@@ -19,7 +19,7 @@ export class UserAgendaDaoSupabaseService {
   constructor() {
   }
 
-  getAll(userIds?: number[]): Observable<UserAgendaDashboardEntity[]> {
+  getAll(userIds?: string[]): Observable<UserAgendaDashboardEntity[]> {
     let query = this.supabaseService.getSupabaseClient()
       .from('v_user_agenda')
       .select('*')
@@ -27,7 +27,7 @@ export class UserAgendaDaoSupabaseService {
       .order('first_name');
 
     if (userIds && userIds.length > 0) {
-      query = query.or(`owner_id.in.(${userIds.join(',')})`);
+      query = query.in('owner_id', userIds);
     }
 
     return from(query).pipe(
@@ -76,7 +76,7 @@ export class UserAgendaDaoSupabaseService {
     );
   }
 
-  unlink(owner_id: number, contact_id: number): Observable<boolean> {
+  unlink(owner_id: string, contact_id: string): Observable<boolean> {
     return from(
       this.supabaseService.getSupabaseClient()
         .from('user_agenda')
@@ -88,7 +88,7 @@ export class UserAgendaDaoSupabaseService {
     );
   }
 
-  getHistory(owner_id: number, contact_id: number): Observable<{ follow_up_history: UserAgendaHistory[], last_contact_history: UserAgendaHistory[] }> {
+  getHistory(owner_id: string, contact_id: string): Observable<{ follow_up_history: UserAgendaHistory[], last_contact_history: UserAgendaHistory[] }> {
     return from(
       this.supabaseService.getSupabaseClient()
         .from('user_agenda')
@@ -107,7 +107,7 @@ export class UserAgendaDaoSupabaseService {
     );
   }
 
-  addHistoryEntry(owner_id: number, contact_id: number, type: 'contact' | 'follow_up', entry: UserAgendaHistory): Observable<boolean> {
+  addHistoryEntry(owner_id: string, contact_id: string, type: 'contact' | 'follow_up', entry: UserAgendaHistory): Observable<boolean> {
     const column = type === 'contact' ? 'last_contact_history' : 'follow_up_history';
     
     return this.getHistory(owner_id, contact_id).pipe(

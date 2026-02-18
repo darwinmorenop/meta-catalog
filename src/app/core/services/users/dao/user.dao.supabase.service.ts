@@ -111,7 +111,7 @@ export class UserDaoSupabaseService {
     );
   }
 
-  getAvailableSponsorsRpc(editingUserId: number): Observable<UserSponsorEntity[]> {
+  getAvailableSponsorsRpc(editingUserId: string): Observable<UserSponsorEntity[]> {
     return from(
       this.supabaseService.getSupabaseClient().rpc('get_available_sponsors', { p_edit_user_id: editingUserId })
     ).pipe(
@@ -119,7 +119,7 @@ export class UserDaoSupabaseService {
     );
   }
 
-  getUserDetailWithNetwork(userId: number): Observable<UserNetworkDetail[]> {
+  getUserDetailWithNetwork(userId: string): Observable<UserNetworkDetail[]> {
     const context = 'getUserDetailWithNetwork';
     this.loggerService.debug(`Recovering data for user ${userId}`, this.CLASS_NAME, context);
     return from(
@@ -163,7 +163,7 @@ export class UserDaoSupabaseService {
     );
   }
 
-  delete(id: number): Observable<boolean> {
+  delete(id: string): Observable<boolean> {
     return from(
       this.supabaseService.getSupabaseClient()
         .from('user')

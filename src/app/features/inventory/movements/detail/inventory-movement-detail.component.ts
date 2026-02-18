@@ -40,7 +40,7 @@ export class InventoryMovementDetailComponent implements OnInit {
   private readonly CLASS_NAME = 'InventoryMovementDetailComponent';
 
   productId = signal<number>(0);
-  userId = signal<number>(0);
+  userId = signal<string>('0');
 
   private params$ = toObservable(computed(() => ({
     productId: this.productId(),
@@ -51,8 +51,8 @@ export class InventoryMovementDetailComponent implements OnInit {
     stream: () => this.params$.pipe(
       switchMap(params => {
         if (params.productId === 0) return of([]);
-        // Si userId es 0, pedimos todo el producto (array vacío de usuarios)
-        const filterUserIds = params.userId > 0 ? [params.userId] : [];
+        // Si userId es '0', pedimos todo el producto (array vacío de usuarios)
+        const filterUserIds = params.userId !== '0' ? [params.userId] : [];
         return this.movementService.getAllDashboardData(filterUserIds, [params.productId]);
       })
     )
@@ -72,7 +72,7 @@ export class InventoryMovementDetailComponent implements OnInit {
 
     let movements: any[] = [];
 
-    if (this.userId() > 0) {
+    if (this.userId() !== '0') {
       // Un solo dueño
       const owner = report.owners.find(o => o.user_id === this.userId());
       if (owner) {
@@ -125,7 +125,7 @@ export class InventoryMovementDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.productId.set(Number(params['productId']));
-      this.userId.set(Number(params['userId']));
+      this.userId.set(params['userId']);
     });
   }
 

@@ -48,7 +48,7 @@ export class SaleInventoryDetailComponent implements OnInit {
   private readonly CLASS_NAME = 'SaleInventoryDetailComponent';
 
   productId = signal<number>(0);
-  userId = signal<number>(0);
+  userId = signal<string>('0');
 
   private params$ = toObservable(computed(() => ({
     productId: this.productId(),
@@ -59,8 +59,8 @@ export class SaleInventoryDetailComponent implements OnInit {
     stream: () => this.params$.pipe(
       switchMap(params => {
         if (params.productId === 0) return of([]);
-        // Si userId es 0, pasamos undefined para que el DAO no filtre por usuario (ver todo el producto)
-        const filterUserIds = params.userId > 0 ? [params.userId] : undefined;
+        // Si userId es '0', pasamos undefined para que el DAO no filtre por usuario (ver todo el producto)
+        const filterUserIds = params.userId !== '0' ? [params.userId] : undefined;
         return this.saleService.getSalesByProductId(params.productId, filterUserIds);
       })
     )
@@ -114,7 +114,7 @@ export class SaleInventoryDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.productId.set(Number(params['productId']));
-      this.userId.set(Number(params['userId']));
+      this.userId.set(params['userId']);
     });
   }
 
@@ -229,7 +229,7 @@ export class SaleInventoryDetailComponent implements OnInit {
     const saleSelector = this.dialog.open(SaleSimpleSelectorDialogComponent, {
       width: '900px',
       data: { 
-        userIds: this.userId() > 0 ? [this.userId()] : undefined,
+        userIds: this.userId() !== '0' ? [this.userId()] : undefined,
         title: `Vincular ${info.name} a una venta existente`
       }
     });

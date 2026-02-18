@@ -22,7 +22,7 @@ export class UserListDaoSupabaseService {
   constructor() {
   }
 
-  getAll(userIds?: number[]): Observable<ListViewEntity[]> {
+  getAll(userIds?: string[]): Observable<ListViewEntity[]> {
     const systemSlugs = `${ListSlugEnum.favorites},${ListSlugEnum.price_tracking},${ListSlugEnum.stock_notifier}`;
 
     let query = this.supabaseService.getSupabaseClient()
@@ -32,7 +32,7 @@ export class UserListDaoSupabaseService {
     query = query.or(`slug.is.null,slug.not.in.(${systemSlugs})`);
 
     if (userIds && userIds.length > 0) {
-      query = query.or(`owner_id.in.(${userIds.join(',')})`);
+      query = query.in('owner_id', userIds);
     }
 
     return from(query).pipe(
@@ -40,14 +40,14 @@ export class UserListDaoSupabaseService {
     );
   }
 
-  getTracking(userIds?: number[]): Observable<ListViewEntity[]> {
+  getTracking(userIds?: string[]): Observable<ListViewEntity[]> {
     let query = this.supabaseService.getSupabaseClient()
       .from('v_list')
       .select('*')
       .eq('slug', ListSlugEnum.price_tracking);
 
     if (userIds && userIds.length > 0) {
-      query = query.or(`owner_id.in.(${userIds.join(',')})`);
+      query = query.in('owner_id', userIds);
     }
 
     return from(query).pipe(
@@ -55,7 +55,7 @@ export class UserListDaoSupabaseService {
     );
   }
 
-  getTrackingByUser(userId: number): Observable<ListItemViewEntity[]> {
+  getTrackingByUser(userId: string): Observable<ListItemViewEntity[]> {
     let query = this.supabaseService.getSupabaseClient()
       .from('v_list_items')
       .select('*')
@@ -67,14 +67,14 @@ export class UserListDaoSupabaseService {
     );
   }
 
-  getFavorites(userIds?: number[]): Observable<ListViewEntity[]> {
+  getFavorites(userIds?: string[]): Observable<ListViewEntity[]> {
     let query = this.supabaseService.getSupabaseClient()
       .from('v_list')
       .select('*')
       .eq('slug', ListSlugEnum.favorites);
 
     if (userIds && userIds.length > 0) {
-      query = query.or(`owner_id.in.(${userIds.join(',')})`);
+      query = query.in('owner_id', userIds);
     }
 
     return from(query).pipe(
@@ -82,7 +82,7 @@ export class UserListDaoSupabaseService {
     );
   }
 
-  getFavoritesByUser(userId: number): Observable<ListItemViewEntity[]> {
+  getFavoritesByUser(userId: string): Observable<ListItemViewEntity[]> {
     let query = this.supabaseService.getSupabaseClient()
       .from('v_list_items')
       .select('*')
@@ -94,14 +94,14 @@ export class UserListDaoSupabaseService {
     );
   }
 
-  getNotifier(userIds?: number[]): Observable<ListViewEntity[]> {
+  getNotifier(userIds?: string[]): Observable<ListViewEntity[]> {
     let query = this.supabaseService.getSupabaseClient()
       .from('v_list')
       .select('*')
       .eq('slug', ListSlugEnum.stock_notifier);
 
     if (userIds && userIds.length > 0) {
-      query = query.or(`owner_id.in.(${userIds.join(',')})`);
+      query = query.in('owner_id', userIds);
     }
 
     return from(query).pipe(
@@ -109,7 +109,7 @@ export class UserListDaoSupabaseService {
     );
   }
 
-  getNotifierByUser(userId: number): Observable<ListItemViewEntity[]> {
+  getNotifierByUser(userId: string): Observable<ListItemViewEntity[]> {
     let query = this.supabaseService.getSupabaseClient()
       .from('v_list_items')
       .select('*')

@@ -5,8 +5,8 @@ export interface SaleEntity {
     total_amount: number;
     payment_method: SalePaymentMethod;
     status: SaleStatus;
-    user_source_id: number;
-    user_target_id: number;
+    user_source_id: string;
+    user_target_id: string;
 }
 
 export interface SaleProductEntity {

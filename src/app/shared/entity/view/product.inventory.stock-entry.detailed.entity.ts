@@ -7,7 +7,7 @@ export interface ProductInventoryStockEntryDetailedEntity {
     expiry_date: Date;
     created_at: Date;
     updated_at: Date;
-    user_owner_id: number;
+    user_owner_id: string;
     user_owner_first_name: string;
     user_owner_last_name: string;
     inbound_id: number; 

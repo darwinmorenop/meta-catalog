@@ -7,8 +7,8 @@ import { UserService } from 'src/app/core/services/users/user.service';
 import { UserDashboardModel } from 'src/app/core/models/users/user.model';
 
 export interface UserSimpleSelectorData {
-  userIds?: number[];
-  initialSelectedId?: number;
+  userIds?: string[];
+  initialSelectedId?: string;
 }
 
 @Component({

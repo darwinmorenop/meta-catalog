@@ -21,7 +21,7 @@ export class ProductStoreService {
     private _isLoading = signal<boolean>(false);
     public isLoading = this._isLoading.asReadonly();
 
-    loadProducts(userId: number): void {
+    loadProducts(userId: string): void {
         this._isLoading.set(true);
         this.get(userId).subscribe({
             next: (entities) => {
@@ -34,7 +34,7 @@ export class ProductStoreService {
         });
     }
 
-    get(userId: number): Observable<ProductStore[]> {
+    get(userId: string): Observable<ProductStore[]> {
         return this.dao.get(userId).pipe(
             map(products => products.map(product => {
                 const p = this.productUtilsService.mapProduct(product);
@@ -51,7 +51,7 @@ export class ProductStoreService {
         );
     }
 
-    toggleFav(userId: number, productId: number) {
+    toggleFav(userId: string, productId: number) {
         const currentProducts = this._products();
         const productIndex = currentProducts.findIndex(p => p.id === productId);
 
@@ -124,7 +124,7 @@ export class ProductStoreService {
  * Cambia la cantidad del carrito de forma optimista
  * @param delta 1 para sumar, -1 para restar
  */
-    updateCartQuantity(userId: number, productId: number, delta: number): void {
+    updateCartQuantity(userId: string, productId: number, delta: number): void {
         const currentProducts = this._products();
         const index = currentProducts.findIndex(p => p.id === productId);
 
@@ -179,7 +179,7 @@ export class ProductStoreService {
     /**
  * Toggle del estado de seguimiento de precio (Campana)
  */
-    toggleTrack(userId: number, productId: number): void {
+    toggleTrack(userId: string, productId: number): void {
         const currentProducts = this._products();
         const index = currentProducts.findIndex(p => p.id === productId);
 
@@ -231,7 +231,7 @@ export class ProductStoreService {
 /**
  * Toggle para notificaciones de Stock (estilo campana/favoritos)
  */
-toggleStockNotifier(userId: number, productId: number): void {
+toggleStockNotifier(userId: string, productId: number): void {
   const currentProducts = this._products();
   const index = currentProducts.findIndex(p => p.id === productId);
 

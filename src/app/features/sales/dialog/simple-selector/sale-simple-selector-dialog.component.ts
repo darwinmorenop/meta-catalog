@@ -11,7 +11,7 @@ import { SaleDashboardEntity } from 'src/app/shared/entity/view/sale.dashboard.e
 import { SaleStatusLabels } from 'src/app/shared/entity/sale.entity';
 
 export interface SaleSimpleSelectorData {
-  userIds?: number[];
+  userIds?: string[];
   title?: string;
 }
 

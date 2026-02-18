@@ -16,8 +16,8 @@ export interface UserAgendaHistoryDialogData {
   title: string;
   history: UserAgendaHistory[];
   mode: 'view' | 'edit';
-  owner_id: number;
-  contact_id: number;
+  owner_id: string;
+  contact_id: string;
   type: 'contact' | 'follow_up';
 }
 

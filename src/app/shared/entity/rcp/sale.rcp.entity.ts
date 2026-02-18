@@ -16,8 +16,8 @@ export interface SaleInsertRcpEntity {
   total_amount: number;
   payment_method: SalePaymentMethod;
   status: SaleStatus;
-  user_source_id: number;
-  user_target_id: number;
+  user_source_id: string;
+  user_target_id: string;
   description?: string;
   items: SaleProductInsertRcpEntity[];
 }
@@ -45,7 +45,7 @@ export interface ProductSalesStats {
 }
 
 export interface SellerMetric {
-  user_id: number;
+  user_id: string;
   first_name: string;
   last_name: string;
   sales_count: number;

@@ -43,7 +43,7 @@ private readonly CLASS_NAME = InventoryInboundDaoSupabaseService.name;
     );
   }
 
-  getAllDashboardData(userIds?: number[]): Observable<InventoryInboundDashboardEntity[]> {
+  getAllDashboardData(userIds?: string[]): Observable<InventoryInboundDashboardEntity[]> {
     const context = 'getAllDashboardData';
     let query = this.supabaseService.getSupabaseClient()
       .from('v_inventory_inbound_dashboard')

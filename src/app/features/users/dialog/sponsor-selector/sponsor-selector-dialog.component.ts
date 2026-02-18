@@ -33,7 +33,7 @@ import { UserRankEnum, UserRankLabel } from 'src/app/core/models/users/user.mode
 export class SponsorSelectorDialogComponent {
   private readonly userService = inject(UserService);
   private readonly dialogRef = inject(MatDialogRef<SponsorSelectorDialogComponent>);
-  public data = inject<{ editingUserId: number }>(MAT_DIALOG_DATA);
+  public data = inject<{ editingUserId: string }>(MAT_DIALOG_DATA);
 
   sponsorsResource = rxResource({
     stream: () => this.userService.getAvailableSponsors(this.data.editingUserId)

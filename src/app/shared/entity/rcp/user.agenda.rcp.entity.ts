@@ -1,8 +1,8 @@
 import { UserProfile } from "src/app/shared/entity/user.profile.entity";
 
 export interface UserAgendaLinkRcpEntity {
-    p_owner_id: number;
-    p_contact_id: number;
+    p_owner_id: string;
+    p_contact_id: string;
     p_alias: string;
     p_tags: string[];
 }
@@ -13,7 +13,7 @@ export interface UserAgendaLinkRcpResponseEntity {
 }
 
 export interface UserAgendaCreateRcpEntity {
-    p_owner_id: number,
+    p_owner_id: string,
     p_first_name: string,
     p_last_name: string,
     p_email: string,
@@ -30,6 +30,6 @@ export interface UserAgendaCreateRcpEntity {
 export interface UserAgendaCreateRcpResponseEntity {
     status: 'success' | 'conflict' | 'error';
     message: string;
-    conflicting_users: number[];
-    contact_id: number;
+    conflicting_users: string[];
+    contact_id: string;
 }

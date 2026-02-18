@@ -2,7 +2,7 @@ import { UserRankEnum } from "src/app/core/models/users/user.model";
 import { UserSettingsEntity } from "src/app/shared/entity/user.entity";
 
 export interface UserSponsorEntity {
-  id: number;
+  id: string;
   fullName: string;
   email: string;
   rank: UserRankEnum;
@@ -15,7 +15,7 @@ export interface UserNode extends UserNetworkDetail {
 }
 
 export interface UserNetworkDetail {
-  id: number;
+  id: string;
   identifier: string;
   firstName: string;
   lastName: string;
@@ -32,7 +32,7 @@ export interface UserNetworkDetail {
   settings: UserSettingsEntity;
 
   // Detalles del Sponsor desglosados
-  sponsorId: number | null;
+  sponsorId: string | null;
   sponsorFirstName: string | null;
   sponsorLastName: string | null;
   sponsorFullName: string | null;

@@ -2,8 +2,8 @@ import { ProductStatusEnum } from "src/app/core/models/products/product.status.e
 import { UserProfileEntity } from "src/app/shared/entity/user.entity";
 
 export interface UserAgendaDashboardEntity {
-  owner_id: number;
-  contact_id: number;
+  owner_id: string;
+  contact_id: string;
   alias: string | null;
   tags: string[] | null;
   lead: string[] | null;
@@ -25,6 +25,6 @@ export interface UserAgendaDashboardEntity {
   image: string | null;
   user_status: ProductStatusEnum;
   user_general_notes: string | null;
-  user_owner_id: number;
+  user_owner_id: string;
   is_manual: boolean;
 }

@@ -25,12 +25,12 @@ export class ProductInventoryStockEntryService {
   }
 
 
-  getAllDashboardData(userIds?: number[]): Observable<ProductInventoryStockEntryDashboardEntity[]> {
+  getAllDashboardData(userIds?: string[]): Observable<ProductInventoryStockEntryDashboardEntity[]> {
     this.loggerService.debug(`Getting all dashboard data for users: ${userIds}`, this.CLASS_NAME, 'getAllDashboardData');
     return this.dao.getAllDashboardData(userIds);
   }
 
-  getByProductIdAndUserId(productId: number, userId: number): Observable<ProductInventoryStockEntryDetailedEntity[]> {
+  getByProductIdAndUserId(productId: number, userId: string): Observable<ProductInventoryStockEntryDetailedEntity[]> {
     return this.dao.getByProductIdAndUserId(productId, userId);
   }
 

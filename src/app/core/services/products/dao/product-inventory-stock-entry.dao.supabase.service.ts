@@ -25,14 +25,14 @@ export class ProductInventoryStockEntryDaoSupabaseService {
   constructor() {
   }
 
-  getByProductIdAndUserId(productId: number, userId: number): Observable<ProductInventoryStockEntryDetailedEntity[]> {
+  getByProductIdAndUserId(productId: number, userId: string): Observable<ProductInventoryStockEntryDetailedEntity[]> {
     const context = 'getByProductIdAndUserId';
     let query = this.supabaseService.getSupabaseClient()
       .from(this.VIEW_DETAILED_NAME)
       .select('*')
       .eq('product_id', productId)
 
-    if (userId > 0) {
+    if (userId !== "0") {
       query = query.eq('user_owner_id', userId);
     }
     const promise = query
@@ -50,7 +50,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
     );
   }
 
-  getAllDashboardData(userIds: number[] = []): Observable<ProductInventoryStockEntryDashboardEntity[]> {
+  getAllDashboardData(userIds: string[] = []): Observable<ProductInventoryStockEntryDashboardEntity[]> {
     const context = 'getAllDashboardData';
     const query = this.supabaseService.getSupabaseClient()
       .rpc(this.RPC_DASHBOARD_NAME, {

@@ -127,11 +127,11 @@ export class SaleInventoryDashboardComponent {
         });
       } else {
         // En ámbitos como "Todos", vamos a la vista global (0)
-        this.router.navigate(['/sales/inventory', row.product_id, 0]);
+        this.router.navigate(['/sales/inventory', row.product_id, '0']);
       }
     } else {
         // Ningún dato, pero navegamos al producto con ID 0 para el usuario
-        this.router.navigate(['/sales/inventory', row.product_id, 0]);
+        this.router.navigate(['/sales/inventory', row.product_id, '0']);
     }
   }
 

@@ -19,7 +19,7 @@ export class ProductStoreDaoSupabaseService {
   constructor() {
   }
 
-  get(userId: number): Observable<ProductStoreCompleteRpcEntity[]> {
+  get(userId: string): Observable<ProductStoreCompleteRpcEntity[]> {
     const context = 'get'
     const promise = this.supabaseService.getSupabaseClient()
       .rpc('fn_get_products_with_user_context', { p_user_id: userId });
@@ -44,7 +44,7 @@ export class ProductStoreDaoSupabaseService {
     );
   }
 
-  toggleFav(userId: number, productId: number): Observable<boolean | null> {
+  toggleFav(userId: string, productId: number): Observable<boolean | null> {
     const context = 'toggleFav'
     const promise = this.supabaseService.getSupabaseClient()
       .rpc('fn_toggle_favorite', { p_user_id: userId, p_product_id: productId });
@@ -61,7 +61,7 @@ export class ProductStoreDaoSupabaseService {
     );
   }
 
-  changeQuantity(user_id: number, product_id: number, delta: number): Observable<number | null> {
+  changeQuantity(user_id: string, product_id: number, delta: number): Observable<number | null> {
     const context = 'changeQuantity'
     const dataToSend = {
       p_user_id: user_id,
@@ -84,7 +84,7 @@ export class ProductStoreDaoSupabaseService {
     );
   }
 
-  toggleStockNotifier(userId: number, productId: number): Observable<boolean | null> {
+  toggleStockNotifier(userId: string, productId: number): Observable<boolean | null> {
     const context = 'toggleStockNotifier'
     return from(
       this.supabaseService.getSupabaseClient()
@@ -101,7 +101,7 @@ export class ProductStoreDaoSupabaseService {
     );
   }
 
-  toggleTracking(userId: number, productId: number): Observable<boolean | null> {
+  toggleTracking(userId: string, productId: number): Observable<boolean | null> {
     const context = 'toggleTracking'
     const promise = this.supabaseService.getSupabaseClient()
       .rpc('fn_toggle_tracking', { p_user_id: userId, p_product_id: productId });

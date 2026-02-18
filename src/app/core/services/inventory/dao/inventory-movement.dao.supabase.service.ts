@@ -16,7 +16,7 @@ export class InventoryMovementDaoSupabaseService {
   constructor() {
   }
 
-  getAllDashboardData(userIds?: number[], productIds?: number[]): Observable<ProductMovementReport[]> {
+  getAllDashboardData(userIds?: string[], productIds?: number[]): Observable<ProductMovementReport[]> {
     const context = 'getAllDashboardData';
     let query = this.supabaseService.getSupabaseClient()
       .rpc('get_movements_by_user_and_product', { p_user_ids: userIds, p_product_ids: productIds });

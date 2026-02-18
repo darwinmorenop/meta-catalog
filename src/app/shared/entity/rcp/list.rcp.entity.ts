@@ -2,7 +2,7 @@ import { ListItemTrackingTypeEnum } from "../list.entity"
 
 export interface ListRcpUpsertRequestEntity {
     p_list_id?: string,
-    p_owner_id?: number,
+    p_owner_id?: string,
     p_name?: string,
     p_description?: string,
     p_slug?: string,
@@ -18,7 +18,7 @@ export interface ListItemRcpEntity {
 
 export interface ListRcpCopyRequestEntity {
     p_source_list_id: string,
-    p_new_owner_id: number,
+    p_new_owner_id: string,
     p_new_name?: string
 }
 

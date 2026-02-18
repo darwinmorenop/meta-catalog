@@ -12,7 +12,7 @@ export class UserListService {
   
   private userListDaoSupabaseService = inject(UserListDaoSupabaseService);
 
-  getAll(userIds?: number[]): Observable<ListViewEntity[]> {
+  getAll(userIds?: string[]): Observable<ListViewEntity[]> {
     return this.userListDaoSupabaseService.getAll(userIds);
   }
 
@@ -20,27 +20,27 @@ export class UserListService {
     return this.userListDaoSupabaseService.getAllItems(listId);
   }
 
-  getFavorites(userIds?: number[]): Observable<ListViewEntity[]> {
+  getFavorites(userIds?: string[]): Observable<ListViewEntity[]> {
     return this.userListDaoSupabaseService.getFavorites(userIds);
   }
 
-  getFavoritesByUser(userId: number): Observable<ListItemViewEntity[]> {
+  getFavoritesByUser(userId: string): Observable<ListItemViewEntity[]> {
     return this.userListDaoSupabaseService.getFavoritesByUser(userId);
   }
 
-  getTracking(userIds?: number[]): Observable<ListViewEntity[]> {
+  getTracking(userIds?: string[]): Observable<ListViewEntity[]> {
     return this.userListDaoSupabaseService.getTracking(userIds);
   }
 
-  getTrackingByUser(userId: number): Observable<ListItemViewEntity[]> {
+  getTrackingByUser(userId: string): Observable<ListItemViewEntity[]> {
     return this.userListDaoSupabaseService.getTrackingByUser(userId);
   }
 
-  getNotifier(userIds?: number[]): Observable<ListViewEntity[]> {
+  getNotifier(userIds?: string[]): Observable<ListViewEntity[]> {
     return this.userListDaoSupabaseService.getNotifier(userIds);
   }
 
-  getNotifierByUser(userId: number): Observable<ListItemViewEntity[]> {
+  getNotifierByUser(userId: string): Observable<ListItemViewEntity[]> {
     return this.userListDaoSupabaseService.getNotifierByUser(userId);
   }
 

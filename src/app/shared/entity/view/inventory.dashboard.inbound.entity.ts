@@ -8,12 +8,12 @@ export interface InventoryInboundDashboardEntity {
     inbound_created_at: Date;
     inbound_updated_at: Date;
 
-    source_user_id: number;
+    source_user_id: string;
     source_user_full_name: string;
     source_user_email: string;
     source_user_rank: string;
 
-    target_user_id: number;
+    target_user_id: string;
     target_user_full_name: string;
     target_user_email: string;
     target_user_rank: string;
@@ -33,12 +33,12 @@ export interface InventoryInboundDashboardDetailedEntity {
     inbound_created_at: Date;
     inbound_updated_at: Date;
 
-    source_user_id: number;
+    source_user_id: string;
     source_user_full_name: string;
     source_user_email: string;
     source_user_rank: string;
 
-    target_user_id: number;
+    target_user_id: string;
     target_user_full_name: string;
     target_user_email: string;
     target_user_rank: string;

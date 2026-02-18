@@ -1,5 +1,5 @@
 export interface UserEntity {
-  id: number;
+  id: string;
   createdAt: string;
   updatedAt: string;
   externalAuthId?: string | null;
@@ -10,14 +10,14 @@ export interface UserEntity {
   firstName: string;
   lastName?: string | null;
   rank: string;
-  sponsorId: number | null; 
+  sponsorId: string | null; 
   path: string;
   image: string;
   profile: UserProfileEntity;
   birthday: string | null;
   status: string;
   notes: string | null;
-  user_owner_id: number;
+  user_owner_id: string;
   user_profile_id: string;
   settings: UserSettingsEntity;
 }

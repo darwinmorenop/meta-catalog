@@ -13,7 +13,7 @@ export class SaleService {
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = SaleService.name;
 
-  getAllDashboardData(userIds?: number[]): Observable<SaleDashboardEntity[]> {
+  getAllDashboardData(userIds?: string[]): Observable<SaleDashboardEntity[]> {
     this.logger.debug('Getting all sales dashboard data', this.CLASS_NAME, 'getAllDashboardData');
     return this.dao.getAllDashboardData(userIds);
   }
@@ -28,12 +28,12 @@ export class SaleService {
     return this.dao.getSaleByIdDetailedData(id);
   }
 
-  getSalesStats(userIds?: number[]): Observable<ProductSalesStats[]> {
+  getSalesStats(userIds?: string[]): Observable<ProductSalesStats[]> {
     this.logger.debug('Getting sales stats', this.CLASS_NAME, 'getSalesStats');
     return this.dao.getSalesStats(userIds);
   }
 
-  getSalesByProductId(productId: number, userIds?: number[]): Observable<SaleDetailedEntity[]> {
+  getSalesByProductId(productId: number, userIds?: string[]): Observable<SaleDetailedEntity[]> {
     this.logger.debug(`Getting sales for product id: ${productId}`, this.CLASS_NAME, 'getSalesByProductId');
     return this.dao.getSalesByProductId(productId, userIds);
   }

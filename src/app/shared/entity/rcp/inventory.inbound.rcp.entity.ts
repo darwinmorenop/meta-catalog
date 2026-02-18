@@ -1,7 +1,7 @@
 export interface InventoryInboundInsertRcpEntity {
-    user_source_id: number;
+    user_source_id: string;
     received_at: string;
-    user_target_id: number;
+    user_target_id: string;
     reference_number: string;
     status: string
     products: InventoryInboundProductInsertRcpEntity[]

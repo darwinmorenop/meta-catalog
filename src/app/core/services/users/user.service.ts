@@ -67,8 +67,7 @@ export class UserService {
       
       const savedId = localStorage.getItem(this.ACTIVE_USER_KEY);
       if (savedId) {
-        const id = +savedId;
-        this.getUserDetailWithNetwork(id).subscribe({
+        this.getUserDetailWithNetwork(savedId).subscribe({
           next: (network) => {
             this.currentUserNetwork.set(network);
             // The effect will trigger loadUserProfile, which will set isInitialized to true
@@ -106,7 +105,7 @@ export class UserService {
 
     this.getUserDetailWithNetwork(user.id).subscribe(network => {
       this.currentUserNetwork.set(network);
-      localStorage.setItem(this.ACTIVE_USER_KEY, user.id.toString());
+      localStorage.setItem(this.ACTIVE_USER_KEY, user.id);
     });
   }
 
@@ -129,7 +128,7 @@ export class UserService {
     );
   }
 
-  getUserDetailWithNetwork(userId: number): Observable<UserNetworkDetail[]> {
+  getUserDetailWithNetwork(userId: string): Observable<UserNetworkDetail[]> {
     return this.userDaoSupabaseService.getUserDetailWithNetwork(userId);
   }
 
@@ -151,7 +150,7 @@ export class UserService {
     };
   }
 
-  getAvailableSponsors(editingUserId: number): Observable<UserSponsorEntity[]> {
+  getAvailableSponsors(editingUserId: string): Observable<UserSponsorEntity[]> {
     return this.userDaoSupabaseService.getAvailableSponsorsRpc(editingUserId);
   }
 
@@ -163,7 +162,7 @@ export class UserService {
     return this.userDaoSupabaseService.update(user);
   }
 
-  delete(id: number): Observable<boolean> {
+  delete(id: string): Observable<boolean> {
     return this.userDaoSupabaseService.delete(id);
   }
 

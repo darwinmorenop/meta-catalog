@@ -9,23 +9,23 @@ import { CartItemEntity } from 'src/app/shared/entity/cart.entity';
 export class CartService {
   private cartDao = inject(CartDaoSupabaseService);
 
-  getAll(userIds?: number[]): Observable<CartItemEntity[]> {
+  getAll(userIds?: string[]): Observable<CartItemEntity[]> {
     return this.cartDao.getAll(userIds);
   }
 
-  delete(user_id: number, product_id: number): Observable<any> {
+  delete(user_id: string, product_id: number): Observable<any> {
     return this.cartDao.delete(user_id, product_id);
   }
 
-  update(user_id: number, product_id: number, updates: Partial<CartItemEntity>): Observable<any> {
+  update(user_id: string, product_id: number, updates: Partial<CartItemEntity>): Observable<any> {
     return this.cartDao.update(user_id, product_id, updates);
   }
 
-  changeIsSelected(user_id: number, product_id: number, is_selected: boolean): Observable<any> {
+  changeIsSelected(user_id: string, product_id: number, is_selected: boolean): Observable<any> {
     return this.cartDao.changeIsSelected(user_id, product_id, is_selected);
   }
 
-  changeIsSavedForLater(user_id: number, product_id: number, is_saved_for_later: boolean): Observable<any> {
+  changeIsSavedForLater(user_id: string, product_id: number, is_saved_for_later: boolean): Observable<any> {
     return this.cartDao.changeIsSavedForLater(user_id, product_id, is_saved_for_later);
   }
 }

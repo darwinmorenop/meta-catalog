@@ -23,7 +23,7 @@ import { UserDashboardModel } from 'src/app/core/models/users/user.model';
 })
 export class UserSelectorComponent {
   @Input() users: UserDashboardModel[] = [];
-  @Input() initialSelectedId?: number;
+  @Input() initialSelectedId?: string;
   @Output() onSelected = new EventEmitter<UserDashboardModel>();
 
   searchControl = new FormControl('', { nonNullable: true });

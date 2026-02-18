@@ -49,7 +49,7 @@ export class ProductInventoryStockDetailComponent implements OnInit {
   private readonly CLASS_NAME = ProductInventoryStockDetailComponent.name;
 
   productId = signal<number>(0);
-  userId = signal<number>(0);
+  userId = signal<string>('0');
   productInfo = signal<ProductInventoryStockEntryDashboardEntity | null>(null);
 
   private params$ = toObservable(computed(() => ({
@@ -60,7 +60,7 @@ export class ProductInventoryStockDetailComponent implements OnInit {
   stockHistoryResource = rxResource({
     stream: () => this.params$.pipe(
       switchMap(params => {
-        if (params.productId === 0 || params.userId === 0) return of([]);
+        if (params.productId === 0 || params.userId === '0') return of([]);
         return this.stockService.getByProductIdAndUserId(params.productId, params.userId);
       })
     )
@@ -92,7 +92,7 @@ export class ProductInventoryStockDetailComponent implements OnInit {
     const context = 'ngOnInit';
     this.route.params.subscribe(params => {
       this.productId.set(Number(params['productId']));
-      this.userId.set(Number(params['userId']));
+      this.userId.set(params['userId']);
       if (this.stockService.getCurrentDashboardRow()
         && this.stockService.getCurrentDashboardRow()?.product_id === this.productId()) {
         this.productInfo.set(this.stockService.getCurrentDashboardRow());

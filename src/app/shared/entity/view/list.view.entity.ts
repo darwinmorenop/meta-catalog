@@ -1,7 +1,7 @@
 import { ListItemTrackingTypeEnum, ListSlugEnum } from "../list.entity";
 export interface ListViewEntity {
     id: string;
-    owner_id: number;
+    owner_id: string;
     name: string;
     description: string;
     slug: ListSlugEnum;
@@ -21,7 +21,7 @@ export interface ListItemViewEntity {
     list_slug: string;
     list_description: string;
     list_is_private: boolean;
-    owner_id: number;
+    owner_id: string;
     owner_image: string;
     owner_last_name: string;
     owner_first_name: string;

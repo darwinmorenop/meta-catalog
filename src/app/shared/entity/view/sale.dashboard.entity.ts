@@ -35,14 +35,14 @@ export interface SaleDetailedEntity {
     sale_updated_at: Date;
 
     // Datos del Vendedor
-    source_user_id: number;
+    source_user_id: string;
     source_user_name: string;
     source_user_email: string;
     source_user_image: string;
     source_user_rank: UserRankEnum;
 
     // Datos del Cliente
-    target_user_id: number;
+    target_user_id: string;
     target_user_name: string;
     target_user_email: string;
     target_user_image: string;

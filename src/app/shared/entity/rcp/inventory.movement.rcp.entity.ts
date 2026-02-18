@@ -24,7 +24,7 @@ export const InventoryMovementTypeLabels = {
 }
 
 export interface ProductMovementReportOwnerGroup {
-  user_id: number;
+  user_id: string;
   owner_name: string;
   owner_email: string;
   owner_current_stock: number;

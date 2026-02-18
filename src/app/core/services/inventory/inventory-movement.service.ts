@@ -12,7 +12,7 @@ export class InventoryMovementService {
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = InventoryMovementService.name;
 
-  getAllDashboardData(userIds?: number[], productIds?: number[]): Observable<ProductMovementReport[]> {
+  getAllDashboardData(userIds?: string[], productIds?: number[]): Observable<ProductMovementReport[]> {
     this.logger.debug('Getting all dashboard data', this.CLASS_NAME, 'getAllDashboardData');
     return this.dao.getAllDashboardData(userIds, productIds);
   }

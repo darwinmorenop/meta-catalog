@@ -11,8 +11,8 @@
           <div class="product-text">
             <h1>{{ info.product_name }}</h1>
             <p>{{ info.product_sku }} • 
-               <span *ngIf="userId() > 0">Vista de Usuario Individual</span>
-               <span *ngIf="userId() === 0">Vista Global (Todos los usuarios)</span>
+               <span *ngIf="userId() !== '0'">Vista de Usuario Individual</span>
+               <span *ngIf="userId() === '0'">Vista Global (Todos los usuarios)</span>
             </p>
           </div>
         </div>

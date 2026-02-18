@@ -8,7 +8,7 @@
         <h1>Entradas de Stock</h1>
         @if(productInfo()){
           <p class="subtitle">
-            Producto: {{ productInfo()!.product_name  }} - Usuario(ID): {{ userId() > 0 ? userId() : 'Todos' }}
+            Producto: {{ productInfo()!.product_name  }} - Usuario(ID): {{ userId() !== '0' ? userId() : 'Todos' }}
           </p>
         }
       </div>

@@ -18,11 +18,11 @@ export const InventoryInboundStatusLabels: Record<InventoryInboundStatusEnum, st
 
 export interface InventoryInboundEntity {
     id: number;
-    user_source_id: number;
+    user_source_id: string;
     received_at: Date;
     created_at: Date;
     updated_at: Date;
-    user_target_id: number;
+    user_target_id: string;
     reference_number: string;
     status: InventoryInboundStatusEnum
 }

@@ -80,7 +80,7 @@ export class UserAgendaDialogComponent implements OnInit {
     if (this.isCreateMode) return true;
     if (!this.data.contact) return false;
     // We check if the user record owner matches the agenda relationship owner
-    return Number(this.data.contact.user_owner_id) === Number(this.data.contact.owner_id);
+    return this.data.contact.user_owner_id === this.data.contact.owner_id;
   }
 
   ngOnInit() {

@@ -1,6 +1,6 @@
 export interface ListEntity {
     id: string;
-    owner_id: number;
+    owner_id: string;
     name: string;
     description: string;
     slug: ListSlugEnum;
@@ -43,7 +43,7 @@ export interface ListItemEntity {
 
 export interface ListMembersEntity {
     list_id: string;
-    user_id: number;
+    user_id: string;
     role: string;
     joined_at: Date;
 }

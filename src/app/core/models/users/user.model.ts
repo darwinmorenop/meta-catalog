@@ -33,7 +33,7 @@ export const UserRankLabel: Record<UserRankEnum, string> = {
 }
 
 export interface UserDashboardModel {
-  id: number;
+  id: string;
   email: string | null;
   phone: string | null;
   isManual: boolean;
@@ -55,12 +55,12 @@ export interface UserCreateModel {
   firstName: string;
   lastName?: string | null;
   rank: UserRankEnum;
-  sponsorId: number | null;
+  sponsorId: string | null;
   image: string | null;
   user_profile_id: string;
   settings: UserSettingsEntity;
 }
 
 export interface UserUpdateModel extends Omit<UserCreateModel, 'sponsorId'> {
-  id: number;
+  id: string;
 }

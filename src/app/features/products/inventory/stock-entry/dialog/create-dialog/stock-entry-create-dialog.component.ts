@@ -14,7 +14,7 @@ import { InboundSelectorDialogComponent, InboundSelectorDialogData } from 'src/a
 
 export interface StockEntryCreateDialogData {
   product_id: number;
-  user_owner_id: number;
+  user_owner_id: string;
   product_name: string;
   product_sku: string;
   quantity: number;

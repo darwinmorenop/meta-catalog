@@ -20,7 +20,7 @@ export class SaleDaoSupabaseService {
   constructor() {
   }
 
-  getAllDashboardData(userIds?: number[]): Observable<SaleDashboardEntity[]> {
+  getAllDashboardData(userIds?: string[]): Observable<SaleDashboardEntity[]> {
     const context = 'getAllDashboardData';
     let query = this.supabaseService.getSupabaseClient()
       .from('v_sales_summary_detailed')
@@ -91,7 +91,7 @@ export class SaleDaoSupabaseService {
     );
   }
 
-  getSalesStats(userIds?: number[]): Observable<ProductSalesStats[]> {
+  getSalesStats(userIds?: string[]): Observable<ProductSalesStats[]> {
     const context = 'getSalesStats';
     const promise = this.supabaseService.getSupabaseClient()
     .rpc('get_product_sales_stats', {
@@ -113,7 +113,7 @@ export class SaleDaoSupabaseService {
     );
   }
 
-  getSalesByProductId(productId: number, userIds?: number[]): Observable<SaleDetailedEntity[]> {
+  getSalesByProductId(productId: number, userIds?: string[]): Observable<SaleDetailedEntity[]> {
     const context = 'getSalesByProductId';
     let query = this.supabaseService.getSupabaseClient()
       .from('v_sale_full_details')

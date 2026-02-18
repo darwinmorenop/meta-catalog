@@ -1,6 +1,6 @@
 export interface UserAgendaEntity {
-    owner_id: number;
-    contact_id: number;
+    owner_id: string;
+    contact_id: string;
     alias: string | null;
     tags: string[] | null;
     created_at: Date;

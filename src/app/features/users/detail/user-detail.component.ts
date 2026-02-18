@@ -46,7 +46,7 @@ export class UserDetailComponent implements OnInit {
 
   // Reactively track the user ID from the route
   userId = toSignal(
-    this.route.params.pipe(map(params => params['id'] ? +params['id'] : null))
+    this.route.params.pipe(map(params => params['id'] || null))
   );
 
   private userId$ = toObservable(this.userId);
@@ -113,7 +113,7 @@ export class UserDetailComponent implements OnInit {
   private buildTree(flatList: UserNetworkDetail[]): UserNode[] {
     const context = `buildTree`;
     this.loggerService.debug(`Building tree for user detail: ${this.userId()} with data: ${JSON.stringify(flatList)}`,this.CLASS_NAME,context);
-    const map: { [key: number]: UserNode } = {};
+    const map: { [key: string]: UserNode } = {};
     const roots: UserNode[] = [];
 
     // First pass: Create all nodes
@@ -138,7 +138,7 @@ export class UserDetailComponent implements OnInit {
     this.router.navigate(['/users']);
   }
 
-  viewUser(id: number) {
+  viewUser(id: string) {
     this.router.navigate(['/users', id]);
   }
 
