@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { SupabaseService } from '../supabase/supabase.service';
 import { Router } from '@angular/router';
 import { from, Observable, tap } from 'rxjs';
@@ -16,11 +16,18 @@ export class AuthService {
 
   session = signal<Session | null>(null);
   user = signal<User | null>(null);
+  isInitialized = signal(false);
 
   constructor() {
+    this.logger.debug('Initializing AuthService', this.CLASS_NAME);
     // Initializing state
     this.supabase.auth.getSession().then(({ data: { session } }) => {
-      this.handleAuthChange('SIGNED_IN', session);
+      this.logger.debug('Initial session check completed', this.CLASS_NAME);
+      this.handleAuthChange('SIGNED_IN' as any, session);
+      this.isInitialized.set(true);
+    }).catch(err => {
+      this.logger.error('Error getting initial session', this.CLASS_NAME, err);
+      this.isInitialized.set(true); // Still initialized, just no session
     });
 
     // Listening for auth changes
@@ -74,11 +81,13 @@ export class AuthService {
     }));
   }
 
+  updatePassword(password: string): Observable<any> {
+    return from(this.supabase.auth.updateUser({ password }));
+  }
+
   signOut(): Observable<any> {
     return from(this.supabase.auth.signOut());
   }
 
-  get isAuthenticated(): boolean {
-    return !!this.user();
-  }
+  isAuthenticated = computed(() => !!this.user());
 }

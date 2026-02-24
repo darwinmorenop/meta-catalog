@@ -21,7 +21,7 @@ export class ProductStoreService {
     private _isLoading = signal<boolean>(false);
     public isLoading = this._isLoading.asReadonly();
 
-    loadProducts(userId: string): void {
+    loadProducts(userId: string | null): void {
         this._isLoading.set(true);
         this.get(userId).subscribe({
             next: (entities) => {
@@ -34,7 +34,7 @@ export class ProductStoreService {
         });
     }
 
-    get(userId: string): Observable<ProductStore[]> {
+    get(userId: string | null): Observable<ProductStore[]> {
         return this.dao.get(userId).pipe(
             map(products => products.map(product => {
                 const p = this.productUtilsService.mapProduct(product);

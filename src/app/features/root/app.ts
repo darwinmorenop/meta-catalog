@@ -11,6 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ThemeService } from 'src/app/core/services/theme/theme.service';
 import { UserService } from 'src/app/core/services/users/user.service';
 import { UserActiveSelectorDialogComponent } from 'src/app/features/users/dialog/active-selector/user-active-selector-dialog.component';
@@ -40,13 +41,14 @@ import { HasPermissionDirective } from 'src/app/shared/directives/has-permission
     MatMenuModule,
     MatDialogModule,
     MatDividerModule,
+    MatProgressSpinnerModule,
     HasPermissionDirective
   ],
   templateUrl: 'app.html',
   styleUrls: ['app.scss']
 })
 export class AppComponent {
-  private router = inject(Router);
+  public router = inject(Router);
   private dialog = inject(MatDialog);
   private loggerService = inject(LoggerService);
   private readonly CLASS_NAME = AppComponent.name;

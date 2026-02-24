@@ -19,7 +19,7 @@ export class ProductStoreDaoSupabaseService {
   constructor() {
   }
 
-  get(userId: string): Observable<ProductStoreCompleteRpcEntity[]> {
+  get(userId: string | null): Observable<ProductStoreCompleteRpcEntity[]> {
     const context = 'get'
     const promise = this.supabaseService.getSupabaseClient()
       .rpc('fn_get_products_with_user_context', { p_user_id: userId });

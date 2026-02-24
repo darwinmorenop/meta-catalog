@@ -20,6 +20,10 @@ export const routes: Routes = [
       component: LoginComponent
     },
     {
+      path: 'reset-password',
+      loadComponent: () => import('src/app/features/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+    },
+    {
       path: '',
       component: HomeComponent,
       pathMatch: 'full',

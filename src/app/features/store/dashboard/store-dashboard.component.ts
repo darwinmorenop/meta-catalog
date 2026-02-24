@@ -35,19 +35,17 @@ export class StoreDashboardComponent {
   isLoading = this.productStoreService.isLoading;
 
   constructor() {
-    // Load products when user changes
+    // Load products on init or when user changes
     effect(() => {
       const user = this.currentUser();
-      if (user) {
-        this.productStoreService.loadProducts(user.id);
-      }
+      this.productStoreService.loadProducts(user?.id || null);
     });
   }
 
   // Refresh helper
   refresh() {
     const user = this.currentUser();
-    if (user) this.productStoreService.loadProducts(user.id);
+    this.productStoreService.loadProducts(user?.id || null);
   }
   // Actions
   toggleFavorite(product: ProductStore) {

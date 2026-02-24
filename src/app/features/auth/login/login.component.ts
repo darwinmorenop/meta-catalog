@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { UserService } from 'src/app/core/services/users/user.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -31,6 +32,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private userService = inject(UserService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
@@ -64,8 +66,12 @@ export class LoginComponent {
   }
 
   toggleForgotPassword() {
-    this.isForgotPasswordMode.set(!this.isForgotPasswordMode());
-    if (this.isForgotPasswordMode()) {
+    this.setForgotPasswordMode(!this.isForgotPasswordMode());
+  }
+
+  private setForgotPasswordMode(isForgot: boolean) {
+    this.isForgotPasswordMode.set(isForgot);
+    if (isForgot) {
       this.loginForm.get('password')?.clearValidators();
     } else {
       this.loginForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
@@ -87,7 +93,7 @@ export class LoginComponent {
             this.snackBar.open(response.error.message, 'Cerrar', { duration: 5000 });
           } else {
             this.snackBar.open('Email de recuperación enviado. Revisa tu bandeja.', 'Cerrar', { duration: 5000 });
-            this.isForgotPasswordMode.set(false);
+            this.setForgotPasswordMode(false);
           }
           this.isLoading.set(false);
         },
@@ -102,9 +108,28 @@ export class LoginComponent {
         error: (err) => this.handleError(err)
       });
     } else {
-      this.authService.signUp(email, password, { first_name: firstName, last_name: lastName }).subscribe({
-        next: (response) => this.handleAuthResponse(response, true),
-        error: (err) => this.handleError(err)
+      // Sign Up Flow - Check if user exists first
+      this.userService.findByPhoneOrEmail(undefined, email).subscribe({
+        next: (exists) => {
+          if (exists) {
+            this.snackBar.open('Ya existe una cuenta con este email. Puedes restablecer tu contraseña.', 'Cerrar', { duration: 6000 });
+            this.setForgotPasswordMode(true);
+            this.isLoading.set(false);
+          } else {
+            // Proceed with signup
+            this.authService.signUp(email, password, { first_name: firstName, last_name: lastName }).subscribe({
+              next: (response) => this.handleAuthResponse(response, true),
+              error: (err) => this.handleError(err)
+            });
+          }
+        },
+        error: (err) => {
+          // In case of error checking existence, proceed with signup anyway and let Supabase handle it
+          this.authService.signUp(email, password, { first_name: firstName, last_name: lastName }).subscribe({
+            next: (response) => this.handleAuthResponse(response, true),
+            error: (err) => this.handleError(err)
+          });
+        }
       });
     }
   }

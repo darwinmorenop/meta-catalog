@@ -84,6 +84,7 @@ export class UserDaoSupabaseService {
       sponsor_id: user.sponsorId,
       identifier: user.identifier,
       image: user.image,
+      settings: user.settings,
       external_auth_id: user.externalAuthId,
       user_profile_id: user.user_profile_id
     };
@@ -161,6 +162,8 @@ export class UserDaoSupabaseService {
 
   update(user: UserEntity): Observable<UserEntity> {
     const dbData = this.mapToDb(user);
+    const context = 'update';
+    this.loggerService.debug(`Updating user ${user.id} with data ${JSON.stringify(dbData)}`, this.CLASS_NAME, context);
     return from(
       this.supabaseService.getSupabaseClient()
         .from('user')

@@ -1,4 +1,5 @@
-@if (authService.isAuthenticated) {
+@if (authService.isInitialized()) {
+  @if (authService.isAuthenticated()) {
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav mode="over" class="sidenav">
     <mat-toolbar color="primary">Menu</mat-toolbar>
@@ -362,7 +363,34 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 } @else {
-  <main class="login-container">
-    <router-outlet></router-outlet>
-  </main>
+  @if (!authService.isAuthenticated()) {
+    <!-- Contenedor para rutas públicas (Tienda, Login, etc.) -->
+    <div class="public-layout">
+      <!-- Si no es el login, mostramos un header minimalista o el logo -->
+      @if (router.url !== '/login') {
+        <mat-toolbar color="primary" class="main-header">
+           <span (click)="navigateTo('/')" class="app-title">Yanbal-ERP</span>
+           <span class="spacer"></span>
+           <button mat-button (click)="navigateTo('/store')">
+             <mat-icon>storefront</mat-icon>
+             <span>Tienda</span>
+           </button>
+           <button mat-button (click)="navigateTo('/login')">
+             <mat-icon>login</mat-icon>
+             <span>Iniciar Sesión</span>
+           </button>
+        </mat-toolbar>
+      }
+      
+      <main [class.login-container]="router.url === '/login'" [class.main-content]="router.url !== '/login'">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  }
+}
+} @else {
+  <div class="loading-overlay">
+    <mat-spinner></mat-spinner>
+    <p>Cargando aplicación...</p>
+  </div>
 }
