@@ -50,9 +50,18 @@ export type PermissionMap = {
   [key in Resource]?: Action[];
 };
 
+export enum ProfileSlug {
+  client_free = 'client_free',
+  client_basic = 'client_basic',
+  manager_pro = 'manager_pro',
+  manager_ultra = 'manager_ultra',
+  admin = 'admin'
+}
+
 export interface UserProfile {
   id: string;              
   name: string;
+  slug: ProfileSlug;
   description: string | null;
   permissions: PermissionMap;
   created_at: Date;      

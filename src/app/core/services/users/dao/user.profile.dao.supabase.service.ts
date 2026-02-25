@@ -91,6 +91,7 @@ export class UserProfileDaoSupabaseService {
     return {
       id: item.id,
       name: item.name,
+      slug: item.slug,
       description: item.description,
       permissions: item.permissions,
       created_at: item.created_at,

@@ -1,0 +1,43 @@
+{
+  "marca": "Yanbal Data Item",
+  "objetivo": "Mantener consistencia visual en UI y landings.",
+  "paleta": {
+    "principal": "#000000",
+    "secundario": "#FFFFFF",
+    "acento": "#00E5FF",
+    "fondo": "#0B0B0B",
+    "superficie": "#141414",
+    "texto": {
+      "principal": "#FFFFFF",
+      "secundario": "#B5B5B5"
+    },
+    "bordes": "#2A2A2A"
+  },
+  "tipografia": {
+    "titulares": "Inter",
+    "cuerpo": "Inter",
+    "pesos": {
+      "normal": 400,
+      "medio": 500,
+      "negrita": 700
+    }
+  },
+  "formas": {
+    "radio_tarjeta": "18px",
+    "radio_boton": "12px",
+    "radio_input": "12px"
+  },
+  "espaciado": {
+    "xs": "4px",
+    "sm": "8px",
+    "md": "12px",
+    "lg": "16px",
+    "xl": "24px",
+    "xxl": "32px"
+  },
+  "componentes": {
+    "boton_principal": "alto contraste, muy legible, CTA corto",
+    "tarjetas": "sombras suaves, bordes sutiles, mucho aire",
+    "layout": "grid simple, no saturar, priorizar claridad"
+  }
+}

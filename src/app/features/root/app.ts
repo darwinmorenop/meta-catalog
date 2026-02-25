@@ -21,6 +21,7 @@ import { Action, Resource } from 'src/app/shared/entity/user.profile.entity';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 import { HasPermissionDirective } from 'src/app/shared/directives/has-permission.directive';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +43,8 @@ import { HasPermissionDirective } from 'src/app/shared/directives/has-permission
     MatDialogModule,
     MatDividerModule,
     MatProgressSpinnerModule,
-    HasPermissionDirective
+    HasPermissionDirective,
+    HeaderComponent
   ],
   templateUrl: 'app.html',
   styleUrls: ['app.scss']
@@ -62,11 +64,7 @@ export class AppComponent {
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
-  navItems = [
-    { label: 'Campañas', icon: 'campaign', route: '/campaigns', resource: Resource.campaigns },
-    { label: 'Categorías', icon: 'category', route: '/categories', resource: Resource.categories },
-    { label: 'Scrap', icon: 'inventory_2', route: '/scraps', resource: Resource.scraps },
-  ];
+  navItems: Array<{label: string, icon: string, route: string, resource: Resource}> = [];
 
   navigateTo(route: string) {
     const context = "navigateTo";
