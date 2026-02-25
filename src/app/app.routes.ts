@@ -246,6 +246,12 @@ export const routes: Routes = [
       data: { resource: Resource.users, action: Action.edit }
     },
     {
+      path: 'users/account',
+      loadComponent: () => import('src/app/features/users/account/account.component').then(m => m.AccountComponent),
+      canActivate: [authGuard, PermissionGuard],
+      data: { resource: Resource.users, action: Action.view }
+    },
+    {
       path: 'users/:id',
       loadComponent: () => import('src/app/features/users/detail/user-detail.component').then(m => m.UserDetailComponent),
       canActivate: [authGuard, PermissionGuard],

@@ -1,0 +1,71 @@
+<div class="account-container">
+  <div class="account-card-wrapper">
+    <mat-card class="account-card glass-effect">
+      <div class="card-header-gradient">
+        <div class="avatar-container">
+          <img [src]="(userService.currentUser())?.image || 'assets/images/default-avatar.png'" alt="User Avatar" class="profile-image">
+          <button mat-mini-fab color="primary" class="edit-avatar-btn" matTooltip="Cambiar imagen">
+            <mat-icon>photo_camera</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <mat-card-content class="profile-content">
+        <div class="user-info-header">
+          <h1 class="user-fullname">{{ (userService.currentUser())?.fullName }}</h1>
+          <p class="user-email">
+            <mat-icon>mail</mat-icon>
+            {{ (userService.currentUser())?.email }}
+          </p>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Nombre y Apellido</div>
+            <div class="info-value">
+              {{ (userService.currentUser())?.firstName }} {{ (userService.currentUser())?.lastName }}
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">Teléfono</div>
+            <div class="info-value">
+              {{ (userService.currentUser())?.phone || 'Sin especificar' }}
+            </div>
+          </div>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <section class="preferences-section">
+          <h2 class="section-title">Preferencias de la Aplicación</h2>
+          
+          <div class="preference-item">
+            <div class="pref-desc">
+              <span class="pref-name">Tema Visual</span>
+              <span class="pref-detail">Alterna entre modo claro y oscuro para tu comodidad.</span>
+            </div>
+            <button mat-icon-button (click)="themeService.toggleTheme()" [color]="themeService.theme() === 'dark' ? 'accent' : 'primary'">
+              <mat-icon>{{ themeService.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+            </button>
+          </div>
+        </section>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <div class="danger-zone">
+          <button mat-flat-button color="warn" class="logout-full-btn" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Cerrar Sesión Segura
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <div class="footer-links">
+      <span>Versión 1.0.0</span>
+      <span class="dot">•</span>
+      <a href="javascript:void(0)">Términos y Privacidad</a>
+    </div>
+  </div>
+</div>

@@ -5,7 +5,7 @@ import { UserEntity } from 'src/app/shared/entity/user.entity';
 import { UserDashboardModel, UserRankEnum } from 'src/app/core/models/users/user.model';
 import { UserNetworkDetail, UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { ThemeService } from 'src/app/core/services/theme/theme.service';
-import { UserProfile } from 'src/app/shared/entity/user.profile.entity';
+import { UserProfile, ProfileSlug } from 'src/app/shared/entity/user.profile.entity';
 import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
@@ -36,6 +36,12 @@ export class UserService {
 
   // The permissions profile of the current user
   currentUserProfile = signal<UserProfile | null>(null);
+
+  // All available profiles for simulation
+  availableProfiles = signal<UserProfile[]>([]);
+
+  // The original profile slug (before any simulation)
+  originalProfileSlug = signal<ProfileSlug | null>(null);
 
   // Loading state
   isInitialized = signal(false);
@@ -84,6 +90,11 @@ export class UserService {
   }
 
   loadAll() {
+    // Load all available profiles for simulation
+    this.userProfileService.getAll().subscribe(profiles => {
+      this.availableProfiles.set(profiles);
+    });
+
     this.getAllDashboard().subscribe(users => {
       this.users.set(users);
       
@@ -108,11 +119,13 @@ export class UserService {
     this.userProfileService.getById(profileId).subscribe({
       next: (profile) => {
         this.currentUserProfile.set(profile);
+        this.originalProfileSlug.set(profile.slug as ProfileSlug);
         this.isInitialized.set(true);
       },
       error: (err) => {
         console.error('Error loading user profile permissions', err);
         this.currentUserProfile.set(null);
+        this.originalProfileSlug.set(null);
         this.isInitialized.set(true);
       }
     });
@@ -129,6 +142,19 @@ export class UserService {
       this.currentUserNetwork.set(network);
       localStorage.setItem(this.ACTIVE_USER_KEY, user.id);
     });
+  }
+
+  simulateProfileSlug(slug: ProfileSlug) {
+    const profiles = this.availableProfiles();
+    const targetProfile = profiles.find(p => p.slug === slug);
+    
+    if (!targetProfile) {
+      console.warn(`Profile with slug ${slug} not found`);
+      return;
+    }
+
+    // Actualizamos el perfil completo para simular permisos reales
+    this.currentUserProfile.set(targetProfile);
   }
 
   getAllDashboard(): Observable<UserDashboardModel[]> {

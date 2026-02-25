@@ -1,213 +1,12 @@
 @if (authService.isInitialized()) {
-  @if (authService.isAuthenticated()) {
+@if (authService.isAuthenticated()) {
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav mode="over" class="sidenav">
     <mat-toolbar color="primary">Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item *appHasPermission="[Resource.dashboard, Action.view]" (click)="navigateTo('/')">
-        <mat-icon matListItemIcon>home</mat-icon>
-        <span matListItemTitle>Inicio</span>
-      </a>
-
-      <a mat-list-item *appHasPermission="[Resource.store, Action.view]" (click)="navigateTo('/store')">
-        <mat-icon matListItemIcon>storefront</mat-icon>
-        <span matListItemTitle>Tienda</span>
-      </a>
-
-      <mat-accordion>
-        <mat-expansion-panel *appHasPermission="[Resource.products, Action.view]" class="mat-elevation-z0">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <mat-icon class="menu-icon">inventory_2</mat-icon>
-              Productos
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-nav-list>
-            <a mat-list-item (click)="navigateTo('/products-price-dashboard')">
-              <mat-icon matListItemIcon>payments</mat-icon>
-              <span matListItemTitle>Precios</span>
-            </a>
-            <mat-expansion-panel class="mat-elevation-z0 nested-expansion">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <mat-icon class="menu-icon">sync_alt</mat-icon>
-                        Flujo
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-nav-list>
-                    <a mat-list-item *appHasPermission="[Resource.inventory_movements, Action.view]" (click)="navigateTo('/inventory/movements')">
-                        <mat-icon matListItemIcon>history</mat-icon>
-                        <span matListItemTitle>Movimientos</span>
-                    </a>
-                    <a mat-list-item *appHasPermission="[Resource.inventory_stock, Action.view]" (click)="navigateTo('/inventory/stock-entry')">
-                        <mat-icon matListItemIcon>inventory_2</mat-icon>
-                        <span matListItemTitle>Compras</span>
-                    </a>
-                    <a mat-list-item *appHasPermission="[Resource.sales, Action.view]" (click)="navigateTo('/sales/inventory')">
-                        <mat-icon matListItemIcon>analytics</mat-icon>
-                        <span matListItemTitle>Ventas</span>
-                    </a>
-                    </mat-nav-list>
-                </mat-expansion-panel>
-          </mat-nav-list>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel *appHasPermission="[Resource.inventory_inbound, Action.view]" class="mat-elevation-z0">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <mat-icon class="menu-icon">shopping_bag</mat-icon>
-              Compras
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-nav-list>
-            <a mat-list-item (click)="navigateTo('/inventory/inbound')">
-              <mat-icon matListItemIcon>inventory</mat-icon>
-              <span matListItemTitle>Documentos</span>
-            </a>
-            <a mat-list-item *appHasPermission="[Resource.inventory_inbound, Action.view]" (click)="navigateTo('/inventory/inbound/register')">
-              <mat-icon matListItemIcon>add_circle</mat-icon>
-              <span matListItemTitle>Registrar</span>
-            </a>
-          </mat-nav-list>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel *appHasPermission="[Resource.sales, Action.view]" class="mat-elevation-z0">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <mat-icon class="menu-icon">sell</mat-icon>
-              Ventas
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-nav-list>
-            <a mat-list-item (click)="navigateTo('/sales')">
-              <mat-icon matListItemIcon>receipt_long</mat-icon>
-              <span matListItemTitle>Documentos</span>
-            </a>
-            <a mat-list-item *appHasPermission="[Resource.sales, Action.view]" (click)="navigateTo('/sales/register')">
-              <mat-icon matListItemIcon>add_shopping_cart</mat-icon>
-              <span matListItemTitle>Registrar</span>
-            </a>
-          </mat-nav-list>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel *appHasPermission="[Resource.users, Action.view]" class="mat-elevation-z0">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <mat-icon class="menu-icon">group</mat-icon>
-                Usuarios
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-nav-list>
-              <a mat-list-item *appHasPermission="[Resource.users, Action.view]" (click)="navigateTo('/users')">
-                <mat-icon matListItemIcon>list</mat-icon>
-                <span matListItemTitle>Listado</span>
-              </a>
-              <a mat-list-item *appHasPermission="[Resource.users, Action.view]" (click)="navigateTo('/users/agenda')">
-                <mat-icon matListItemIcon>contact_mail</mat-icon>
-                <span matListItemTitle>Agenda</span>
-              </a>
-              <mat-expansion-panel class="mat-elevation-z0 nested-expansion">
-                  <mat-expansion-panel-header>
-                      <mat-panel-title>
-                          <mat-icon class="menu-icon">view_list</mat-icon>
-                          Listas
-                      </mat-panel-title>
-                  </mat-expansion-panel-header>
-                  <mat-nav-list>
-                      <a mat-list-item (click)="navigateTo('/users/lists')">
-                          <mat-icon matListItemIcon>list</mat-icon>
-                          <span matListItemTitle>General</span>
-                      </a>
-                      <a mat-list-item (click)="navigateTo('/favorites')">
-                          <mat-icon matListItemIcon>favorite</mat-icon>
-                          <span matListItemTitle>Favoritos</span>
-                      </a>
-                      <a mat-list-item (click)="navigateTo('/tracking')">
-                          <mat-icon matListItemIcon>track_changes</mat-icon>
-                          <span matListItemTitle>Seguimiento</span>
-                      </a>
-                      <a mat-list-item (click)="navigateTo('/stock-notifier')">
-                          <mat-icon matListItemIcon>notifications</mat-icon>
-                          <span matListItemTitle>Avisos de Stock</span>
-                      </a>
-                  </mat-nav-list>
-              </mat-expansion-panel>
-            </mat-nav-list>
-          </mat-expansion-panel>
-
-        <mat-expansion-panel *appHasPermission="[Resource.users, Action.admin]" class="mat-elevation-z0">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <mat-icon class="menu-icon">admin_panel_settings</mat-icon>
-              Administrador
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-nav-list>
-            <mat-expansion-panel class="mat-elevation-z0 nested-expansion">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  <mat-icon class="menu-icon">inventory_2</mat-icon>
-                  Product
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-nav-list>
-                <a mat-list-item (click)="navigateTo('/scraps/products')">
-                  <mat-icon matListItemIcon>inventory_2</mat-icon>
-                  <span matListItemTitle>Scrap</span>
-                </a>
-                <a mat-list-item (click)="navigateTo('/products')">
-                  <mat-icon matListItemIcon>list</mat-icon>
-                  <span matListItemTitle>General</span>
-                </a>
-                <a mat-list-item (click)="navigateTo('/products-media-dashboard')">
-                  <mat-icon matListItemIcon>image</mat-icon>
-                  <span matListItemTitle>Media</span>
-                </a>
-              </mat-nav-list>
-            </mat-expansion-panel>
-
-            <a mat-list-item (click)="navigateTo('/scraps')">
-              <mat-icon matListItemIcon>sync</mat-icon>
-              <span matListItemTitle>Scrap</span>
-            </a>
-            <a mat-list-item (click)="navigateTo('/categories')">
-              <mat-icon matListItemIcon>category</mat-icon>
-              <span matListItemTitle>Categories</span>
-            </a>
-            <a mat-list-item (click)="navigateTo('/campaigns')">
-              <mat-icon matListItemIcon>campaign</mat-icon>
-              <span matListItemTitle>Campaigns</span>
-            </a>
-
-            <mat-expansion-panel class="mat-elevation-z0 nested-expansion">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  <mat-icon class="menu-icon">group</mat-icon>
-                  Users
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-nav-list>
-                <a mat-list-item (click)="navigateTo('/users/profiles')">
-                  <mat-icon matListItemIcon>security</mat-icon>
-                  <span matListItemTitle>Profiles</span>
-                </a>
-              </mat-nav-list>
-            </mat-expansion-panel>
-          </mat-nav-list>
-        </mat-expansion-panel>
+      <mat-accordion [multi]="true">
+        <ng-container *ngTemplateOutlet="sidenavMenu; context: { items: navItems }"></ng-container>
       </mat-accordion>
-
-      <a mat-list-item *appHasPermission="[Resource.cart, Action.view]" (click)="navigateTo('/cart/dashboard')">
-        <mat-icon matListItemIcon>shopping_cart</mat-icon>
-        <span matListItemTitle>Carrito</span>
-      </a>
-
-      @for (item of navItems; track item.label) {
-        <a mat-list-item *appHasPermission="[item.resource, Action.view]" (click)="navigateTo(item.route)">
-          <mat-icon matListItemIcon>{{item.icon}}</mat-icon>
-          <span matListItemTitle>{{item.label}}</span>
-        </a>
-      }
     </mat-nav-list>
   </mat-sidenav>
 
@@ -218,187 +17,86 @@
       </button>
 
       <span (click)="navigateTo('/')" class="app-title">Yanbal-ERP</span>
-      
+
       <span class="spacer"></span>
 
       <div class="nav-buttons">
-        <button mat-button *appHasPermission="[Resource.store, Action.view]" (click)="navigateTo('/store')">
-          <mat-icon>storefront</mat-icon>
-          <span class="btn-label">Tienda</span>
-        </button>
-
-        <button mat-button *appHasPermission="[Resource.products, Action.view]" [matMenuTriggerFor]="productMenu">
-          <mat-icon>inventory_2</mat-icon>
-          <span class="btn-label">Productos</span>
-          <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
-        </button>
-
-        <mat-menu #productMenu="matMenu" class="custom-menu">
-          <button mat-menu-item (click)="navigateTo('/products')">
-            <mat-icon>list</mat-icon>
-            <span>General</span>
-          </button>
-          <button mat-menu-item (click)="navigateTo('/products-media-dashboard')">
-            <mat-icon>image</mat-icon>
-            <span>Media</span>
-          </button>
-          <button mat-menu-item (click)="navigateTo('/products-price-dashboard')">
-            <mat-icon>payments</mat-icon>
-            <span>Precios</span>
-          </button>
-
-          <button mat-menu-item [matMenuTriggerFor]="flowMenu">
-            <mat-icon>sync_alt</mat-icon>
-            <span>Flujo</span>
-          </button>
-
-          <button mat-menu-item *appHasPermission="[Resource.scraps, Action.view]" (click)="navigateTo('/scraps/products')">
-            <mat-icon>inventory_2</mat-icon>
-            <span>Scrap</span>
-          </button>
-        </mat-menu>
-
-        <!-- Submenu Flujo (Dentro de Productos) -->
-        <mat-menu #flowMenu="matMenu">
-          <button mat-menu-item *appHasPermission="[Resource.inventory_movements, Action.view]" (click)="navigateTo('/inventory/movements')">
-            <mat-icon>history</mat-icon>
-            <span>Movimientos</span>
-          </button>
-          <button mat-menu-item *appHasPermission="[Resource.inventory_stock, Action.view]" (click)="navigateTo('/inventory/stock-entry')">
-            <mat-icon>inventory_2</mat-icon>
-            <span>Compras</span>
-          </button>
-          <button mat-menu-item *appHasPermission="[Resource.sales, Action.view]" (click)="navigateTo('/sales/inventory')">
-            <mat-icon>analytics</mat-icon>
-            <span>Ventas</span>
-          </button>
-        </mat-menu>
-
-        <!-- Menú Compras -->
-        <button mat-button *appHasPermission="[Resource.inventory_inbound, Action.view]" [matMenuTriggerFor]="comprasMenu">
-          <mat-icon>shopping_bag</mat-icon>
-          <span class="btn-label">Compras</span>
-          <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
-        </button>
-
-        <mat-menu #comprasMenu="matMenu">
-          <button mat-menu-item *appHasPermission="[Resource.inventory_inbound, Action.view]" (click)="navigateTo('/inventory/inbound')">
-            <mat-icon>inventory</mat-icon>
-            <span>Documentos</span>
-          </button>
-          <button mat-menu-item *appHasPermission="[Resource.inventory_inbound, Action.view]" (click)="navigateTo('/inventory/inbound/register')">
-            <mat-icon>add_circle</mat-icon>
-            <span>Registrar</span>
-          </button>
-        </mat-menu>
-
-        <!-- Menú Ventas -->
-        <button mat-button *appHasPermission="[Resource.sales, Action.view]" [matMenuTriggerFor]="ventasMenu">
-          <mat-icon>sell</mat-icon>
-          <span class="btn-label">Ventas</span>
-          <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
-        </button>
-
-        <mat-menu #ventasMenu="matMenu">
-          <button mat-menu-item *appHasPermission="[Resource.sales, Action.view]" (click)="navigateTo('/sales')">
-            <mat-icon>receipt_long</mat-icon>
-            <span>Documentos</span>
-          </button>
-          <button mat-menu-item *appHasPermission="[Resource.sales, Action.view]" (click)="navigateTo('/sales/register')">
-            <mat-icon>add_shopping_cart</mat-icon>
-            <span>Registrar</span>
-          </button>
-        </mat-menu>
-
-        <!-- Carrito -->
-        <button mat-button *appHasPermission="[Resource.cart, Action.view]" (click)="navigateTo('/cart/dashboard')">
-          <mat-icon>shopping_cart</mat-icon>
-          <span class="btn-label">Carrito</span>
-        </button>
-
-        <!-- Menú Usuarios -->
-        <button mat-button *appHasPermission="[Resource.users, Action.view]" [matMenuTriggerFor]="usuariosMenu">
-          <mat-icon>group</mat-icon>
-          <span class="btn-label">Usuarios</span>
-          <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
-        </button>
-
-        <mat-menu #usuariosMenu="matMenu">
-          <button mat-menu-item *appHasPermission="[Resource.users, Action.view]" (click)="navigateTo('/users')">
-            <mat-icon>list</mat-icon>
-            <span>Listado</span>
-          </button>
-          <button mat-menu-item *appHasPermission="[Resource.users, Action.view]" (click)="navigateTo('/users/profiles')">
-            <mat-icon>security</mat-icon>
-            <span>Perfiles</span>
-          </button>
-          <button mat-menu-item *appHasPermission="[Resource.users, Action.view]" (click)="navigateTo('/users/agenda')">
-            <mat-icon>contact_mail</mat-icon>
-            <span>Agenda</span>
-          </button>
-          <button mat-menu-item *appHasPermission="[Resource.users, Action.view]" [matMenuTriggerFor]="listsMenu">
-            <mat-icon>view_list</mat-icon>
-            <span>Listas</span>
-          </button>
-        </mat-menu>
-
-        <!-- Submenu Listas (Dentro de Usuarios) -->
-        <mat-menu #listsMenu="matMenu">
-          <button mat-menu-item (click)="navigateTo('/users/lists')">
-            <mat-icon>list</mat-icon>
-            <span>General</span>
-          </button>
-          <button mat-menu-item (click)="navigateTo('/favorites')">
-            <mat-icon>favorite</mat-icon>
-            <span>Favoritos</span>
-          </button>
-          <button mat-menu-item (click)="navigateTo('/tracking')">
-            <mat-icon>track_changes</mat-icon>
-            <span>Seguimiento</span>
-          </button>
-          <button mat-menu-item (click)="navigateTo('/stock-notifier')">
-            <mat-icon>notifications</mat-icon>
-            <span>Avisos de Stock</span>
-          </button>
-        </mat-menu>
-
-        <!-- Otras secciones -->
         @for (item of navItems; track item.label) {
-          <button mat-button *appHasPermission="[item.resource, Action.view]" (click)="navigateTo(item.route)">
-            <mat-icon>{{item.icon}}</mat-icon>
-            <span class="btn-label">{{item.label}}</span>
-          </button>
+          <ng-container *appHasPermission="item.permissions">
+            @if (item.children) {
+              <button mat-button [matMenuTriggerFor]="flatMenu">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span class="btn-label">{{ item.label }}</span>
+                <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+              </button>
+              <mat-menu #flatMenu="matMenu" class="custom-menu">
+                @for (entry of flattenForToolbar(item.children); track $index) {
+                  @if (entry.type === 'divider') {
+                    <mat-divider></mat-divider>
+                  } @else if (entry.type === 'header') {
+                    <ng-container *appHasPermission="entry.permissions">
+                      <div class="menu-group-header">
+                        <mat-icon>{{ entry.icon }}</mat-icon>
+                        <span>{{ entry.label }}</span>
+                      </div>
+                    </ng-container>
+                  } @else {
+                    <ng-container *appHasPermission="entry.permissions">
+                      <button mat-menu-item (click)="navigateTo(entry.route)">
+                        <mat-icon>{{ entry.icon }}</mat-icon>
+                        <span>{{ entry.label }}</span>
+                      </button>
+                    </ng-container>
+                  }
+                }
+              </mat-menu>
+            } @else {
+              <button mat-button (click)="navigateTo(item.route)">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span class="btn-label">{{ item.label }}</span>
+              </button>
+            }
+          </ng-container>
         }
       </div>
 
-
       @if (userService.currentUser(); as user) {
-        <div class="user-active-control">
-          <button mat-flat-button class="active-user-btn" [matMenuTriggerFor]="userMenu" matTooltip="Mi Perfil">
-            <div class="user-btn-content">
-              <div class="avatar-header">
-                <img [src]="user.image || 'assets/images/default-avatar.png'" [alt]="user.firstName">
-              </div>
-              <span class="username">{{ user.firstName }}</span>
+      <div class="user-active-control">
+        <button mat-flat-button class="active-user-btn" [matMenuTriggerFor]="userMenu" matTooltip="Mi Perfil">
+          <div class="user-btn-content">
+            <div class="avatar-header">
+              <img [src]="user.image || 'assets/images/default-avatar.png'" [alt]="user.firstName">
             </div>
-          </button>
+            <span class="username">{{ user.firstName }}</span>
+          </div>
+        </button>
 
-          <mat-menu #userMenu="matMenu">
-            <button mat-menu-item (click)="navigateTo('/users/' + (user.id ?? ''))">
-              <mat-icon>account_circle</mat-icon>
-              <span>Mi Perfil</span>
-            </button>
-            <button mat-menu-item (click)="themeService.toggleTheme()">
-              <mat-icon>{{ themeService.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
-              <span>{{ themeService.theme() === 'dark' ? 'Modo Claro' : 'Modo Oscuro' }}</span>
-            </button>
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item (click)="navigateTo('/users/account')">
+            <mat-icon>account_circle</mat-icon>
+            <span>Cuenta</span>
+          </button>
+          
+          @if (userService.originalProfileSlug() === ProfileSlug.admin) {
             <mat-divider></mat-divider>
-            <button mat-menu-item (click)="logout()" class="logout-btn">
-              <mat-icon color="warn">logout</mat-icon>
-              <span class="text-warn">Cerrar Sesión</span>
+            <button mat-menu-item [matMenuTriggerFor]="profileSimMenu">
+              <mat-icon>terminal</mat-icon>
+              <span>Simular Perfil</span>
             </button>
-          </mat-menu>
-        </div>
+          }
+        </mat-menu>
+
+        <mat-menu #profileSimMenu="matMenu">
+          @for (profile of userService.availableProfiles(); track profile.id) {
+            <button mat-menu-item (click)="userService.simulateProfileSlug(profile.slug)">
+              <mat-icon [color]="userService.currentUserProfile()?.id === profile.id ? 'primary' : 'disabled'">
+                {{ userService.currentUserProfile()?.id === profile.id ? 'radio_button_checked' : 'radio_button_unchecked' }}
+              </mat-icon>
+              <span>{{ profile.name }}</span>
+            </button>
+          }
+        </mat-menu>
+      </div>
       }
     </mat-toolbar>
 
@@ -408,34 +106,58 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 } @else {
-  @if (!authService.isAuthenticated()) {
-    <!-- Contenedor para rutas públicas (Tienda, Login, etc.) -->
-    <div class="public-layout">
-      <!-- Si no es el login, mostramos un header minimalista o el logo -->
-      @if (router.url !== '/login') {
-        <mat-toolbar color="primary" class="main-header">
-           <span (click)="navigateTo('/')" class="app-title">Yanbal-ERP</span>
-           <span class="spacer"></span>
-           <button mat-button (click)="navigateTo('/store')">
-             <mat-icon>storefront</mat-icon>
-             <span>Tienda</span>
-           </button>
-           <button mat-button (click)="navigateTo('/login')">
-             <mat-icon>login</mat-icon>
-             <span>Iniciar Sesión</span>
-           </button>
-        </mat-toolbar>
-      }
-      
-      <main [class.login-container]="router.url === '/login'" [class.main-content]="router.url !== '/login'">
-        <router-outlet></router-outlet>
-      </main>
-    </div>
+@if (!authService.isAuthenticated()) {
+<div class="public-layout">
+  @if (router.url !== '/login') {
+  <mat-toolbar color="primary" class="main-header">
+    <span (click)="navigateTo('/')" class="app-title">Yanbal-ERP</span>
+    <span class="spacer"></span>
+    <button mat-button (click)="navigateTo('/store')">
+      <mat-icon>storefront</mat-icon>
+      <span>Tienda</span>
+    </button>
+    <button mat-button (click)="navigateTo('/login')">
+      <mat-icon>login</mat-icon>
+      <span>Iniciar Sesión</span>
+    </button>
+  </mat-toolbar>
   }
+
+  <main [class.login-container]="router.url === '/login'" [class.main-content]="router.url !== '/login'">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+}
 }
 } @else {
-  <div class="loading-overlay">
-    <mat-spinner></mat-spinner>
-    <p>Cargando aplicación...</p>
-  </div>
+<div class="loading-overlay">
+  <mat-spinner></mat-spinner>
+  <p>Cargando aplicación...</p>
+</div>
 }
+
+<!-- TEMPLATE: Menú Sidenav recursivo (Móvil) -->
+<ng-template #sidenavMenu let-items="items" let-level="level">
+  @for (item of items; track item.label) {
+    <ng-container *appHasPermission="item.permissions">
+      @if (item.children) {
+        <mat-expansion-panel class="mat-elevation-z0" [class.nested-expansion]="(level || 0) > 0">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="menu-icon">{{ item.icon }}</mat-icon>
+              {{ item.label }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <ng-container *ngTemplateOutlet="sidenavMenu; context: { items: item.children, level: (level || 0) + 1 }"></ng-container>
+          </mat-nav-list>
+        </mat-expansion-panel>
+      } @else {
+        <a mat-list-item (click)="navigateTo(item.route)">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </ng-container>
+  }
+</ng-template>

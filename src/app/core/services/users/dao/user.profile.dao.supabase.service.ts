@@ -38,8 +38,11 @@ export class UserProfileDaoSupabaseService {
         .eq('id', id)
         .single()
     ).pipe(
-      map(res => {
+      tap(res => {
         if (res.error) throw res.error;
+        this.loggerService.debug(`Usuario perfil obtenido: ${JSON.stringify(res.data)}`, this.CLASS_NAME);
+      }),
+      map(res => {
         return this.mapToEntity(res.data);
       })
     );
