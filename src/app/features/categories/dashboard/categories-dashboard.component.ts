@@ -4,7 +4,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CategoryService } from 'src/app/core/services/categories/category.service';
+import { CategoryService } from 'src/app/core/services/admin/categories/category.service';
 import { CategoryHierarchyEntity } from 'src/app/shared/entity/view/category.hierarchy.entity';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';

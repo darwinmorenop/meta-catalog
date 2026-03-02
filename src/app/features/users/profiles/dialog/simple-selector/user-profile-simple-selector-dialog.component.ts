@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { UserProfileSelectorComponent } from '../../components/user-profile-selector/user-profile-selector.component';
-import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
+import { UserProfileService } from 'src/app/core/services/admin/users/profile/user.profile.service';
 import { UserProfile } from 'src/app/shared/entity/user.profile.entity';
 import { MatIcon } from "@angular/material/icon";
 

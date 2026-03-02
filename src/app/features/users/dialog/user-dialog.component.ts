@@ -16,7 +16,7 @@ import { UserProfileSimpleSelectorDialogComponent } from 'src/app/features/users
 import { UserRankEnum, UserDashboardModel, UserRankLabel } from 'src/app/core/models/users/user.model';
 import { UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { UserProfile } from 'src/app/shared/entity/user.profile.entity';
-import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
+import { UserProfileService } from 'src/app/core/services/admin/users/profile/user.profile.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 
 @Component({

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
-import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
+import { SupabaseService } from 'src/app/core/services/admin/supabase/supabase.service';
 import { ListEntity, ListSlugEnum } from 'src/app/shared/entity/list.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { ListItemViewEntity, ListViewEntity } from 'src/app/shared/entity/view/list.view.entity';
@@ -25,8 +25,7 @@ export class UserListDaoSupabaseService {
   getAll(userIds?: string[]): Observable<ListViewEntity[]> {
     const systemSlugs = `${ListSlugEnum.favorites},${ListSlugEnum.price_tracking},${ListSlugEnum.stock_notifier}`;
 
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_list')
+    let query = this.supabaseService.getSupabaseClient().schema('public').from('v_list')
       .select('*');
 
     query = query.or(`slug.is.null,slug.not.in.(${systemSlugs})`);
@@ -41,8 +40,7 @@ export class UserListDaoSupabaseService {
   }
 
   getTracking(userIds?: string[]): Observable<ListViewEntity[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_list')
+    let query = this.supabaseService.getSupabaseClient().schema('public').from('v_list')
       .select('*')
       .eq('slug', ListSlugEnum.price_tracking);
 
@@ -56,8 +54,7 @@ export class UserListDaoSupabaseService {
   }
 
   getTrackingByUser(userId: string): Observable<ListItemViewEntity[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_list_items')
+    let query = this.supabaseService.getSupabaseClient().schema('public').from('v_list_items')
       .select('*')
       .eq('owner_id', userId)
       .eq('slug', ListSlugEnum.price_tracking);
@@ -68,8 +65,7 @@ export class UserListDaoSupabaseService {
   }
 
   getFavorites(userIds?: string[]): Observable<ListViewEntity[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_list')
+    let query = this.supabaseService.getSupabaseClient().schema('public').from('v_list')
       .select('*')
       .eq('slug', ListSlugEnum.favorites);
 
@@ -83,8 +79,7 @@ export class UserListDaoSupabaseService {
   }
 
   getFavoritesByUser(userId: string): Observable<ListItemViewEntity[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_list_items')
+    let query = this.supabaseService.getSupabaseClient().schema('public').from('v_list_items')
       .select('*')
       .eq('owner_id', userId)
       .eq('slug', ListSlugEnum.favorites);
@@ -95,8 +90,7 @@ export class UserListDaoSupabaseService {
   }
 
   getNotifier(userIds?: string[]): Observable<ListViewEntity[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_list')
+    let query = this.supabaseService.getSupabaseClient().schema('public').from('v_list')
       .select('*')
       .eq('slug', ListSlugEnum.stock_notifier);
 
@@ -110,8 +104,7 @@ export class UserListDaoSupabaseService {
   }
 
   getNotifierByUser(userId: string): Observable<ListItemViewEntity[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_list_items')
+    let query = this.supabaseService.getSupabaseClient().schema('public').from('v_list_items')
       .select('*')
       .eq('owner_id', userId)
       .eq('slug', ListSlugEnum.stock_notifier);
@@ -122,8 +115,7 @@ export class UserListDaoSupabaseService {
   }
 
   getById(id: string): Observable<ListViewEntity> {
-    const query = this.supabaseService.getSupabaseClient()
-      .from('v_list')
+    const query = this.supabaseService.getSupabaseClient().schema('public').from('v_list')
       .select('*')
       .eq('id', id)
       .single();
@@ -139,8 +131,7 @@ export class UserListDaoSupabaseService {
    * @returns Observable con los items de la lista
    */
   getAllItems(listId: string): Observable<Partial<ListItemViewEntity>[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_list_items')
+    let query = this.supabaseService.getSupabaseClient().schema('public').from('v_list_items')
       .select(`
         item_id,
         list_id, 
@@ -161,8 +152,7 @@ export class UserListDaoSupabaseService {
   }
 
   getAllItemsComplete(listId: string): Observable<ListItemViewEntity[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_list_items')
+    let query = this.supabaseService.getSupabaseClient().schema('public').from('v_list_items')
       .select('*')
       .eq('list_id', listId)
       .order('product_name');
@@ -172,8 +162,7 @@ export class UserListDaoSupabaseService {
   }
 
   upsert(data: ListRcpUpsertRequestEntity): Observable<string | null> {
-    const query = this.supabaseService.getSupabaseClient()
-      .rpc('upsert_full_list', data);
+    const query = this.supabaseService.getSupabaseClient().rpc('upsert_full_list', data);
     return from(query).pipe(
       map(res => res.data),
       catchError(err => {
@@ -184,8 +173,7 @@ export class UserListDaoSupabaseService {
   }
 
   copy(data: ListRcpCopyRequestEntity): Observable<string | null> {
-    const query = this.supabaseService.getSupabaseClient()
-      .rpc('copy_list', data);
+    const query = this.supabaseService.getSupabaseClient().rpc('copy_list', data);
     return from(query).pipe(
       map(res => res.data),
       catchError(err => {
@@ -196,8 +184,7 @@ export class UserListDaoSupabaseService {
   }
 
   delete(id: string): Observable<boolean> {
-    const query = this.supabaseService.getSupabaseClient()
-      .from('lists')
+    const query = this.supabaseService.fromUsers('lists')
       .delete()
       .eq('id', id);
     return from(query).pipe(
@@ -210,8 +197,7 @@ export class UserListDaoSupabaseService {
   }
 
   removeItem(listId: string, itemId: string): Observable<boolean> {
-    const query = this.supabaseService.getSupabaseClient()
-      .from('list_items')
+    const query = this.supabaseService.fromUsers('list_items')
       .delete()
       .eq('list_id', listId)
       .eq('id', itemId);
@@ -225,8 +211,7 @@ export class UserListDaoSupabaseService {
   }
 
   upsertItem(data: ListItemRcpUpsertRequestEntity): Observable<string|null> {
-    const query = this.supabaseService.getSupabaseClient()
-      .rpc('upsert_single_list_item', data);
+    const query = this.supabaseService.getSupabaseClient().rpc('upsert_single_list_item', data);
     return from(query).pipe(
       map(res => res.data),
       catchError(err => {

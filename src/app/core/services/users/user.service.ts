@@ -6,17 +6,20 @@ import { UserDashboardModel, UserRankEnum } from 'src/app/core/models/users/user
 import { UserNetworkDetail, UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { ThemeService } from 'src/app/core/services/theme/theme.service';
 import { UserProfile, ProfileSlug } from 'src/app/shared/entity/user.profile.entity';
-import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
+import { UserProfileService } from 'src/app/core/services/admin/users/profile/user.profile.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { SupabaseService } from 'src/app/core/services/admin/supabase/supabase.service';
+import { UserReadService } from 'src/app/core/services/admin/users/main/read/user-read.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private userDaoSupabaseService = inject(UserDaoSupabaseService);
+  private userReadService = inject(UserReadService);
   private userProfileService = inject(UserProfileService);
   private themeService = inject(ThemeService);
   private authService = inject(AuthService);
+  private supabaseService = inject(SupabaseService);
 
   private readonly ACTIVE_USER_KEY = 'activeUserId';
   
@@ -54,7 +57,7 @@ export class UserService {
       const authUser = this.authService.user();
       if (authUser) {
         // this.logger.debug(`Usuario autenticado detectado: ${authUser.id}`, 'UserService');
-        this.getUserDetailWithNetwork(authUser.id).subscribe(network => {
+        this.userReadService.getUserDetailWithNetwork(authUser.id).subscribe(network => {
           this.currentUserNetwork.set(network);
           localStorage.setItem(this.ACTIVE_USER_KEY, authUser.id);
         });
@@ -62,7 +65,7 @@ export class UserService {
         // Si no hay sesión, intentamos cargar el último usuario guardado (comportamiento legacy/dev)
         const savedId = localStorage.getItem(this.ACTIVE_USER_KEY);
         if (savedId && !this.currentUserNetwork()) {
-           this.getUserDetailWithNetwork(savedId).subscribe(network => {
+           this.userReadService.getUserDetailWithNetwork(savedId).subscribe(network => {
             this.currentUserNetwork.set(network);
           });
         }
@@ -95,12 +98,12 @@ export class UserService {
       this.availableProfiles.set(profiles);
     });
 
-    this.getAllDashboard().subscribe(users => {
+    this.userReadService.getAllDashboard().subscribe(users => {
       this.users.set(users);
       
       const savedId = localStorage.getItem(this.ACTIVE_USER_KEY);
       if (savedId) {
-        this.getUserDetailWithNetwork(savedId).subscribe({
+        this.userReadService.getUserDetailWithNetwork(savedId).subscribe({
           next: (network) => {
             this.currentUserNetwork.set(network);
             // The effect will trigger loadUserProfile, which will set isInitialized to true
@@ -120,6 +123,7 @@ export class UserService {
       next: (profile) => {
         this.currentUserProfile.set(profile);
         this.originalProfileSlug.set(profile.slug as ProfileSlug);
+        this.supabaseService.setSchema(profile.slug);
         this.isInitialized.set(true);
       },
       error: (err) => {
@@ -138,7 +142,7 @@ export class UserService {
       return;
     }
 
-    this.getUserDetailWithNetwork(user.id).subscribe(network => {
+    this.userReadService.getUserDetailWithNetwork(user.id).subscribe(network => {
       this.currentUserNetwork.set(network);
       localStorage.setItem(this.ACTIVE_USER_KEY, user.id);
     });
@@ -155,67 +159,7 @@ export class UserService {
 
     // Actualizamos el perfil completo para simular permisos reales
     this.currentUserProfile.set(targetProfile);
-  }
-
-  getAllDashboard(): Observable<UserDashboardModel[]> {
-    return this.userDaoSupabaseService.getAll().pipe(
-      map((users: UserEntity[]) => users.map((user: UserEntity) => ({
-        id: user.id,
-        email: user.email,
-        phone: user.phone,
-        isManual: user.isManual,
-        identifier: user.identifier,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        rank: user.rank as UserRankEnum,
-        sponsor: user.sponsorId ? this.convertToUserDashboardModel(users.find((u: UserEntity) => u.id === user.sponsorId)) : null,
-        image: user.image,
-        user_profile_id: user.user_profile_id,
-        settings: user.settings
-      })))
-    );
-  }
-
-  getUserDetailWithNetwork(userId: string): Observable<UserNetworkDetail[]> {
-    return this.userDaoSupabaseService.getUserDetailWithNetwork(userId);
-  }
-
-  private convertToUserDashboardModel(user: UserEntity | undefined): UserDashboardModel | null {
-    if (!user) return null;
-    return {
-      id: user.id,
-      email: user.email,
-      phone: user.phone,
-      isManual: user.isManual,
-      identifier: user.identifier,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      rank: user.rank as UserRankEnum,
-      sponsor: null, // To avoid infinite loop
-      image: user.image,
-      user_profile_id: user.user_profile_id,
-      settings: user.settings
-    };
-  }
-
-  getAvailableSponsors(editingUserId: string): Observable<UserSponsorEntity[]> {
-    return this.userDaoSupabaseService.getAvailableSponsorsRpc(editingUserId);
-  }
-
-  insert(user: UserEntity): Observable<UserEntity> {
-    return this.userDaoSupabaseService.insert(user);
-  }
-
-  update(user: UserEntity): Observable<UserEntity> {
-    return this.userDaoSupabaseService.update(user);
-  }
-
-  delete(id: string): Observable<boolean> {
-    return this.userDaoSupabaseService.delete(id);
-  }
-
-  findByPhoneOrEmail(phone?: string, email?: string): Observable<Partial<UserEntity> | null> {
-    return this.userDaoSupabaseService.findByPhoneOrEmail(phone, email);
+    this.supabaseService.setSchema(targetProfile.slug);
   }
 
 }

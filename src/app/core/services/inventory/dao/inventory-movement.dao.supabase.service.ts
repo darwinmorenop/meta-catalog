@@ -3,7 +3,7 @@ import { from, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ProductMovementReport } from 'src/app/shared/entity/rcp/inventory.movement.rcp.entity';
-import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
+import { SupabaseService } from 'src/app/core/services/admin/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +18,7 @@ export class InventoryMovementDaoSupabaseService {
 
   getAllDashboardData(userIds?: string[], productIds?: number[]): Observable<ProductMovementReport[]> {
     const context = 'getAllDashboardData';
-    let query = this.supabaseService.getSupabaseClient()
-      .rpc('get_movements_by_user_and_product', { p_user_ids: userIds, p_product_ids: productIds });
+    let query = this.supabaseService.getSupabaseClient().rpc('get_movements_by_user_and_product', { p_user_ids: userIds, p_product_ids: productIds });
 
     return from(query).pipe(
       tap(response => {

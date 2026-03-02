@@ -1,15 +1,15 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { SupabaseService } from '../supabase/supabase.service';
 import { Router } from '@angular/router';
-import { from, Observable, tap } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
-import { LoggerService } from '../logger/logger.service';
+import { LoggerService } from 'src/app/core/services/logger/logger.service';
+import { SupabaseAuthService } from 'src/app/core/services/admin/supabase/supabase.auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private supabase = inject(SupabaseService).getSupabaseClient();
+  private supabaseAuthService = inject(SupabaseAuthService);
   private router = inject(Router);
   private logger = inject(LoggerService);
   private readonly CLASS_NAME = 'AuthService';
@@ -21,17 +21,19 @@ export class AuthService {
   constructor() {
     this.logger.debug('Initializing AuthService', this.CLASS_NAME);
     // Initializing state
-    this.supabase.auth.getSession().then(({ data: { session } }) => {
-      this.logger.debug('Initial session check completed', this.CLASS_NAME);
-      this.handleAuthChange('SIGNED_IN' as any, session);
-      this.isInitialized.set(true);
-    }).catch(err => {
-      this.logger.error('Error getting initial session', this.CLASS_NAME, err);
-      this.isInitialized.set(true); // Still initialized, just no session
-    });
+    this.supabaseAuthService.getSession().subscribe(
+      ({ data: { session } }) => {
+        this.logger.debug('Initial session check completed', this.CLASS_NAME);
+        this.handleAuthChange('SIGNED_IN' as any, session);
+        this.isInitialized.set(true);
+      },
+      (err) => {
+        this.logger.error('Error getting initial session', this.CLASS_NAME, err);
+        this.isInitialized.set(true); // Still initialized, just no session
+      });
 
     // Listening for auth changes
-    this.supabase.auth.onAuthStateChange((event, session) => {
+    this.supabaseAuthService.onAuthStateChange((event, session) => {
       this.handleAuthChange(event, session);
     });
   }
@@ -44,49 +46,6 @@ export class AuthService {
     if (event === 'SIGNED_OUT') {
       this.router.navigate(['/login']);
     }
-  }
-
-  signIn(email: string): Observable<any> {
-    // Magic link is often preferred, but user might want password. 
-    // Usually a "Magic Link" is standard for premium Supabase setups.
-    return from(this.supabase.auth.signInWithOtp({ email }));
-  }
-
-  signInWithPassword(email: string, password: string): Observable<any> {
-    return from(this.supabase.auth.signInWithPassword({ email, password }));
-  }
-
-  signUp(email: string, password: string, data: any): Observable<any> {
-    return from(this.supabase.auth.signUp({ 
-      email, 
-      password,
-      options: {
-        data: data // Contiene first_name, last_name, etc. que el trigger capturará
-      }
-    }));
-  }
-
-  signInWithOAuth(provider: 'google' | 'facebook' | 'apple'): Observable<any> {
-    return from(this.supabase.auth.signInWithOAuth({
-      provider: provider,
-      options: {
-        redirectTo: window.location.origin
-      }
-    }));
-  }
-
-  resetPassword(email: string): Observable<any> {
-    return from(this.supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    }));
-  }
-
-  updatePassword(password: string): Observable<any> {
-    return from(this.supabase.auth.updateUser({ password }));
-  }
-
-  signOut(): Observable<any> {
-    return from(this.supabase.auth.signOut());
   }
 
   isAuthenticated = computed(() => !!this.user());

@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserService } from 'src/app/core/services/users/user.service';
 import { UserEntity } from 'src/app/shared/entity/user.entity';
+import { UserReadService } from 'src/app/core/services/admin/users/main/read/user-read.service';
 
 @Component({
   selector: 'app-user-search-existing-dialog',
@@ -28,7 +29,7 @@ import { UserEntity } from 'src/app/shared/entity/user.entity';
 })
 export class UserSearchExistingDialogComponent {
   private fb = inject(FormBuilder);
-  private userService = inject(UserService);
+  private userReadService = inject(UserReadService);
   private dialogRef = inject(MatDialogRef<UserSearchExistingDialogComponent>);
 
   searchForm: FormGroup = this.fb.group({
@@ -53,7 +54,7 @@ export class UserSearchExistingDialogComponent {
 
     const { phone, email } = this.searchForm.value;
 
-    this.userService.findByPhoneOrEmail(phone, email).subscribe({
+    this.userReadService.findByPhoneOrEmail(phone, email).subscribe({
       next: (user) => {
         this.isLoading.set(false);
         if (user) {

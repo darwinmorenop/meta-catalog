@@ -8,8 +8,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserService } from 'src/app/core/services/users/user.service';
 import { ThemeService } from 'src/app/core/services/theme/theme.service';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { SupabaseAuthService } from 'src/app/core/services/admin/supabase/supabase.auth.service';
 
 @Component({
   selector: 'app-account',
@@ -29,7 +29,7 @@ import { Router } from '@angular/router';
 export class AccountComponent {
   userService = inject(UserService);
   themeService = inject(ThemeService);
-  authService = inject(AuthService);
+  authService = inject(SupabaseAuthService);
   router = inject(Router);
 
   logout() {

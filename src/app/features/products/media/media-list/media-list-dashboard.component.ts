@@ -8,7 +8,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 // Services & Models
-import { ProductMediaService } from 'src/app/core/services/products/product-media.service';
+import { ProductMediaService } from 'src/app/core/services/admin/products/media/product-media.service';
 import { ProductMedia } from 'src/app/core/models/products/media/product.media.model';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';

@@ -8,12 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 // Services & Models
-import { UserService } from 'src/app/core/services/users/user.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
-import { UserEntity } from 'src/app/shared/entity/user.entity';
 import { UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { UserRankEnum, UserRankLabel } from 'src/app/core/models/users/user.model';
+import { UserReadService } from 'src/app/core/services/admin/users/main/read/user-read.service';
 
 @Component({
   selector: 'app-sponsor-selector-dialog',
@@ -31,12 +30,12 @@ import { UserRankEnum, UserRankLabel } from 'src/app/core/models/users/user.mode
   styleUrls: ['sponsor-selector-dialog.component.scss']
 })
 export class SponsorSelectorDialogComponent {
-  private readonly userService = inject(UserService);
+  private readonly userReadService = inject(UserReadService);
   private readonly dialogRef = inject(MatDialogRef<SponsorSelectorDialogComponent>);
   public data = inject<{ editingUserId: string }>(MAT_DIALOG_DATA);
 
   sponsorsResource = rxResource({
-    stream: () => this.userService.getAvailableSponsors(this.data.editingUserId)
+    stream: () => this.userReadService.getAvailableSponsors(this.data.editingUserId)
   });
 
   tableData = computed(() => {

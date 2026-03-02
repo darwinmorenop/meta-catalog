@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProductMedia } from 'src/app/core/models/products/media/product.media.model';
-import { ProductMediaService } from 'src/app/core/services/products/product-media.service';
+import { ProductMediaService } from 'src/app/core/services/admin/products/media/product-media.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { C } from '@angular/cdk/keycodes';
 @Component({

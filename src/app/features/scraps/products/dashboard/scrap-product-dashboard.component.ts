@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { rxResource } from '@angular/core/rxjs-interop';
 
-import { ScrapService } from 'src/app/core/services/scrap/scrap.service';
+import { ScrapService } from 'src/app/core/services/admin/scrap/scrap.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { ProductWithSourcesEntity } from 'src/app/shared/entity/view/product.scrap.entity';

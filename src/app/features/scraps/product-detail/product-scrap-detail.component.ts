@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
-import { ScrapService } from 'src/app/core/services/scrap/scrap.service';
+import { ScrapService } from 'src/app/core/services/admin/scrap/scrap.service';
 import { ProductScrapEntity } from 'src/app/shared/entity/view/product.scrap.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 

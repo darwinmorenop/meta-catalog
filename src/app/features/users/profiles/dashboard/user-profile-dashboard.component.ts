@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
+import { UserProfileService } from 'src/app/core/services/admin/users/profile/user.profile.service';
 import { UserProfile } from 'src/app/shared/entity/user.profile.entity';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';

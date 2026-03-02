@@ -5,7 +5,7 @@ import { UserEntity } from 'src/app/shared/entity/user.entity';
 import { UserNetworkDetail, UserSponsorEntity } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { UserRankEnum } from 'src/app/core/models/users/user.model';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
-import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
+import { SupabaseService } from 'src/app/core/services/admin/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
@@ -103,8 +103,7 @@ export class UserDaoSupabaseService {
 
   getAll(): Observable<UserEntity[]> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('user')
+      this.supabaseService.fromUsers('user')
         .select('*')
         .order('first_name')
     ).pipe(
@@ -114,8 +113,7 @@ export class UserDaoSupabaseService {
 
   getById(userId: string): Observable<UserEntity | null> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('user')
+      this.supabaseService.fromUsers('user')
         .select('*')
         .eq('id', userId)
         .single()
@@ -147,8 +145,7 @@ export class UserDaoSupabaseService {
   insert(user: UserEntity): Observable<UserEntity> {
     const dbData = this.mapToDb(user);
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('user')
+      this.supabaseService.fromUsers('user')
         .insert(dbData)
         .select()
         .single()
@@ -165,8 +162,7 @@ export class UserDaoSupabaseService {
     const context = 'update';
     this.loggerService.debug(`Updating user ${user.id} with data ${JSON.stringify(dbData)}`, this.CLASS_NAME, context);
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('user')
+      this.supabaseService.fromUsers('user')
         .update(dbData)
         .eq('id', user.id)
         .select()
@@ -181,8 +177,7 @@ export class UserDaoSupabaseService {
 
   delete(id: string): Observable<boolean> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('user')
+      this.supabaseService.fromUsers('user')
         .delete()
         .eq('id', id)
     ).pipe(
@@ -200,8 +195,7 @@ export class UserDaoSupabaseService {
     if (filters.length === 0) return of(null);
 
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('user')
+      this.supabaseService.fromUsers('user')
         .select('id,first_name,last_name')
         .or(filters.join(','))
         .limit(1)

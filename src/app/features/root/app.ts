@@ -21,6 +21,7 @@ import { Action, ProfileSlug, Resource } from 'src/app/shared/entity/user.profil
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 import { HasPermissionDirective } from 'src/app/shared/directives/has-permission.directive';
+import { SupabaseAuthService } from 'src/app/core/services/admin/supabase/supabase.auth.service';
 
 @Component({
   selector: 'app-root',
@@ -56,6 +57,7 @@ export class AppComponent {
   userService = inject(UserService);
   permissionService = inject(PermissionService);
   authService = inject(AuthService);
+  supabaseAuthService = inject(SupabaseAuthService);
 
   readonly Resource = Resource;
   readonly Action = Action;
@@ -199,7 +201,7 @@ export class AppComponent {
   }
 
   logout() {
-    this.authService.signOut().subscribe(() => {
+    this.supabaseAuthService.signOut().subscribe(() => {
       this.router.navigate(['/login']);
     });
   }

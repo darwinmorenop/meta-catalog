@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
-import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
+import { SupabaseService } from 'src/app/core/services/admin/supabase/supabase.service';
 import { CartItemEntity } from 'src/app/shared/entity/cart.entity';
 
 @Injectable({
@@ -24,8 +24,7 @@ export class CartDaoSupabaseService {
   }
 
   getAll(userIds?: string[]): Observable<CartItemEntity[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_cart_items')
+    let query = this.supabaseService.fromTier('v_cart')
       .select('*')
       .order('updated_at', { ascending: false });
 
@@ -40,8 +39,7 @@ export class CartDaoSupabaseService {
 
   delete(user_id: string, product_id: number): Observable<any> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('cart_items')
+      this.supabaseService.fromSales('cart_items')
         .delete()
         .eq('user_id', user_id)
         .eq('product_id', product_id)
@@ -50,8 +48,7 @@ export class CartDaoSupabaseService {
 
   update(user_id: string, product_id: number, updates: Partial<CartItemEntity>): Observable<any> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('cart_items')
+      this.supabaseService.fromSales('cart_items')
         .update(updates)
         .eq('user_id', user_id)
         .eq('product_id', product_id)
@@ -60,8 +57,7 @@ export class CartDaoSupabaseService {
 
   changeIsSelected(user_id: string, product_id: number, is_selected: boolean): Observable<any> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('cart_items')
+      this.supabaseService.fromSales('cart_items')
         .update({ is_selected: is_selected })
         .match({ product_id: product_id, user_id: user_id })
     ).pipe(map(res => res.data));
@@ -69,8 +65,7 @@ export class CartDaoSupabaseService {
 
   changeIsSavedForLater(user_id: string, product_id: number, is_saved_for_later: boolean): Observable<any> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('cart_items')
+      this.supabaseService.fromSales('cart_items')
         .update({ is_saved_for_later: is_saved_for_later })
         .match({ product_id: product_id, user_id: user_id })
     ).pipe(map(res => res.data));

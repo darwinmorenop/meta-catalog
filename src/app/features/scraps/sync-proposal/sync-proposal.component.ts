@@ -8,7 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ScrapService } from 'src/app/core/services/scrap/scrap.service';
+import { ScrapService } from 'src/app/core/services/admin/scrap/scrap.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { ProductScrapSyncPendingChange, ProductScrapSyncOptions, ScrapCategory } from 'src/app/core/models/products/scrap/product.scrap.sync.model';
@@ -17,7 +17,7 @@ import { ScrapEntity } from 'src/app/shared/entity/scrap.entity';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ScrapChangeDetailDialogComponent } from './components/scrap-change-detail-dialog/scrap-change-detail-dialog.component';
 import { ScrapRcpResponseEntity } from 'src/app/shared/entity/rcp/scrap.rcp.entity';
-import { ScrapRemoteService } from 'src/app/core/services/scrap/scrap.remote.service';
+import { ScrapRemoteService } from 'src/app/core/services/admin/scrap/scrap.remote.service';
 
 @Component({
   selector: 'app-sync-proposal',

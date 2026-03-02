@@ -9,7 +9,7 @@ import { rxResource, toObservable } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { ScrapService } from 'src/app/core/services/scrap/scrap.service';
+import { ScrapService } from 'src/app/core/services/admin/scrap/scrap.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { ProductWithSourcesEntity, ProductSourceDetail } from 'src/app/shared/entity/view/product.scrap.entity';

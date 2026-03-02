@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 // Services & Entities
-import { CampaignService } from 'src/app/core/services/campaigns/campaign.service';
+import { CampaignService } from 'src/app/core/services/admin/campaigns/campaign.service';
 import { CampaignEntity } from 'src/app/shared/entity/view/campaign.entity';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';

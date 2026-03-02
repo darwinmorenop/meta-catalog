@@ -6,7 +6,7 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { ProductInventoryStockEntryDetailedEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.detailed.entity';
 import { ProductInventoryStockEntryDashboardEntity, UserInventoryStockEntryDashboardEntity } from 'src/app/shared/entity/view/product.inventory.stock-entry.dashboard.entity';
 import { ProductInventoryStockEntryEntity } from 'src/app/shared/entity/product.inventory.stock-entry.entity';
-import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
+import { SupabaseService } from 'src/app/core/services/admin/supabase/supabase.service';
 
 export type StockScopeType = 'Todos' | 'Grupal' | 'Personal';
 
@@ -52,8 +52,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
 
   getAllDashboardData(userIds: string[] = []): Observable<ProductInventoryStockEntryDashboardEntity[]> {
     const context = 'getAllDashboardData';
-    const query = this.supabaseService.getSupabaseClient()
-      .rpc(this.RPC_DASHBOARD_NAME, {
+    const query = this.supabaseService.getSupabaseClient().rpc(this.RPC_DASHBOARD_NAME, {
         p_user_ids: userIds.length > 0 ? userIds : null
       });
 
@@ -73,8 +72,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
   update(id: number, stockEntry: Partial<ProductInventoryStockEntryEntity>): Observable<boolean> {
     const context = 'update';
     this.logger.debug(`Updating stock entry for product ${id} with data:${JSON.stringify(stockEntry)}`, this.CLASS_NAME, context);
-    const promise = this.supabaseService.getSupabaseClient()
-      .from(this.TABLE_NAME)
+    const promise = this.supabaseService.fromCatalog(this.TABLE_NAME)
       .update(stockEntry)
       .eq('id', id);
 
@@ -93,8 +91,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
   insert(stockEntry: Partial<ProductInventoryStockEntryEntity>): Observable<boolean> {
     const context = 'insert';
     this.logger.debug(`Inserting stock entry for product ${stockEntry.product_id} with data:${JSON.stringify(stockEntry)}`, this.CLASS_NAME, context);
-    const promise = this.supabaseService.getSupabaseClient()
-      .from(this.TABLE_NAME)
+    const promise = this.supabaseService.fromCatalog(this.TABLE_NAME)
       .insert(stockEntry);
 
     return from(promise).pipe(
@@ -111,8 +108,7 @@ export class ProductInventoryStockEntryDaoSupabaseService {
 
   delete(id: number): Observable<boolean> {
     const context = 'delete';
-    const promise = this.supabaseService.getSupabaseClient()
-      .from(this.TABLE_NAME)
+    const promise = this.supabaseService.fromCatalog(this.TABLE_NAME)
       .delete()
       .eq('id', id);
 

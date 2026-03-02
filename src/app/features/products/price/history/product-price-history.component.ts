@@ -13,7 +13,7 @@ import { PriceHistoryViewDialogComponent } from './dialog/view-dialog/price-hist
 import { PriceHistoryEditDialogComponent } from './dialog/edit-dialog/price-history-edit-dialog.component';
 
 // Services & Models
-import { ProductPriceService } from 'src/app/core/services/products/product-price.service';
+import { ProductPriceService } from 'src/app/core/services/admin/products/price/product-price.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';

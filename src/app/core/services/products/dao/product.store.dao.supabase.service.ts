@@ -4,7 +4,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { ProductCompleteEntity } from 'src/app/shared/entity/view/product.complete.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
-import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
+import { SupabaseService } from 'src/app/core/services/admin/supabase/supabase.service';
 import { ProductStoreCompleteRpcEntity } from 'src/app/shared/entity/rcp/product/product.store.complete.rpc.entity';
 
 @Injectable({
@@ -21,8 +21,7 @@ export class ProductStoreDaoSupabaseService {
 
   get(userId: string | null): Observable<ProductStoreCompleteRpcEntity[]> {
     const context = 'get'
-    const promise = this.supabaseService.getSupabaseClient()
-      .rpc('fn_get_products_with_user_context', { p_user_id: userId });
+    const promise = this.supabaseService.getSupabaseClient().rpc('fn_get_products_with_user_context', { p_user_id: userId });
 
     return from(promise).pipe(
       tap(response => {
@@ -46,8 +45,7 @@ export class ProductStoreDaoSupabaseService {
 
   toggleFav(userId: string, productId: number): Observable<boolean | null> {
     const context = 'toggleFav'
-    const promise = this.supabaseService.getSupabaseClient()
-      .rpc('fn_toggle_favorite', { p_user_id: userId, p_product_id: productId });
+    const promise = this.supabaseService.getSupabaseClient().rpc('fn_toggle_favorite', { p_user_id: userId, p_product_id: productId });
 
     return from(promise).pipe(
       tap(response => {
@@ -70,8 +68,7 @@ export class ProductStoreDaoSupabaseService {
     };
 
     return from(
-      this.supabaseService.getSupabaseClient()
-        .rpc('fn_change_cart_quantity', dataToSend)
+      this.supabaseService.getSupabaseClient().rpc('fn_change_cart_quantity', dataToSend)
     ).pipe(
       map(res => {
         if (res.error) throw res.error;
@@ -87,8 +84,7 @@ export class ProductStoreDaoSupabaseService {
   toggleStockNotifier(userId: string, productId: number): Observable<boolean | null> {
     const context = 'toggleStockNotifier'
     return from(
-      this.supabaseService.getSupabaseClient()
-        .rpc('fn_toggle_stock_notifier', { p_user_id: userId, p_product_id: productId })
+      this.supabaseService.getSupabaseClient().rpc('fn_toggle_stock_notifier', { p_user_id: userId, p_product_id: productId })
     ).pipe(
       map(res => {
         if (res.error) throw res.error;
@@ -103,8 +99,7 @@ export class ProductStoreDaoSupabaseService {
 
   toggleTracking(userId: string, productId: number): Observable<boolean | null> {
     const context = 'toggleTracking'
-    const promise = this.supabaseService.getSupabaseClient()
-      .rpc('fn_toggle_tracking', { p_user_id: userId, p_product_id: productId });
+    const promise = this.supabaseService.getSupabaseClient().rpc('fn_toggle_tracking', { p_user_id: userId, p_product_id: productId });
 
     return from(promise).pipe(
       map(res => {

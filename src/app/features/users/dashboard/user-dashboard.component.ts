@@ -9,12 +9,13 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Services & Models
-import { UserService } from 'src/app/core/services/users/user.service';
 import { UserDashboardModel, UserRankLabel } from 'src/app/core/models/users/user.model';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';
 import { UserDialogComponent } from 'src/app/features/users/dialog/user-dialog.component';
+import { UserReadService } from 'src/app/core/services/admin/users/main/read/user-read.service';
+import { UserWriteService } from 'src/app/core/services/admin/users/main/write/user-write.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -33,20 +34,21 @@ import { UserDialogComponent } from 'src/app/features/users/dialog/user-dialog.c
   styleUrl: 'user-dashboard.component.scss'
 })
 export class UserDashboardComponent {
-  private readonly userService = inject(UserService);
+  private readonly userReadService = inject(UserReadService);
+  private readonly userWriteService = inject(UserWriteService);
   private readonly loggerService = inject(LoggerService);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
   private readonly CLASS_NAME = UserDashboardComponent.name;
 
   usersResource = rxResource({
-    stream: () => this.userService.getAllDashboard()
+    stream: () => this.userReadService.getAllDashboard()
   });
 
   // --- Signals Derivados (Computed) ---
 
   totalUsers = computed(() => this.usersResource.value()?.length ?? 0);
-  
+
   manualUsers = computed(() => {
     const users = this.usersResource.value() ?? [];
     return users.filter(u => u.isManual).length;
@@ -89,7 +91,7 @@ export class UserDashboardComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.userService.update(result).subscribe(() => {
+        this.userWriteService.update(result).subscribe(() => {
           this.usersResource.reload();
         });
       }
@@ -98,7 +100,7 @@ export class UserDashboardComponent {
 
   onDelete(user: UserDashboardModel): void {
     if (confirm(`¿Estás seguro de eliminar al usuario ${user.firstName}?`)) {
-      this.userService.delete(user.id).subscribe(() => {
+      this.userWriteService.delete(user.id).subscribe(() => {
         this.usersResource.reload();
       });
     }
@@ -112,7 +114,7 @@ export class UserDashboardComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.userService.insert(result).subscribe(() => {
+        this.userWriteService.insert(result).subscribe(() => {
           this.usersResource.reload();
         });
       }
@@ -121,7 +123,7 @@ export class UserDashboardComponent {
 
   onView(user: UserDashboardModel): void {
     const context = `onView`;
-    this.loggerService.debug(`Routing to user detail: ${user.id}`,this.CLASS_NAME,context);
+    this.loggerService.debug(`Routing to user detail: ${user.id}`, this.CLASS_NAME, context);
     this.router.navigate(['/users', user.id]);
   }
 

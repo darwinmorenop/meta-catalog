@@ -7,7 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 // Services & Models
-import { ProductPriceService } from 'src/app/core/services/products/product-price.service';
+import { ProductPriceService } from 'src/app/core/services/admin/products/price/product-price.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';
 import { TableConfig } from 'src/app/shared/models/table-config';

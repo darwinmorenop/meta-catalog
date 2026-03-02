@@ -6,7 +6,7 @@ import { InventoryInboundInsertRcpEntity } from 'src/app/shared/entity/rcp/inven
 import { InventoryInboundStatusEnum, InventoryInboundEntity, InventoryInboundStatusLabels } from 'src/app/shared/entity/inventory.inbound.entity';
 import { InventoryInboundDashboardEntity, InventoryInboundDashboardDetailedEntity } from 'src/app/shared/entity/view/inventory.dashboard.inbound.entity';
 import { DateUtilsService } from 'src/app/core/services/utils/date-utils.service';
-import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
+import { SupabaseService } from 'src/app/core/services/admin/supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +23,7 @@ private readonly CLASS_NAME = InventoryInboundDaoSupabaseService.name;
   insertInboundRpc(inbound: InventoryInboundInsertRcpEntity): Observable<number> {
     const context = 'insertInboundRpc';
     this.logger.debug(`Calling to insert with: ${JSON.stringify(inbound)}`, this.CLASS_NAME, context);
-    const promise = this.supabaseService.getSupabaseClient()
-    .rpc('create_inbound_with_stock', {
+    const promise = this.supabaseService.getSupabaseClient().rpc('create_inbound_with_stock', {
       p_data: inbound
     });
 
@@ -92,8 +91,7 @@ private readonly CLASS_NAME = InventoryInboundDaoSupabaseService.name;
 
   getAll(): Observable<InventoryInboundEntity[]> {
     const context = 'getAll';
-    const query = this.supabaseService.getSupabaseClient()
-      .from('inventory_inbound')
+    const query = this.supabaseService.fromInventory('inventory_inbound')
       .select(`*`);
 
     return from(query).pipe(
@@ -147,8 +145,7 @@ private readonly CLASS_NAME = InventoryInboundDaoSupabaseService.name;
 
   getInboundById(id: number): Observable<InventoryInboundEntity> {
     const context = 'getInboundById';
-    const query = this.supabaseService.getSupabaseClient()
-      .from('inventory_inbound')
+    const query = this.supabaseService.fromInventory('inventory_inbound')
       .select(`*`)
       .eq('id', id)
       .single();
@@ -170,8 +167,7 @@ private readonly CLASS_NAME = InventoryInboundDaoSupabaseService.name;
 
   update(id: number, data: Partial<InventoryInboundEntity>): Observable<boolean> {
     const context = 'update';
-    const query = this.supabaseService.getSupabaseClient()
-      .from('inventory_inbound')
+    const query = this.supabaseService.fromInventory('inventory_inbound')
       .update(data)
       .eq('id', id);
 

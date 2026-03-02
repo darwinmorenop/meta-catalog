@@ -11,6 +11,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { UserService } from 'src/app/core/services/users/user.service';
 import { Router } from '@angular/router';
+import { SupabaseAuthService } from 'src/app/core/services/admin/supabase/supabase.auth.service';
+import { UserReadService } from 'src/app/core/services/admin/users/main/read/user-read.service';
 
 @Component({
   selector: 'app-login',
@@ -31,8 +33,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private userService = inject(UserService);
+  private authService = inject(SupabaseAuthService);
+  private userService = inject(UserReadService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
 

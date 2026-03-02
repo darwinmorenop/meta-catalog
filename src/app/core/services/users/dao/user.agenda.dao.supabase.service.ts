@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
-import { SupabaseService } from 'src/app/core/services/supabase/supabase.service';
+import { SupabaseService } from 'src/app/core/services/admin/supabase/supabase.service';
 import { UserAgendaDashboardEntity } from 'src/app/shared/entity/view/user.agenda.dashboard.entity';
 import { UserAgendaEntity, UserAgendaHistory } from 'src/app/shared/entity/user.agenda.entity';
 import { UserAgendaCreateRcpEntity, UserAgendaCreateRcpResponseEntity, UserAgendaLinkRcpEntity, UserAgendaLinkRcpResponseEntity } from 'src/app/shared/entity/rcp/user.agenda.rcp.entity';
@@ -20,8 +20,7 @@ export class UserAgendaDaoSupabaseService {
   }
 
   getAll(userIds?: string[]): Observable<UserAgendaDashboardEntity[]> {
-    let query = this.supabaseService.getSupabaseClient()
-      .from('v_user_agenda')
+    let query = this.supabaseService.fromTier('v_agenda')
       .select('*')
       .eq('agenda_status', ProductStatusEnum.active)
       .order('first_name');
@@ -37,8 +36,7 @@ export class UserAgendaDaoSupabaseService {
 
   create(data: UserAgendaCreateRcpEntity): Observable<UserAgendaCreateRcpResponseEntity> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .rpc('add_user_agenda_flow', data)
+      this.supabaseService.getSupabaseClient().rpc('add_user_agenda_flow', data)
     ).pipe(
       map(res => {
         if (res.error) throw res.error;
@@ -49,8 +47,7 @@ export class UserAgendaDaoSupabaseService {
 
   link(userAgendaLink: UserAgendaLinkRcpEntity): Observable<UserAgendaLinkRcpResponseEntity> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .rpc('link_existing_user_agenda', userAgendaLink)
+      this.supabaseService.getSupabaseClient().rpc('link_existing_user_agenda', userAgendaLink)
     ).pipe(
       map(res => {
         if (res.error) throw res.error;
@@ -61,8 +58,7 @@ export class UserAgendaDaoSupabaseService {
 
   update(userAgenda: Partial<UserAgendaEntity>): Observable<UserAgendaEntity> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('user_agenda')
+      this.supabaseService.fromUsers('user_agenda')
         .update(userAgenda)
         .eq('owner_id', userAgenda.owner_id)
         .eq('contact_id', userAgenda.contact_id)
@@ -78,8 +74,7 @@ export class UserAgendaDaoSupabaseService {
 
   unlink(owner_id: string, contact_id: string): Observable<boolean> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('user_agenda')
+      this.supabaseService.fromUsers('user_agenda')
         .update({ status: ProductStatusEnum.archived })
         .eq('owner_id', owner_id)
         .eq('contact_id', contact_id)
@@ -90,8 +85,7 @@ export class UserAgendaDaoSupabaseService {
 
   getHistory(owner_id: string, contact_id: string): Observable<{ follow_up_history: UserAgendaHistory[], last_contact_history: UserAgendaHistory[] }> {
     return from(
-      this.supabaseService.getSupabaseClient()
-        .from('user_agenda')
+      this.supabaseService.fromUsers('user_agenda')
         .select('follow_up_history, last_contact_history')
         .eq('owner_id', owner_id)
         .eq('contact_id', contact_id)
@@ -117,8 +111,7 @@ export class UserAgendaDaoSupabaseService {
       }),
       switchMap((updatedHistory: UserAgendaHistory[]) => {
         return from(
-          this.supabaseService.getSupabaseClient()
-            .from('user_agenda')
+          this.supabaseService.fromUsers('user_agenda')
             .update({ [column]: updatedHistory })
             .eq('owner_id', owner_id)
             .eq('contact_id', contact_id)

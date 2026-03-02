@@ -12,7 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
 import { UserProfile, Resource, Action, labelResource, labelAction, PermissionMap } from 'src/app/shared/entity/user.profile.entity';
-import { UserProfileService } from 'src/app/core/services/users/user.profile.service';
+import { UserProfileService } from 'src/app/core/services/admin/users/profile/user.profile.service';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
 import { PermissionEditDialogComponent } from './permissions/permission-edit-dialog.component';
 import { SmartTableComponent } from 'src/app/shared/components/smart-table/smart-table.component';

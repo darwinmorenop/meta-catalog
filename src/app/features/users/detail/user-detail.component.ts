@@ -13,7 +13,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Services & Models
-import { UserService } from 'src/app/core/services/users/user.service';
+import { UserReadService } from 'src/app/core/services/admin/users/main/read/user-read.service';
 import { UserNetworkDetail, UserNode } from 'src/app/shared/entity/rcp/user.rcp.entity';
 import { UserRankEnum, UserRankLabel } from 'src/app/core/models/users/user.model';
 import { LoggerService } from 'src/app/core/services/logger/logger.service';
@@ -38,7 +38,7 @@ import { LoggerService } from 'src/app/core/services/logger/logger.service';
 export class UserDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly userService = inject(UserService);
+  private readonly userReadService = inject(UserReadService);
   private readonly loggerService = inject(LoggerService);
   private readonly CLASS_NAME = UserDetailComponent.name;
 
@@ -56,7 +56,7 @@ export class UserDetailComponent implements OnInit {
     stream: () => this.userId$.pipe(
       switchMap(id => {
         this.loggerService.debug(`Resource fetching data for user ID: ${id}`, this.CLASS_NAME, 'stream');
-        return id ? this.userService.getUserDetailWithNetwork(id) : of([] as UserNetworkDetail[]);
+        return id ? this.userReadService.getUserDetailWithNetwork(id) : of([] as UserNetworkDetail[]);
       })
     )
   });

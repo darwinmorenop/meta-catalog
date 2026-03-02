@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { CategoryEntity } from 'src/app/shared/entity/category.entity';
-import { CategoryService } from 'src/app/core/services/categories/category.service';
+import { CategoryService } from 'src/app/core/services/admin/categories/category.service';
 
 import { CategoryHierarchyEntity } from 'src/app/shared/entity/view/category.hierarchy.entity';
 

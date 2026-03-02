@@ -10,6 +10,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { SupabaseAuthService } from 'src/app/core/services/admin/supabase/supabase.auth.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -30,7 +31,7 @@ import { Router } from '@angular/router';
 })
 export class ResetPasswordComponent {
   private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
+  private authService = inject(SupabaseAuthService);
   public router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
